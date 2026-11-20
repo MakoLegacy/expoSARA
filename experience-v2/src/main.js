@@ -297,9 +297,12 @@ function animate(time) {
   pointer.smoothX += (pointer.x - pointer.smoothX) * 0.035;
   pointer.smoothY += (pointer.y - pointer.smoothY) * 0.035;
   if (camera) {
-    camera.position.x += pointer.smoothX * 0.16;
-    camera.position.y += pointer.smoothY * 0.08;
-    camera.lookAt(focusTarget);
+    // Parallax is applied to the look target, not cumulatively to the camera position.
+    camera.lookAt(
+      focusTarget.x + pointer.smoothX * 0.42,
+      focusTarget.y + pointer.smoothY * 0.2,
+      focusTarget.z
+    );
   }
   if (particles) particles.rotation.y = time * 0.000012;
   if (renderer && scene && camera) renderer.render(scene, camera);
