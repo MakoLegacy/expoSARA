@@ -1,0 +1,35 @@
+name: Build immersive S.A.R.A. experience
+
+on:
+  push:
+    branches:
+      - "redesign/**"
+    paths:
+      - "experience-v2/**"
+      - ".github/workflows/build-experience.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "experience-v2/**"
+      - ".github/workflows/build-experience.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: experience-v2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: experience-v2/package.json
+      - name: Install dependencies
+        run: npm install
+      - name: Build production bundle
+        run: npm run build
