@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#08090b" />
+  <meta name="description" content="S.A.R.A. — Experiencia digital de alerta de rayos Antamina." />
+  <title>S.A.R.A. — Digital Mining Experience</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <canvas id="terrain" aria-label="Visualización tridimensional topográfica del tajo"></canvas>
+  <div class="scene-vignette"></div>
+  <div class="scene-grain"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="S.A.R.A. inicio">
+      <span class="brand-mark"><i></i><i></i><i></i></span>
+      <span class="brand-word">S.A.R.A<span class="brand-dot">.</span></span>
+    </a>
+    <div class="topbar-center"><span class="status-light"></span> DIGITAL MINING EXPERIENCE <span class="topbar-divider">/</span> ANTAMINA</div>
+    <a class="topbar-link" href="#capitulo-06">EXPLORAR PROYECTO <span>↗</span></a>
+  </header>
+
+  <div class="progress-track"><span id="progress"></span></div>
+
+  <aside class="side-rail" aria-label="Navegación de capítulos">
+    <span class="rail-label">RECORRIDO</span>
+    <button class="rail-dot is-active" data-target="inicio" aria-label="Inicio"><span>00</span></button>
+    <button class="rail-dot" data-target="capitulo-01" aria-label="Centro de control"><span>01</span></button>
+    <button class="rail-dot" data-target="capitulo-02" aria-label="Problemática"><span>02</span></button>
+    <button class="rail-dot" data-target="capitulo-03" aria-label="Propuesta S.A.R.A."><span>03</span></button>
+    <button class="rail-dot" data-target="capitulo-04" aria-label="Optimización"><span>04</span></button>
+    <button class="rail-dot" data-target="capitulo-05" aria-label="Notificaciones"><span>05</span></button>
+    <button class="rail-dot" data-target="capitulo-06" aria-label="Mitigación"><span>06</span></button>
+  </aside>
+
+  <main>
+    <section class="chapter hero" id="inicio" data-chapter="00">
+      <div class="chapter-inner hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-line"></span> SISTEMA DE ALERTA DE RAYOS ANTAMINA</p>
+          <p class="hero-kicker">UNA NUEVA FORMA DE</p>
+          <h1>VER LA<br /><em>ALERTA.</em></h1>
+          <p class="hero-description">De la detección a la comprensión. Una experiencia unificada para comunicar y visualizar las alertas de tormentas eléctricas en la operación.</p>
+          <div class="hero-actions">
+            <a class="button-primary" href="#capitulo-01">INICIAR RECORRIDO <span>↓</span></a>
+            <span class="hero-note">EXPERIENCIA INTERACTIVA <b>·</b> 3D / DATA / OPERACIÓN</span>
+          </div>
+        </div>
+        <div class="hero-hud" aria-hidden="true">
+          <div class="hud-topline"><span>LIVE TOPOGRAPHY</span><span class="hud-live"><i></i> RENDER 3D</span></div>
+          <div class="hud-coordinates"><span>TAJO / ANTAMINA</span><b>REFERENCIA VISUAL</b></div>
+          <div class="hud-scale"><span>TOPOGRAPHY</span><span>ESCENA PROCEDURAL</span></div>
+          <div class="hud-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="hud-bottomline"><span>TOPOGRAPHIC FIELD</span><span>01 — 07</span></div>
+        </div>
+        <div class="hero-scroll"><span class="scroll-line"></span> DESLIZA PARA DESCUBRIR</div>
+      </div>
+    </section>
+
+    <section class="chapter" id="capitulo-01" data-chapter="01">
+      <div class="chapter-inner split-layout">
+        <div class="chapter-copy">
+          <p class="eyebrow"><span class="chapter-index">01</span> CONTEXTO OPERACIONAL</p>
+          <h2>EL CENTRO<br />DE <em>CONTROL.</em></h2>
+          <p class="lead">Monitoreo constante. Comunicación oportuna. Una operación que necesita comprender dónde se presenta la alerta.</p>
+          <p>El Centro de Control de Comunicaciones y Emergencias es responsable del monitoreo y aviso de las alertas de tormentas eléctricas en toda la mina.</p>
+          <div class="tag-row"><span>MONITOREO 24/7</span><span>DETECCIÓN</span><span>AVISO RADIAL</span></div>
+        </div>
+        <div class="data-card sensor-card">
+          <div class="card-heading"><span>SISTEMAS DE DETECCIÓN</span><span>02 SOURCES</span></div>
+          <article class="sensor-row">
+            <div class="sensor-icon">SG</div>
+            <div><h3>STRIKEGUARD</h3><p>Sistema reactivo. Envía alertas al registrar una descarga nube–tierra.</p></div>
+            <span class="sensor-state">REACTIVO</span>
+          </article>
+          <div class="card-separator"></div>
+          <article class="sensor-row">
+            <div class="sensor-icon sensor-icon-alt">K</div>
+            <div><h3>KERAUNOS</h3><p>Sistema predictivo basado en el umbral del campo electromagnético.</p></div>
+            <span class="sensor-state sensor-state-alt">PREDICTIVO</span>
+          </article>
+          <div class="flow-strip"><span>DETECCIÓN</span><b>→</b><span>MONITOREO</span><b>→</b><span>ALERTA RADIAL</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="capitulo-02" data-chapter="02">
+      <div class="chapter-inner split-layout">
+        <div class="chapter-copy">
+          <p class="eyebrow"><span class="chapter-index danger-index">02</span> EL DESAFÍO</p>
+          <h2>LA ALERTA<br />NO DEBE SER<br /><em>UNA DUDA.</em></h2>
+          <p class="lead">Durante un evento de tormenta, la información debe ser clara y fácil de interpretar por el personal de campo.</p>
+          <p>La presentación base identifica tres fricciones en el protocolo actual de comunicación.</p>
+        </div>
+        <div class="issue-stack">
+          <article class="issue-card"><span>01 / MENSAJE RADIAL</span><h3>¿DÓNDE?</h3><p>Alertas generales sin ubicación exacta.</p><b>01</b></article>
+          <article class="issue-card"><span>02 / SATURACIÓN DEL CANAL</span><h3>¿QUÉ SUCEDE?</h3><p>Radios y celulares colapsan por consultas.</p><b>02</b></article>
+          <article class="issue-card"><span>03 / USABILIDAD</span><h3>¿CÓMO LO VEO?</h3><p>Interfaz Keraunos poco amigable para el usuario.</p><b>03</b></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="capitulo-03" data-chapter="03">
+      <div class="chapter-inner">
+        <div class="chapter-copy chapter-copy-wide">
+          <p class="eyebrow"><span class="chapter-index">03</span> LA PROPUESTA</p>
+          <h2>UNA SOLA VISIÓN.<br /><em>S.A.R.A.</em></h2>
+          <p class="lead">S.A.R.A. transforma el caos del Centro de Control y las dudas del personal en campo en un mapa accesible e intuitivo.</p>
+        </div>
+        <div class="capability-grid">
+          <article class="capability-card"><span class="capability-symbol">01</span><div class="capability-line"></div><h3>MOTOR DE CONSULTAS</h3><p>Consulta continua para alertar eventos al instante.</p></article>
+          <article class="capability-card"><span class="capability-symbol">02</span><div class="capability-line"></div><h3>SOMBREADO AUTOMÁTICO</h3><p>Visualiza las zonas afectadas según el nivel de alerta.</p></article>
+          <article class="capability-card"><span class="capability-symbol">03</span><div class="capability-line"></div><h3>INDEXACIÓN GPS</h3><p>El trabajador verifica su zona operativa en tiempo real.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="capitulo-04" data-chapter="04">
+      <div class="chapter-inner">
+        <div class="chapter-copy chapter-copy-wide">
+          <p class="eyebrow"><span class="chapter-index violet-index">04</span> EVOLUCIÓN TÉCNICA</p>
+          <h2>DE LA FRICCIÓN<br />A LA <em>OPTIMIZACIÓN.</em></h2>
+          <p class="lead">Dos desafíos técnicos identificados y sus propuestas de mejora.</p>
+        </div>
+        <div class="comparison-grid">
+          <article class="comparison-card current"><span>ESTADO ACTUAL · SEGÚN PRESENTACIÓN BASE</span><h3>LATENCIA DE CONSULTA</h3><p>Riesgo de bloqueo de IP por polling excesivo (cada 20 segundos).</p></article>
+          <div class="comparison-arrow">↗</div>
+          <article class="comparison-card proposed"><span>PROPUESTA</span><h3>API DIRECTA</h3><p>Integración directa de API de Keraunos para recibir eventos en tiempo real.</p></article>
+          <article class="comparison-card current"><span>ESTADO ACTUAL · SEGÚN PRESENTACIÓN BASE</span><h3>SERVIDOR DE PRUEBA</h3><p>URL externa sin SSL corporativo, con riesgo de falta de confianza.</p></article>
+          <div class="comparison-arrow">↗</div>
+          <article class="comparison-card proposed"><span>PROPUESTA</span><h3>RED INTERNA</h3><p>Migración a la red interna y generación de un dominio corporativo.</p></article>
+        </div>
+        <p class="footnote">Las mejoras se presentan como propuestas descritas en la versión base; su implementación debe validarse por separado.</p>
+      </div>
+    </section>
+
+    <section class="chapter" id="capitulo-05" data-chapter="05">
+      <div class="chapter-inner split-layout">
+        <div class="chapter-copy">
+          <p class="eyebrow"><span class="chapter-index amber-index">05</span> COMUNICACIÓN</p>
+          <h2>ALERTAR.<br /><em>INVOLUCRAR.</em></h2>
+          <p class="lead">La notificación debe ayudar a actuar, no convertirse en una alerta más que termina siendo ignorada.</p>
+        </div>
+        <div class="notification-list">
+          <article><span class="notification-icon">01</span><div><h3>EVITAR EL “EFECTO BASURERO”</h3><p>No saturar al trabajador con notificaciones que puedan terminar siendo ignoradas.</p></div></article>
+          <article><span class="notification-icon">02</span><div><h3>NOTIFICACIÓN PERSISTENTE</h3><p>Alertas críticas que requieren confirmación y apagado manual dentro del sistema.</p></div></article>
+          <article><span class="notification-icon">03</span><div><h3>CULTURA Y RESPUESTA</h3><p>Involucrar al trabajador en la verificación de alertas de tormentas en su zona operativa.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="capitulo-06" data-chapter="06">
+      <div class="chapter-inner">
+        <div class="chapter-copy chapter-copy-wide">
+          <p class="eyebrow"><span class="chapter-index success-index">06</span> CONFIANZA OPERACIONAL</p>
+          <h2>RESILIENCIA<br />POR <em>DISEÑO.</em></h2>
+          <p class="lead">Privacidad, ciberseguridad y redundancia operativa como pilares de la propuesta.</p>
+        </div>
+        <div class="resilience-grid">
+          <article class="resilience-card"><span>01 / SEGURIDAD</span><h3>CIBERSEGURIDAD COMPARTIDA</h3><p>Integración auditada por Ciberseguridad Antamina y gestor de secretos para API Keys.</p></article>
+          <article class="resilience-card"><span>02 / PRIVACIDAD</span><h3>ZERO-LOGGING</h3><p>La propuesta indica que el sistema no almacena ubicaciones y hace referencia a la Ley N.º 29733.</p></article>
+          <article class="resilience-card resilience-wide"><span>03 / CONTINUIDAD</span><h3>TRIPLE CAPA DE RESPALDO</h3><div class="redundancy-flow"><b>API</b><i>→</i><b>MOTORES 01–03</b><i>→</i><b>KERAUNOS MANUAL</b><i>→</i><b>STRIKEGUARD MANUAL</b></div></article>
+        </div>
+        <div class="closing-line"><span class="brand-word">S.A.R.A<span class="brand-dot">.</span></span><span>SISTEMA DE ALERTA DE RAYOS ANTAMINA</span><a href="#inicio">VOLVER AL INICIO ↑</a></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="scene-readout"><span>FIELD / 03D</span><span id="readout">SECTOR 00</span><span>TOPOGRAPHY ONLINE</span></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
