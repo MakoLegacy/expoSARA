@@ -1,0 +1,2052 @@
+:root {
+    --bg-color: #030308;
+    --primary-cyan: #00f3ff;
+    --primary-glow: rgba(0, 243, 255, 0.3);
+    --alert-red: #ff003c;
+    --text-main: #e0e0e0;
+    --font-title: 'Orbitron', sans-serif;
+    --font-body: 'Rajdhani', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body, html {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: var(--font-body);
+}
+
+/* CANVAS Y FONDO */
+#mineCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; cursor: grab; }
+#mineCanvas:active { cursor: grabbing; }
+
+/* DESTELLO DE RELÁMPAGO */
+#lightning-flash {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(180, 240, 255, 0.4);
+    z-index: 2; opacity: 0; pointer-events: none;
+}
+#lightning-flash.flash-active {
+    animation: lightningStrike 0.15s ease-out;
+}
+@keyframes lightningStrike {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 0; }
+}
+
+.scanlines {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0) 50%, rgba(0, 243, 255, 0.03) 50%, rgba(0, 243, 255, 0.03));
+    background-size: 100% 4px; z-index: 5; pointer-events: none;
+}
+
+/* PANTALLA DE INICIO */
+#intro-screen {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(3, 3, 8, 0.85); backdrop-filter: blur(5px);
+    z-index: 1000; display: flex; justify-content: center; align-items: center;
+    cursor: pointer; transition: opacity 1s ease, visibility 1s ease;
+}
+#intro-screen.hidden { opacity: 0; visibility: hidden; }
+.intro-content { text-align: center; color: var(--primary-cyan); }
+.intro-icon { font-size: 4rem; margin-bottom: 1rem; animation: pulse 2s infinite; }
+.intro-content h1 { font-family: var(--font-title); font-size: 3rem; letter-spacing: 5px; margin-bottom: 10px; text-shadow: 0 0 20px var(--primary-cyan); }
+.intro-content p { font-family: monospace; font-size: 1.2rem; color: #888; margin-bottom: 2rem; animation: blink 1s infinite; }
+.intro-btn {
+    border: 1px solid var(--primary-cyan); padding: 10px 30px; font-family: var(--font-title);
+    letter-spacing: 2px; transition: 0.3s; background: rgba(0, 243, 255, 0.1);
+}
+.intro-btn:hover { background: var(--primary-cyan); color: #000; box-shadow: 0 0 20px var(--primary-cyan); }
+
+/* DASHBOARD HUD */
+#hud-dashboard {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; justify-content: space-between; padding: 2rem;
+    z-index: 10; opacity: 1; transition: opacity 1s ease;
+    pointer-events: none; /* Permite clickear el canvas en el fondo */
+}
+#hud-dashboard.hidden { opacity: 0; }
+#hud-dashboard > * { pointer-events: auto; } /* Reactiva el click en los paneles */
+
+/* COLUMNAS Y PANELES */
+.hud-column { display: flex; flex-direction: column; justify-content: space-between; width: 320px; height: 100%; z-index: 10; }
+.hud-panel {
+    background: rgba(5, 5, 15, 0.6);
+    border: 1px solid rgba(0, 243, 255, 0.3);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem; position: relative;
+    clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    animation: float 6s ease-in-out infinite;
+}
+.hud-panel:hover { transform: translateY(-5px) scale(1.02); border-color: var(--primary-cyan); box-shadow: 0 0 20px rgba(0, 243, 255, 0.2); }
+.left .hud-panel:nth-child(1) { animation-delay: 0s; }
+.left .hud-panel:nth-child(2) { animation-delay: 1s; }
+.left .hud-panel:nth-child(3) { animation-delay: 2s; }
+.right .hud-panel:nth-child(1) { animation-delay: 0.5s; }
+.right .hud-panel:nth-child(2) { animation-delay: 1.5s; }
+.right .hud-panel:nth-child(3) { animation-delay: 2.5s; }
+
+.hud-decorations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.hud-decorations::before { content: ''; position: absolute; top: 0; left: 0; width: 30px; height: 2px; background: var(--primary-cyan); }
+.hud-decorations::after { content: ''; position: absolute; bottom: 0; right: 0; width: 30px; height: 2px; background: var(--primary-cyan); }
+
+.panel-header { font-family: var(--font-title); font-size: 0.9rem; color: var(--primary-cyan); border-bottom: 1px solid rgba(0, 243, 255, 0.2); padding-bottom: 5px; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+.panel-num { background: var(--primary-cyan); color: #000; padding: 0 5px; font-weight: bold; }
+.panel-content h2 { font-family: var(--font-title); font-size: 1.2rem; color: #fff; margin-bottom: 10px; }
+.panel-content h3 { font-family: var(--font-title); font-size: 1rem; color: var(--primary-cyan); margin-bottom: 10px; }
+.panel-content p { font-size: 0.95rem; line-height: 1.4; color: #bbb; margin-bottom: 10px; }
+.text-red { color: var(--alert-red) !important; text-shadow: 0 0 10px rgba(255, 0, 60, 0.5); }
+.text-cyan { color: var(--primary-cyan) !important; }
+.hud-hr { border: 0; height: 1px; background: rgba(0, 243, 255, 0.2); margin: 10px 0; }
+
+/* ALERTAS Y BOTONES */
+.alert-panel { border-color: rgba(255, 0, 60, 0.4); }
+.alert-panel .panel-header { color: var(--alert-red); border-bottom-color: rgba(255, 0, 60, 0.2); }
+.alert-panel .panel-num { background: var(--alert-red); color: #fff; }
+.alert-panel .hud-decorations::before, .alert-panel .hud-decorations::after { background: var(--alert-red); }
+
+.problem-step { border-left: 2px solid var(--alert-red); padding-left: 10px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; display: none; }
+.problem-step.active { display: block; animation: fadeIn 0.5s forwards; }
+.problem-step h4 { color: #fff; font-size: 0.9rem; margin-bottom: 5px; font-family: var(--font-title); }
+.problem-step p { font-size: 0.85rem; margin-bottom: 0; }
+.problem-step:hover { background: rgba(255, 0, 60, 0.1); }
+
+.hud-btn, .sara-bolt-container {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    background: rgba(0, 243, 255, 0.1); border: 1px solid var(--primary-cyan);
+    color: var(--primary-cyan); padding: 8px 15px; margin-top: 15px;
+    font-family: var(--font-title); font-size: 0.8rem; cursor: pointer; transition: 0.3s;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+.hud-btn:hover, .sara-bolt-container:hover { background: var(--primary-cyan); color: #000; box-shadow: 0 0 15px var(--primary-cyan); }
+.sara-bolt { font-size: 1.5rem; margin-bottom: 0; animation: pulse 2s infinite; }
+.sara-bolt-container { flex-direction: column; padding: 15px; }
+
+.hud-list { list-style: none; }
+.hud-list li { font-size: 0.9rem; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px; }
+.hud-list i { color: var(--primary-cyan); margin-top: 3px; }
+
+/* =========================================
+   EL NUEVO CENTRO HOLOGRÁFICO (LOGO + ANILLOS)
+   ========================================= */
+.hud-center {
+    flex: 1; display: flex; justify-content: center; align-items: center; z-index: 5;
+    pointer-events: none; /* Permite clickear el canvas detrás del logo */
+}
+.center-hologram {
+    position: relative; width: 400px; height: 400px;
+    display: flex; justify-content: center; align-items: center;
+    pointer-events: none; /* CLAVE: Evita que el centro bloquee el clic de rotación */
+}
+
+/* Nuevo logo SVG en lugar de imagen */
+.holo-logo-svg {
+    width: 280px; /* Aumentado de 220px a 280px para que resalte más */
+    z-index: 2;
+    color: var(--primary-cyan);
+    animation: holoPulse 3s infinite alternate;
+    pointer-events: none;
+}
+
+/* Anillos de escaneo giratorios */
+.scanning-ring {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    border-radius: 50%; border: 1px solid rgba(0, 243, 255, 0.2);
+    pointer-events: none;
+}
+.ring-1 {
+    border-style: dashed; border-width: 2px;
+    animation: spinRing 15s linear infinite;
+}
+.ring-2 {
+    width: 80%; height: 80%; top: 10%; left: 10%;
+    border-style: dotted; border-width: 4px; border-color: rgba(0, 243, 255, 0.4);
+    animation: spinRingReverse 10s linear infinite;
+}
+.ring-3 {
+    width: 110%; height: 110%; top: -5%; left: -5%;
+    border: 1px solid rgba(0, 243, 255, 0.1);
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.1) inset;
+    animation: pulseRing 4s ease-in-out infinite;
+}
+
+@keyframes spinRing { 100% { transform: rotate(360deg); } }
+@keyframes spinRingReverse { 100% { transform: rotate(-360deg); } }
+@keyframes holoPulse {
+    0% { opacity: 0.7; filter: drop-shadow(0 0 10px var(--primary-cyan)); }
+    100% { opacity: 1; filter: drop-shadow(0 0 25px var(--primary-cyan)); }
+}
+@keyframes pulseRing {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.05); opacity: 1; }
+}
+
+
+/* MODAL (Holográfico y Transparente) */
+.holo-modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    /* EL CAMBIO ESTÁ AQUÍ: Bajamos la opacidad a 0.4 y reducimos el blur a 3px */
+    background: rgba(3, 3, 8, 0.4); 
+    backdrop-filter: blur(3px); 
+    z-index: 2000; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.4s ease;
+}
+.holo-modal-overlay.active { display: flex; opacity: 1; }
+
+.holo-modal-content {
+    width: 90%; max-width: 1000px; height: 80vh;
+    /* Un fondo un poco más sólido para el modal en sí, para que el texto se lea perfecto */
+    background: rgba(5, 5, 15, 0.85); 
+    border: 2px solid var(--primary-cyan);
+    box-shadow: 0 0 50px rgba(0, 243, 255, 0.4), inset 0 0 20px rgba(0, 243, 255, 0.2);
+    display: flex; flex-direction: column; position: relative;
+    transform: scale(0.9) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+}
+.holo-modal-overlay.active .holo-modal-content { transform: scale(1) translateY(0); }
+
+/* El resto del header, body e iframe se mantiene igual */
+.holo-header { display: flex; justify-content: space-between; padding: 10px 20px; background: rgba(0, 243, 255, 0.1); border-bottom: 1px solid var(--primary-cyan); }
+.holo-title { font-family: var(--font-title); color: var(--primary-cyan); letter-spacing: 2px; }
+.holo-close-btn { background: transparent; border: none; color: var(--alert-red); font-size: 2rem; cursor: pointer; transition: 0.3s; }
+.holo-close-btn:hover { color: #fff; text-shadow: 0 0 15px var(--alert-red); }
+.holo-body { flex: 1; position: relative; background: #fff; overflow: hidden; }
+.holo-iframe { width: 100%; height: 100%; border: none; }
+
+/* ANIMACIONES GENERALES */
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes pulse { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 5px var(--primary-cyan)); } 50% { opacity: 0.7; filter: drop-shadow(0 0 20px var(--primary-cyan)); } }
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+
+/* Añadir al final de tu style.css */
+
+/* Cursor interactivo para los paneles */
+.hud-panel {
+    cursor: pointer;
+}
+
+/* Estilos para el modal que muestra HTML (Slides) */
+.holo-html-body {
+    background: rgba(5, 5, 15, 0.95); /* Fondo oscuro en lugar de blanco */
+    padding: 3rem;
+    overflow-y: auto;
+    color: var(--text-main);
+    font-family: var(--font-body);
+}
+
+.hidden { display: none !important; }
+
+/* Decoración interna del slide */
+#dynamicContent h2 {
+    font-family: var(--font-title);
+    color: var(--primary-cyan);
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 15px var(--primary-cyan);
+    border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+    padding-bottom: 10px;
+}
+
+#dynamicContent h3 {
+    font-family: var(--font-title);
+    color: #fff;
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+#dynamicContent p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #bbb;
+    margin-bottom: 1rem;
+}
+
+#dynamicContent ul {
+    list-style: none;
+    margin-left: 1rem;
+}
+
+#dynamicContent li {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    padding-left: 20px;
+    position: relative;
+}
+
+#dynamicContent li::before {
+    content: '\f105'; /* Icono de flecha de FontAwesome */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    color: var(--primary-cyan);
+}
+
+/* Botón especial dentro de los modales */
+.modal-btn {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 10px 25px;
+    background: rgba(0, 243, 255, 0.1);
+    border: 1px solid var(--primary-cyan);
+    color: var(--primary-cyan);
+    font-family: var(--font-title);
+    text-decoration: none;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.modal-btn:hover {
+    background: var(--primary-cyan);
+    color: #000;
+    box-shadow: 0 0 20px var(--primary-cyan);
+}
+
+/* =========================================
+   NUBES DE TORMENTA (Humo en la parte superior)
+   ========================================= */
+.storm-clouds {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 45vh; /* Ocupa casi la mitad superior */
+    z-index: 3; /* Por encima del canvas 3D, por debajo de los paneles */
+    pointer-events: none; /* Permite rotar el tajo con el mouse a través de las nubes */
+    overflow: hidden;
+    /* Degradado para que las nubes se fundan suavemente con el fondo oscuro */
+    background: linear-gradient(to bottom, rgba(3, 3, 8, 0.9) 0%, rgba(3, 3, 8, 0) 100%);
+}
+
+.cloud {
+    position: absolute;
+    background: rgba(220, 230, 255, 0.15); /* Blanco azulado tenue */
+    border-radius: 50%;
+    filter: blur(50px); /* Efecto de humo denso */
+    animation: driftClouds linear infinite;
+}
+
+/* Configuración individual de cada nube para dar profundidad */
+.cloud-1 {
+    width: 800px; height: 300px;
+    top: -100px; left: -10%;
+    animation-duration: 40s;
+}
+
+.cloud-2 {
+    width: 600px; height: 250px;
+    top: -50px; left: 40%;
+    background: rgba(255, 255, 255, 0.1); /* Un poco más brillante */
+    animation-duration: 55s;
+    animation-delay: -15s;
+}
+
+.cloud-3 {
+    width: 900px; height: 350px;
+    top: -150px; left: 70%;
+    background: rgba(150, 160, 180, 0.12);
+    animation-duration: 45s;
+    animation-delay: -25s;
+}
+
+.cloud-4 {
+    width: 500px; height: 200px;
+    top: 0px; left: 20%;
+    background: rgba(0, 243, 255, 0.05); /* Un toque sutil de cyan, como si la tormenta tuviera carga eléctrica */
+    filter: blur(60px);
+    animation-duration: 65s;
+    animation-delay: -5s;
+}
+
+/* Animación para que crucen la pantalla */
+@keyframes driftClouds {
+    0% { transform: translateX(0) scale(1); }
+    50% { transform: translateX(-30vw) scale(1.1); }
+    100% { transform: translateX(0) scale(1); }
+}
+
+
+/* =========================================
+   DIAGRAMA DE FLUJO (CARPETA 01)
+   ========================================= */
+.flow-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 3rem;
+    gap: 1rem;
+    width: 100%;
+}
+
+.flow-box {
+    flex: 1;
+    background: rgba(0, 243, 255, 0.05);
+    border: 1px solid rgba(0, 243, 255, 0.3);
+    backdrop-filter: blur(5px);
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+    transition: all 0.3s ease;
+}
+
+.flow-box:hover {
+    background: rgba(0, 243, 255, 0.1);
+    border-color: var(--primary-cyan);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+    transform: translateY(-5px);
+}
+
+/* Borde rojo para la caja de alerta */
+.flow-box.alert-box {
+    border-color: rgba(255, 0, 60, 0.4);
+}
+.flow-box.alert-box:hover {
+    background: rgba(255, 0, 60, 0.1);
+    border-color: var(--alert-red);
+    box-shadow: 0 0 20px rgba(255, 0, 60, 0.2);
+}
+
+.flow-box i {
+    font-size: 2.5rem;
+    color: var(--primary-cyan);
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px var(--primary-cyan));
+}
+.flow-box.alert-box i {
+    color: var(--alert-red);
+    filter: drop-shadow(0 0 10px var(--alert-red));
+}
+
+.flow-box h4 {
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+.flow-box p {
+    font-size: 0.95rem;
+    color: #bbb;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* El Rayo Central */
+.flow-bolt {
+    font-size: 4rem;
+    color: #ffcc00; /* Amarillo advertencia */
+    filter: drop-shadow(0 0 15px #ffcc00);
+    animation: pulse-yellow 2s infinite;
+    z-index: 2;
+    padding: 0 1rem;
+}
+
+/* Las Flechas Curvas */
+.flow-arrow {
+    width: 100px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flow-arrow svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* Animación de flujo en las flechas (efecto de datos viajando) */
+.flow-arrow path {
+    stroke-dasharray: 8;
+    animation: flowData 1.5s linear infinite;
+}
+
+@keyframes flowData {
+    to { stroke-dashoffset: -16; }
+}
+
+/* Responsive: Si la pantalla es chica, se pone en vertical */
+@media (max-width: 1024px) {
+    .flow-container {
+        flex-direction: column;
+    }
+    .flow-arrow {
+        transform: rotate(90deg);
+        margin: 10px 0;
+    }
+}
+
+
+/* =========================================
+   TEMAS DE COLOR POR CARPETA
+   ========================================= */
+
+:root {
+    --color-01-yellow: #ffcc00;
+    --color-02-red: #ff003c;
+    --color-03-cyan: #00f3ff;
+    --color-04-purple: #8b5cf6;
+    --color-05-orange: #ff8c00;
+    --color-06-green: #00ff88;
+}
+
+/* --- ESTILOS DE LAS CAJAS LATERALES (HUD) --- */
+
+/* CARPETA 01: Amarillo / Negro */
+#panel-portada { border-color: rgba(255, 204, 0, 0.4); }
+#panel-portada .panel-header { color: var(--color-01-yellow); border-bottom-color: rgba(255, 204, 0, 0.2); }
+#panel-portada .panel-num { background: var(--color-01-yellow); color: #000; }
+#panel-portada .hud-decorations::before, #panel-portada .hud-decorations::after { background: var(--color-01-yellow); }
+#panel-portada:hover { border-color: var(--color-01-yellow); box-shadow: 0 0 20px rgba(255, 204, 0, 0.2); }
+#panel-portada h2 { color: var(--color-01-yellow); text-shadow: 0 0 10px rgba(255, 204, 0, 0.5); }
+
+/* CARPETA 02: Rojo (Ya tenía estilo, pero lo formalizamos) */
+#panel-problematica { border-color: rgba(255, 0, 60, 0.4); }
+#panel-problematica .panel-header { color: var(--color-02-red); border-bottom-color: rgba(255, 0, 60, 0.2); }
+#panel-problematica .panel-num { background: var(--color-02-red); color: #fff; }
+#panel-problematica .hud-decorations::before, #panel-problematica .hud-decorations::after { background: var(--color-02-red); }
+#panel-problematica:hover { border-color: var(--color-02-red); box-shadow: 0 0 20px rgba(255, 0, 60, 0.2); }
+
+/* CARPETA 03: Cyan (Mantenemos el original) */
+#panel-solucion { border-color: rgba(0, 243, 255, 0.4); }
+#panel-solucion .panel-header { color: var(--color-03-cyan); border-bottom-color: rgba(0, 243, 255, 0.2); }
+#panel-solucion .panel-num { background: var(--color-03-cyan); color: #000; }
+#panel-solucion .hud-decorations::before, #panel-solucion .hud-decorations::after { background: var(--color-03-cyan); }
+#panel-solucion:hover { border-color: var(--color-03-cyan); box-shadow: 0 0 20px rgba(0, 243, 255, 0.2); }
+
+/* CARPETA 04: Morado */
+#panel-hoja { border-color: rgba(176, 38, 255, 0.4); }
+#panel-hoja .panel-header { color: var(--color-04-purple); border-bottom-color: rgba(176, 38, 255, 0.2); }
+#panel-hoja .panel-num { background: var(--color-04-purple); color: #fff; }
+#panel-hoja .hud-decorations::before, #panel-hoja .hud-decorations::after { background: var(--color-04-purple); }
+#panel-hoja:hover { border-color: var(--color-04-purple); box-shadow: 0 0 20px rgba(176, 38, 255, 0.2); }
+#panel-hoja h3 { color: var(--color-04-purple); text-shadow: 0 0 10px rgba(176, 38, 255, 0.5); }
+
+/* CARPETA 05: Naranja */
+#panel-notificaciones { border-color: rgba(255, 106, 0, 0.4); }
+#panel-notificaciones .panel-header { color: var(--color-05-orange); border-bottom-color: rgba(255, 106, 0, 0.2); }
+#panel-notificaciones .panel-num { background: var(--color-05-orange); color: #fff; }
+#panel-notificaciones .hud-decorations::before, #panel-notificaciones .hud-decorations::after { background: var(--color-05-orange); }
+#panel-notificaciones:hover { border-color: var(--color-05-orange); box-shadow: 0 0 20px rgba(255, 106, 0, 0.2); }
+#panel-notificaciones h3 { color: var(--color-05-orange); text-shadow: 0 0 10px rgba(255, 106, 0, 0.5); }
+
+/* CARPETA 06: Verde */
+#panel-mitigacion { border-color: rgba(0, 255, 136, 0.4); }
+#panel-mitigacion .panel-header { color: var(--color-06-green); border-bottom-color: rgba(0, 255, 136, 0.2); }
+#panel-mitigacion .panel-num { background: var(--color-06-green); color: #000; }
+#panel-mitigacion .hud-decorations::before, #panel-mitigacion .hud-decorations::after { background: var(--color-06-green); }
+#panel-mitigacion:hover { border-color: var(--color-06-green); box-shadow: 0 0 20px rgba(0, 255, 136, 0.2); }
+#panel-mitigacion h3 { color: var(--color-06-green); text-shadow: 0 0 10px rgba(0, 255, 136, 0.5); }
+
+
+/* --- ESTILOS PARA LOS MODALES (Se aplican dinámicamente con JS) --- */
+
+/* Modal Tema 01 (Amarillo) */
+.holo-modal-content.theme-01 { border-color: var(--color-01-yellow); box-shadow: 0 0 50px rgba(255, 204, 0, 0.4), inset 0 0 20px rgba(255, 204, 0, 0.2); }
+.holo-modal-content.theme-01 .holo-header { background: rgba(255, 204, 0, 0.1); border-bottom-color: var(--color-01-yellow); }
+.holo-modal-content.theme-01 .holo-title { color: var(--color-01-yellow); text-shadow: 0 0 10px rgba(255, 204, 0, 0.5); }
+.holo-modal-content.theme-01 #dynamicContent h2 { color: var(--color-01-yellow); text-shadow: 0 0 15px rgba(255, 204, 0, 0.5); border-bottom-color: rgba(255, 204, 0, 0.3); }
+.holo-modal-content.theme-01 .modal-btn { border-color: var(--color-01-yellow); color: var(--color-01-yellow); }
+.holo-modal-content.theme-01 .modal-btn:hover { background: var(--color-01-yellow); color: #000; box-shadow: 0 0 20px rgba(255, 204, 0, 0.5); }
+
+/* Estilos específicos para el Diagrama de Flujo en el Tema 01 */
+.holo-modal-content.theme-01 .flow-box { border-color: rgba(255, 204, 0, 0.4); background: rgba(255, 204, 0, 0.05); }
+.holo-modal-content.theme-01 .flow-box:hover { border-color: var(--color-01-yellow); box-shadow: 0 0 20px rgba(255, 204, 0, 0.2); }
+.holo-modal-content.theme-01 .flow-box i { color: var(--color-01-yellow); filter: drop-shadow(0 0 10px var(--color-01-yellow)); }
+.holo-modal-content.theme-01 .flow-arrow path, .holo-modal-content.theme-01 .flow-arrow polygon { stroke: var(--color-01-yellow); fill: var(--color-01-yellow); }
+.holo-modal-content.theme-01 .flow-bolt { color: var(--color-01-yellow); filter: drop-shadow(0 0 15px var(--color-01-yellow)); }
+
+/* Modal Tema 02 (Rojo) */
+.holo-modal-content.theme-02 { border-color: var(--color-02-red); box-shadow: 0 0 50px rgba(255, 0, 60, 0.4), inset 0 0 20px rgba(255, 0, 60, 0.2); }
+.holo-modal-content.theme-02 .holo-header { background: rgba(255, 0, 60, 0.1); border-bottom-color: var(--color-02-red); }
+.holo-modal-content.theme-02 .holo-title { color: var(--color-02-red); text-shadow: 0 0 10px rgba(255, 0, 60, 0.5); }
+.holo-modal-content.theme-02 #dynamicContent h2 { color: var(--color-02-red); text-shadow: 0 0 15px rgba(255, 0, 60, 0.5); border-bottom-color: rgba(255, 0, 60, 0.3); }
+
+/* Modal Tema 03 (Cyan) */
+.holo-modal-content.theme-03 { border-color: var(--color-03-cyan); box-shadow: 0 0 50px rgba(0, 243, 255, 0.4), inset 0 0 20px rgba(0, 243, 255, 0.2); }
+.holo-modal-content.theme-03 .holo-header { background: rgba(0, 243, 255, 0.1); border-bottom-color: var(--color-03-cyan); }
+.holo-modal-content.theme-03 .holo-title { color: var(--color-03-cyan); text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); }
+.holo-modal-content.theme-03 #dynamicContent h2 { color: var(--color-03-cyan); text-shadow: 0 0 15px rgba(0, 243, 255, 0.5); border-bottom-color: rgba(0, 243, 255, 0.3); }
+.holo-modal-content.theme-03 .modal-btn { border-color: var(--color-03-cyan); color: var(--color-03-cyan); }
+.holo-modal-content.theme-03 .modal-btn:hover { background: var(--color-03-cyan); color: #000; box-shadow: 0 0 20px rgba(0, 243, 255, 0.5); }
+
+/* Modal Tema 04 (Morado) */
+.holo-modal-content.theme-04 { border-color: var(--color-04-purple); box-shadow: 0 0 50px rgba(176, 38, 255, 0.4), inset 0 0 20px rgba(176, 38, 255, 0.2); }
+.holo-modal-content.theme-04 .holo-header { background: rgba(176, 38, 255, 0.1); border-bottom-color: var(--color-04-purple); }
+.holo-modal-content.theme-04 .holo-title { color: var(--color-04-purple); text-shadow: 0 0 10px rgba(176, 38, 255, 0.5); }
+.holo-modal-content.theme-04 #dynamicContent h2 { color: var(--color-04-purple); text-shadow: 0 0 15px rgba(176, 38, 255, 0.5); border-bottom-color: rgba(176, 38, 255, 0.3); }
+
+/* Modal Tema 05 (Naranja) */
+.holo-modal-content.theme-05 { border-color: var(--color-05-orange); box-shadow: 0 0 50px rgba(255, 106, 0, 0.4), inset 0 0 20px rgba(255, 106, 0, 0.2); }
+.holo-modal-content.theme-05 .holo-header { background: rgba(255, 106, 0, 0.1); border-bottom-color: var(--color-05-orange); }
+.holo-modal-content.theme-05 .holo-title { color: var(--color-05-orange); text-shadow: 0 0 10px rgba(255, 106, 0, 0.5); }
+.holo-modal-content.theme-05 #dynamicContent h2 { color: var(--color-05-orange); text-shadow: 0 0 15px rgba(255, 106, 0, 0.5); border-bottom-color: rgba(255, 106, 0, 0.3); }
+
+/* Modal Tema 06 (Verde) */
+.holo-modal-content.theme-06 { border-color: var(--color-06-green); box-shadow: 0 0 50px rgba(0, 255, 136, 0.4), inset 0 0 20px rgba(0, 255, 136, 0.2); }
+.holo-modal-content.theme-06 .holo-header { background: rgba(0, 255, 136, 0.1); border-bottom-color: var(--color-06-green); }
+.holo-modal-content.theme-06 .holo-title { color: var(--color-06-green); text-shadow: 0 0 10px rgba(0, 255, 136, 0.5); }
+.holo-modal-content.theme-06 #dynamicContent h2 { color: var(--color-06-green); text-shadow: 0 0 15px rgba(0, 255, 136, 0.5); border-bottom-color: rgba(0, 255, 136, 0.3); }
+
+
+/* =========================================
+   CICLO DE PROBLEMÁTICA (CARPETA 02)
+   ========================================= */
+.cycle-container {
+    position: relative;
+    width: 600px;
+    height: 450px;
+    margin: 2rem auto 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Anillos SVG de fondo */
+.cycle-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+/* Animación de rotación de los anillos */
+.ring-dashed {
+    transform-origin: center;
+    animation: spinCycle 25s linear infinite;
+}
+.ring-solid {
+    transform-origin: center;
+    animation: spinCycleReverse 35s linear infinite;
+}
+
+@keyframes spinCycle {
+    100% { transform: rotate(360deg); }
+}
+@keyframes spinCycleReverse {
+    100% { transform: rotate(-360deg); }
+}
+
+/* Núcleo Central */
+.cycle-core {
+    position: absolute;
+    z-index: 2;
+    width: 120px;
+    height: 120px;
+    background: rgba(255, 0, 60, 0.1);
+    border: 2px solid var(--color-02-red);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 30px rgba(255, 0, 60, 0.4), inset 0 0 20px rgba(255, 0, 60, 0.2);
+    animation: pulseCore 2s infinite alternate;
+}
+
+.cycle-core i {
+    font-size: 2rem;
+    color: var(--color-02-red);
+    margin-bottom: 5px;
+    filter: drop-shadow(0 0 10px var(--color-02-red));
+}
+
+.cycle-core span {
+    font-family: var(--font-title);
+    font-size: 0.7rem;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+@keyframes pulseCore {
+    0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 60, 0.3); }
+    100% { transform: scale(1.05); box-shadow: 0 0 40px rgba(255, 0, 60, 0.6); }
+}
+
+/* Nodos (Las 3 cajas de texto) */
+.cycle-node {
+    position: absolute;
+    width: 220px;
+    background: rgba(15, 5, 10, 0.85);
+    border: 1px solid rgba(255, 0, 60, 0.4);
+    border-left: 3px solid var(--color-02-red);
+    padding: 1rem;
+    z-index: 3;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.cycle-node h4 {
+    font-family: var(--font-title);
+    color: #ffcc00; /* Amarillo de contraste */
+    font-size: 1rem;
+    margin-bottom: 5px;
+    text-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
+}
+
+.cycle-node p {
+    font-size: 0.9rem;
+    color: #ddd;
+    margin: 0;
+    line-height: 1.3;
+}
+
+/* Posicionamiento en triángulo */
+.node-top {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.node-bottom-right {
+    bottom: 10px;
+    right: 0;
+}
+
+.node-bottom-left {
+    bottom: 10px;
+    left: 0;
+}
+
+/* --- SOLUCIÓN AL SALTO DEL HOVER --- */
+/* Aplicamos el hover por separado para no sobreescribir el translateX */
+.node-bottom-right:hover, .node-bottom-left:hover {
+    background: rgba(255, 0, 60, 0.1);
+    border-color: var(--color-02-red);
+    box-shadow: 0 0 20px rgba(255, 0, 60, 0.3);
+    transform: scale(1.05);
+}
+
+.node-top:hover {
+    background: rgba(255, 0, 60, 0.1);
+    border-color: var(--color-02-red);
+    box-shadow: 0 0 20px rgba(255, 0, 60, 0.3);
+    /* Mantenemos el translateX y le sumamos el scale */
+    transform: translateX(-50%) scale(1.05); 
+}
+
+/* --- ESTILO PARA EL ICONO QR DENTRO DE LA CAJA --- */
+.cycle-node .qr-icon-container {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--color-03-cyan); /* Cyan para que resalte sobre el fondo rojo */
+    cursor: pointer;
+    transition: all 0.3s;
+    animation: pulse-cyan 2s infinite;
+}
+
+.cycle-node .qr-icon-container:hover {
+    color: #fff;
+    transform: scale(1.2);
+    text-shadow: 0 0 15px var(--color-03-cyan);
+}
+
+@keyframes pulse-cyan {
+    0%, 100% { filter: drop-shadow(0 0 5px var(--color-03-cyan)); }
+    50% { filter: drop-shadow(0 0 15px var(--color-03-cyan)); }
+}
+
+
+/* =========================================
+   CARPETA 03: ESQUEMA DE SISTEMA (CYAN)
+   ========================================= */
+
+.sara-modal-header {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+.sara-modal-title {
+    font-family: var(--font-title);
+    font-size: 3.5rem;
+    color: #fff;
+    letter-spacing: 10px;
+    text-shadow: 0 0 20px var(--color-03-cyan);
+    margin-bottom: 5px;
+    border: none !important;
+}
+.sara-modal-subtitle {
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    color: var(--color-03-cyan);
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+    padding-bottom: 15px;
+    display: inline-block;
+}
+.sara-modal-header p {
+    font-size: 1.1rem;
+    color: #bbb;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* --- SECCIÓN DE FUSIÓN --- */
+.fusion-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem 0;
+    gap: 1rem;
+}
+
+/* Planetas */
+.globe-wrapper {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hologram-globe {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(0, 243, 255, 0.3) 0%, #020810 70%);
+    border: 1px solid var(--color-03-cyan);
+    box-shadow: 
+        inset -10px -10px 20px rgba(0,0,0,0.9), 
+        inset 10px 10px 20px rgba(0, 243, 255, 0.4), 
+        0 0 20px rgba(0, 243, 255, 0.2);
+    overflow: hidden;
+}
+
+.globe-surface {
+    position: absolute;
+    top: 0; left: 0;
+    width: 200%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(0, 243, 255, 0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.3) 1px, transparent 1px);
+    background-size: 15px 15px;
+    animation: rotateGlobe 8s linear infinite;
+}
+
+@keyframes rotateGlobe {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.globe-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    font-family: var(--font-title);
+    color: #fff;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    text-align: center;
+    text-shadow: 0 0 4px #000, 0 0 8px #000, 0 0 10px var(--color-03-cyan);
+    pointer-events: none;
+}
+
+/* Satélites */
+.orbit-satellite {
+    position: absolute;
+    top: 50%; left: 50%;
+    margin-top: -10px; margin-left: -10px;
+    font-size: 1.2rem;
+    color: var(--color-03-cyan);
+    filter: drop-shadow(0 0 8px var(--color-03-cyan));
+    animation: orbitSatellite 4s linear infinite;
+    z-index: 5;
+}
+.orbit-satellite.delay-orbit {
+    animation-duration: 5s;
+    animation-direction: reverse;
+}
+
+@keyframes orbitSatellite {
+    0% { transform: rotate(0deg) translateX(75px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(75px) rotate(-360deg); }
+}
+
+/* Líneas de Energía (Fusión) */
+.energy-flow {
+    width: 80px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.energy-flow svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.flow-line {
+    stroke-dasharray: 10;
+    animation: flowData 1.5s linear infinite;
+    filter: drop-shadow(0 0 5px var(--color-03-cyan));
+}
+
+@keyframes flowData {
+    to { stroke-dashoffset: -20; }
+}
+
+/* Núcleo Central S.A.R.A */
+.sara-core {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+/* Anillos alrededor del núcleo */
+.core-ring {
+    position: absolute;
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    border: 2px dashed var(--color-03-cyan);
+    animation: spinRing 10s linear infinite;
+    box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.3);
+}
+
+/* El Rayo (Botón Clicable) */
+.core-bolt {
+    font-size: 3rem;
+    color: #fff;
+    text-shadow: 0 0 15px var(--color-03-cyan), 0 0 30px var(--color-03-cyan);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+.core-bolt:hover {
+    transform: scale(1.3);
+    text-shadow: 0 0 25px #fff, 0 0 50px var(--color-03-cyan);
+}
+
+.fusion-text {
+    text-align: center;
+    font-family: var(--font-title);
+    font-size: 0.9rem;
+    color: var(--color-03-cyan);
+    letter-spacing: 1px;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+
+/* --- ENGRANAJES (Se mantienen igual) --- */
+.gears-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.gear-card {
+    flex: 1;
+    background: rgba(0, 243, 255, 0.05);
+    border: 1px solid rgba(0, 243, 255, 0.2);
+    padding: 1.2rem;
+    text-align: center;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    transition: all 0.3s ease;
+}
+.gear-card:hover {
+    background: rgba(0, 243, 255, 0.1);
+    border-color: var(--color-03-cyan);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+    transform: translateY(-5px);
+}
+.gear-card h4 {
+    font-family: var(--font-title);
+    color: var(--color-03-cyan);
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+.gear-card p {
+    font-size: 0.9rem;
+    color: #bbb;
+    line-height: 1.3;
+    margin: 0;
+}
+
+.gear-cluster {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 70px;
+    position: relative;
+}
+
+.gear-large {
+    font-size: 2.5rem;
+    color: var(--color-03-cyan);
+    filter: drop-shadow(0 0 10px var(--color-03-cyan));
+    animation: spinGear 6s linear infinite;
+}
+
+.gear-small {
+    position: absolute;
+    font-size: 1.5rem;
+    color: #fff;
+    filter: drop-shadow(0 0 8px #fff);
+    bottom: -5px;
+    right: 0px;
+    animation: spinGear 4s linear infinite reverse;
+}
+
+@keyframes spinGear {
+    100% { transform: rotate(360deg); }
+}
+
+/* =========================================
+   REVELACIÓN DE S.A.R.A EN EL HUD PRINCIPAL
+   ========================================= */
+.sara-main-hud {
+    position: absolute;
+    top: 2rem; /* Alineado con los paneles laterales */
+    left: 50%;
+    transform: translateX(-50%) scale(0.5); /* Centrado horizontalmente */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    z-index: 30;
+    pointer-events: none;
+}
+
+/* Clase que activa la aparición */
+.sara-main-hud.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) scale(1);
+}
+
+.sara-hud-bolt {
+    font-size: 2.5rem; /* Más pequeño para no empujar el texto */
+    color: var(--primary-cyan);
+    filter: drop-shadow(0 0 20px var(--primary-cyan));
+    margin-bottom: 5px;
+    animation: pulse 2s infinite;
+}
+
+.sara-hud-title {
+    font-family: var(--font-title);
+    font-size: 4.5rem; /* Ajustado para que no sea gigante */
+    color: #fff;
+    letter-spacing: 15px;
+    text-shadow: 0 0 20px var(--primary-cyan), 0 0 40px var(--primary-cyan);
+    margin-bottom: 5px;
+    line-height: 1;
+}
+
+.sara-hud-subtitle {
+    font-family: var(--font-title);
+    font-size: 0.9rem; 
+    color: var(--primary-cyan);
+    letter-spacing: 2px; 
+    white-space: nowrap; 
+    text-shadow: 0 0 10px var(--primary-cyan);
+    border-bottom: 2px solid var(--primary-cyan);
+    padding-bottom: 5px;
+    margin-top: 5px;
+}
+
+/* Efecto: Antamina se atenúa */
+.sara-main-hud.visible ~ .hud-center #antamina-main-logo {
+    opacity: 0.15;
+    transform: scale(1.1);
+    transition: all 1.2s ease;
+    filter: grayscale(100%) blur(2px);
+}
+
+/* =========================================
+   CARPETA 04: EVOLUCIÓN Y DESAFÍOS
+   ========================================= */
+.challenge-container {
+    margin-bottom: 2rem;
+}
+
+.challenge-title {
+    font-family: var(--font-title);
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    border-left: 3px solid var(--color-04-purple);
+    padding-left: 10px;
+}
+
+.challenge-flow {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* Cajas de Actual y Solución */
+.challenge-box {
+    flex: 1;
+    padding: 1.2rem;
+    background: rgba(10, 10, 20, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+/* Caja Actual (Problema) */
+.challenge-box.actual {
+    border-left: 3px solid var(--color-04-purple);
+    box-shadow: inset 10px 0 20px -10px rgba(139, 92, 246, 0.2);
+}
+.challenge-box.actual h4 {
+    color: var(--color-04-purple);
+    font-family: var(--font-title);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+.challenge-box.actual p {
+    color: #aaa;
+    font-size: 1rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Caja Solución (Optimización) */
+.challenge-box.solution {
+    border-left: 3px solid var(--color-03-cyan); /* Cyan para contrastar y mostrar mejora */
+    box-shadow: inset 10px 0 20px -10px rgba(0, 243, 255, 0.2);
+    background: rgba(0, 243, 255, 0.05); /* Un toque de cyan de fondo */
+}
+.challenge-box.solution h4 {
+    color: var(--color-03-cyan);
+    font-family: var(--font-title);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+.challenge-box.solution p {
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* La Flecha de Evolución */
+.challenge-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+}
+
+.evo-arrow {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 0 10px var(--color-04-purple));
+    animation: pulseArrow 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes pulseArrow {
+    0% { transform: translateY(5px) scale(0.95); filter: drop-shadow(0 0 5px var(--color-04-purple)); }
+    100% { transform: translateY(-5px) scale(1.05); filter: drop-shadow(0 0 15px var(--color-04-purple)); }
+}
+
+/* Efecto Responsive: Si la pantalla es muy chica, se pone en vertical */
+@media (max-width: 1024px) {
+    .challenge-flow {
+        flex-direction: column;
+    }
+    .challenge-arrow {
+        width: 100%;
+        transform: rotate(90deg);
+        margin: 10px 0;
+    }
+}
+
+/* =========================================
+   CARPETA 05: NOTIFICACIONES (ÁMBAR)
+   ========================================= */
+
+/* Contenedor diagonal */
+.notif-diagonal-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-left: 2rem;
+}
+
+/* Cada nodo (Círculo + Texto) */
+.notif-node {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    /* Efecto diagonal escalonado */
+    margin-left: 0;
+}
+.notif-node:nth-child(2) { margin-left: 3rem; }
+.notif-node:nth-child(3) { margin-left: 6rem; }
+
+/* El Círculo 3D */
+.notif-circle {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    /* Gradiente radial para efecto 3D */
+    background: radial-gradient(circle at 30% 30%, rgba(255, 140, 0, 0.2) 0%, rgba(10, 10, 20, 0.95) 70%);
+    border: 1px solid rgba(255, 140, 0, 0.4);
+    /* Sombras internas y externas */
+    box-shadow: 
+        inset -10px -10px 20px #000, 
+        inset 5px 5px 15px rgba(255, 140, 0, 0.2), 
+        0 0 20px rgba(255, 140, 0, 0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    z-index: 2;
+}
+
+/* Icono principal dentro del círculo */
+.main-notif-icon {
+    font-size: 2.5rem;
+    color: var(--color-05-orange);
+    filter: drop-shadow(0 0 10px var(--color-05-orange));
+    z-index: 5;
+}
+
+/* Anillos orbitando (Líneas incompletas) */
+.orbit-line {
+    position: absolute;
+    top: -5px; left: -5px; right: -5px; bottom: -5px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: var(--color-05-orange);
+    border-right-color: rgba(255, 140, 0, 0.2);
+    animation: orbitSpin 3s linear infinite;
+}
+.orbit-line.line-2 {
+    top: -12px; left: -12px; right: -12px; bottom: -12px;
+    border-width: 1px;
+    border-top-color: transparent;
+    border-bottom-color: var(--color-05-orange);
+    border-left-color: rgba(255, 140, 0, 0.3);
+    animation-duration: 5s;
+    animation-direction: reverse;
+}
+.orbit-line.reverse {
+    animation-direction: reverse;
+}
+.orbit-line.line-2.reverse {
+    animation-direction: normal;
+}
+
+@keyframes orbitSpin {
+    100% { transform: rotate(360deg); }
+}
+
+/* Badge de "50 notificaciones" */
+.notif-badge {
+    position: absolute;
+    top: 0; right: 0;
+    background: #ff003c; /* Rojo alerta */
+    color: #fff;
+    font-family: var(--font-title);
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ff003c;
+    z-index: 6;
+    animation: badgePulse 1.5s infinite alternate;
+}
+
+@keyframes badgePulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.1); }
+}
+
+/* Candado para Notificación Persistente */
+.lock-icon {
+    position: absolute;
+    bottom: 10px; right: 10px;
+    font-size: 1rem;
+    color: #fff;
+    filter: drop-shadow(0 0 5px #fff);
+    z-index: 6;
+}
+
+/* Texto al lado del círculo */
+.notif-text {
+    flex: 1;
+    background: rgba(255, 140, 0, 0.05);
+    border-left: 2px solid var(--color-05-orange);
+    padding: 1rem;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+}
+.notif-text h4 {
+    font-family: var(--font-title);
+    color: var(--color-05-orange);
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+.notif-text p {
+    font-size: 0.95rem;
+    color: #bbb;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* --- Efecto para el círculo clickeable (Cultura y Respuesta) --- */
+.clickable-circle {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.clickable-circle:hover {
+    transform: scale(1.1);
+    box-shadow: 
+        inset -10px -10px 20px #000, 
+        inset 5px 5px 15px rgba(255, 140, 0, 0.4), 
+        0 0 30px rgba(255, 140, 0, 0.4);
+    border-color: var(--color-05-orange);
+}
+
+.sara-bolt-pulse {
+    color: #fff; /* Rayo blanco para que resalte */
+    text-shadow: 0 0 15px var(--color-05-orange), 0 0 30px var(--color-05-orange);
+    animation: pulseBolt 2s infinite alternate;
+}
+
+@keyframes pulseBolt {
+    0% { transform: scale(1); filter: drop-shadow(0 0 5px var(--color-05-orange)); }
+    100% { transform: scale(1.15); filter: drop-shadow(0 0 20px var(--color-05-orange)); }
+}
+
+/* =========================================
+   CARPETA 06: CUADROS SUPERIORES (SEGURIDAD)
+   ========================================= */
+
+/* Contenedor de los dos cuadros */
+.sec-top-container {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Estilo base del cuadro (Esquinas curvas y fondo cristal) */
+.sec-card {
+    flex: 1;
+    background: rgba(0, 255, 136, 0.05); /* Fondo verde muy sutil */
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    border-radius: 20px; /* Esquinas curvas */
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+}
+
+/* Animación para que floten suavemente */
+.floating-card { 
+    animation: floatCard 4s ease-in-out infinite; 
+}
+.delay-card { 
+    animation-delay: 2s; 
+}
+
+@keyframes floatCard {
+    0%, 100% { 
+        transform: translateY(0); 
+        box-shadow: 0 0 15px rgba(0, 255, 136, 0.1); 
+    }
+    50% { 
+        transform: translateY(-8px); 
+        box-shadow: 0 0 30px rgba(0, 255, 136, 0.3); 
+    }
+}
+
+/* Iconos brillantes */
+.sec-icon {
+    font-size: 2.5rem;
+    color: var(--color-06-green);
+    margin-bottom: 10px;
+    filter: drop-shadow(0 0 10px var(--color-06-green));
+}
+
+/* Título y texto dentro de los cuadros */
+.sec-card h4 {
+    font-family: var(--font-title);
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.sec-card p {
+    font-size: 0.95rem;
+    color: #bbb;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* =========================================
+   CARPETA 06: SIMULADOR DE REDUNDANCIA V6
+   ========================================= */
+
+.sim-stage {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    margin-top: 1rem;
+    overflow: hidden;
+}
+
+/* El Mundo: Origen exacto en el centro */
+.sim-world {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1); 
+}
+
+/* Estados de centrado */
+.sim-world.state-1 { transform: translateX(-125px); } 
+.sim-world.state-2 { transform: translateX(-375px); } 
+
+/* SVG de líneas (Corregido con tamaño fijo) */
+.lines-svg {
+    position: absolute;
+    top: -200px; /* Coincide con el viewBox Y */
+    left: -100px; /* Coincide con el viewBox X */
+    width: 1000px; /* Ancho del viewBox */
+    height: 500px; /* Alto del viewBox */
+    pointer-events: none;
+    overflow: visible;
+}
+
+/* Animación de dibujo lenta (2s) */
+.draw-path {
+    fill: none;
+    stroke: var(--color-06-green);
+    stroke-width: 3;
+    stroke-dasharray: 800;
+    stroke-dashoffset: 800;
+    transition: stroke-dashoffset 2s ease-in-out;
+    filter: drop-shadow(0 0 5px var(--color-06-green));
+}
+.draw-path.drawn { stroke-dashoffset: 0; }
+
+/* Nodos */
+.sim-node {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 20, 10, 0.95); /* Fondo más sólido para tapar la línea por detrás */
+    border: 2px solid var(--color-06-green);
+    border-radius: 15px;
+    color: var(--color-06-green);
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+    transition: all 0.4s ease;
+    transform: translate(-50%, -50%);
+    z-index: 10; /* Por encima de las líneas SVG */
+}
+
+.sim-node i { font-size: 1.5rem; margin-bottom: 5px; }
+.sim-node span { font-family: var(--font-title); font-size: 0.75rem; text-align: center; font-weight: bold; }
+
+/* API: En el centro (0,0) */
+.api-node {
+    left: 0px; top: 0px;
+    width: 90px; height: 90px; border-radius: 50%;
+}
+
+/* Motores: A la derecha (X=250) */
+.motor-node {
+    left: 250px; width: 80px; height: 80px;
+    opacity: 0; visibility: hidden;
+}
+#motor-1 { top: -100px; }
+#motor-2 { top: 0px; }
+#motor-3 { top: 100px; }
+.motor-node.appear { opacity: 1; visibility: visible; }
+
+/* Keraunos: Más a la derecha (X=500) */
+#operator-keraunos {
+    left: 500px; top: 0px;
+    width: 110px; height: 110px; border-radius: 50%;
+    opacity: 0; visibility: hidden;
+}
+#operator-keraunos.appear { opacity: 1; visibility: visible; }
+
+/* StrikeGuard: AÚN MÁS A LA DERECHA (X=750, Y=0) */
+#operator-strike {
+    left: 750px; top: 0px; 
+    width: 110px; height: 110px; border-radius: 50%;
+    border-color: #00f3ff; color: #00f3ff; box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+    opacity: 0; visibility: hidden;
+}
+#operator-strike.appear { opacity: 1; visibility: visible; }
+
+/* Fallos */
+.sim-node.disabled { filter: grayscale(100%) brightness(0.3); pointer-events: none; }
+.red-cross {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 4rem; color: #ff003c; opacity: 0; transform: scale(0.5);
+    transition: all 0.3s ease; text-shadow: 0 0 20px #ff003c; pointer-events: none;
+}
+.sim-node.disabled .red-cross { opacity: 1; transform: scale(1); }
+
+.text-green {
+    color: var(--color-06-green) !important;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+/* =========================================
+   AMBIENTACIÓN DE FONDO (LUCES Y NIEBLA)
+   ========================================= */
+
+/* 1. Luz Radial Central (Ilumina el fondo desde el centro) */
+#ambient-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.08) 0%, rgba(10, 15, 30, 0.6) 40%, var(--bg-color) 70%);
+    z-index: 0; /* Detrás de todo */
+    pointer-events: none;
+}
+
+/* 2. Rejilla Holográfica (Textura de fondo) */
+#hud-grid {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+        linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    background-position: center center;
+    z-index: 0;
+    pointer-events: none;
+    /* Máscara para que la cuadrícula se desvanezca en los bordes */
+    mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+}
+
+/* 3. Niebla / Humo Inferior */
+.bottom-fog {
+    position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 30vh;
+    z-index: 2; /* Por encima del canvas 3D (que está en z-index 1) */
+    pointer-events: none;
+    overflow: hidden;
+    background: linear-gradient(to top, rgba(3, 3, 8, 1) 0%, rgba(3, 3, 8, 0) 100%);
+}
+
+.fog {
+    position: absolute;
+    bottom: -50px;
+    width: 600px; height: 200px;
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: driftFog linear infinite;
+}
+
+/* Niebla Cyan (como si la luz del Tajo se reflejara) */
+.fog-1 {
+    left: 10%;
+    background: rgba(0, 243, 255, 0.08);
+    animation-duration: 25s;
+}
+
+/* Niebla Gris Oscura (Humo de la mina) */
+.fog-2 {
+    right: 10%;
+    background: rgba(80, 90, 110, 0.15);
+    animation-duration: 35s;
+    animation-delay: -10s;
+}
+
+@keyframes driftFog {
+    0% { transform: translateX(0) scale(1); }
+    50% { transform: translateX(10vw) scale(1.2); }
+    100% { transform: translateX(0) scale(1); }
+}
+
+/* =========================================
+   FONDO DEGRADADO PARA LOS TÍTULOS DE CADA CARPETA
+   ========================================= */
+
+/* 01 - Amarillo */
+#panel-portada .panel-header {
+    background: linear-gradient(to bottom, rgba(255, 204, 0, 0.2) 0%, transparent 100%);
+    margin: -1.5rem -1.5rem 1rem -1.5rem; /* Estira el fondo a los bordes */
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem; /* Mantiene el texto en su lugar */
+    border-bottom: none; /* Quita la línea por defecto para que se vea más limpio */
+}
+
+/* 02 - Rojo */
+#panel-problematica .panel-header {
+    background: linear-gradient(to bottom, rgba(255, 0, 60, 0.2) 0%, transparent 100%);
+    margin: -1.5rem -1.5rem 1rem -1.5rem;
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    border-bottom: none;
+}
+
+/* 03 - Cyan */
+#panel-solucion .panel-header {
+    background: linear-gradient(to bottom, rgba(0, 243, 255, 0.2) 0%, transparent 100%);
+    margin: -1.5rem -1.5rem 1rem -1.5rem;
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    border-bottom: none;
+}
+
+/* 04 - Morado */
+#panel-hoja .panel-header {
+    background: linear-gradient(to bottom, rgba(139, 92, 246, 0.2) 0%, transparent 100%);
+    margin: -1.5rem -1.5rem 1rem -1.5rem;
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    border-bottom: none;
+}
+
+/* 05 - Naranja */
+#panel-notificaciones .panel-header {
+    background: linear-gradient(to bottom, rgba(255, 140, 0, 0.2) 0%, transparent 100%);
+    margin: -1.5rem -1.5rem 1rem -1.5rem;
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    border-bottom: none;
+}
+
+/* 06 - Verde */
+#panel-mitigacion .panel-header {
+    background: linear-gradient(to bottom, rgba(0, 255, 136, 0.2) 0%, transparent 100%);
+    margin: -1.5rem -1.5rem 1rem -1.5rem;
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    border-bottom: none;
+}
+
+/* =========================================
+   RAYOS LATERALES (CORTOS)
+   ========================================= */
+.lightning-lines-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 3; /* Por encima del fondo, por debajo de las carpetas */
+}
+
+.lightning-path {
+    fill: none;
+    stroke: #00f3ff; /* Cyan */
+    stroke-width: 3;
+    filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 15px #00f3ff);
+    /* El guion es más corto ahora (400) porque las líneas son cortas */
+    stroke-dasharray: 400; 
+    stroke-dashoffset: 400;
+    opacity: 0;
+}
+
+/* Animación que se activa con JavaScript */
+.lightning-path.strike {
+    animation: lightningStrikePath 0.5s ease-out forwards;
+}
+
+@keyframes lightningStrikePath {
+    0% { 
+        stroke-dashoffset: 400; 
+        opacity: 1; 
+    }
+    50% { 
+        stroke-dashoffset: 0; 
+        opacity: 1; 
+    }
+    100% { 
+        stroke-dashoffset: 0; 
+        opacity: 0; /* Se desvanece al final */
+    }
+}
+
+/* =========================================
+   MECANISMO DE MISTERIO: CARPETAS BLOQUEADAS
+   ========================================= */
+
+/* Ocultar el contenido cuando está bloqueado */
+.hud-panel.locked .panel-content {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Hacer que el contenido aparezca suavemente al desbloquear */
+.hud-panel .panel-content {
+    transition: opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s; 
+}
+
+/* Fondos misteriosos (Cortina) para cada carpeta */
+.hud-panel.locked {
+    transition: background 0.8s ease;
+}
+
+#panel-portada.locked { background: linear-gradient(180deg, rgba(5,5,15,0.95) 30%, rgba(255,204,0,0.15) 100%); }
+#panel-problematica.locked { background: linear-gradient(180deg, rgba(5,5,15,0.95) 30%, rgba(255,0,60,0.15) 100%); }
+#panel-solucion.locked { background: linear-gradient(180deg, rgba(5,5,15,0.95) 30%, rgba(0,243,255,0.15) 100%); }
+#panel-hoja.locked { background: linear-gradient(180deg, rgba(5,5,15,0.95) 30%, rgba(139,92,246,0.15) 100%); }
+#panel-notificaciones.locked { background: linear-gradient(180deg, rgba(5,5,15,0.95) 30%, rgba(255,140,0,0.15) 100%); }
+#panel-mitigacion.locked { background: linear-gradient(180deg, rgba(5,5,15,0.95) 30%, rgba(0,255,136,0.15) 100%); }
+
+
+/* =========================================
+   NUBES MÁS VISIBLES Y SUELO MATRIX
+   ========================================= */
+
+/* 1. Mejora de las Nubes (Más densas y visibles) */
+.cloud {
+    background: rgba(220, 230, 255, 0.25) !important; /* Aumento de opacidad */
+    filter: blur(65px) !important; /* Un poco más de difuminado para que parezcan densas */
+}
+
+/* Nube extra para llenar el centro */
+.cloud-5 {
+    width: 700px; height: 250px;
+    top: -80px; left: 60%;
+    background: rgba(0, 243, 255, 0.15) !important; /* Tono cyan, como si tuviera carga eléctrica */
+    animation-duration: 50s;
+    animation-delay: -12s;
+}
+
+/* 2. Suelo Tipo Matrix (Rejilla en movimiento) */
+.grid-floor {
+    position: absolute;
+    bottom: -20vh; /* Lo bajamos un poco para que empiece más abajo */
+    left: -50%;
+    width: 200%;
+    height: 80vh;
+    
+    /* Creación de las líneas de la rejilla */
+    background-image: 
+        linear-gradient(rgba(0, 243, 255, 0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.3) 1px, transparent 1px);
+    background-size: 60px 60px;
+    
+    /* Efecto 3D: Inclinamos el plano hacia atrás */
+    transform: perspective(600px) rotateX(75deg);
+    transform-origin: top center;
+    
+    /* Animación para que se mueva hacia nosotros */
+    animation: moveGrid 2.5s linear infinite;
+    
+    z-index: 1; /* Justo por encima del fondo, por debajo del canvas 3D */
+    pointer-events: none;
+    
+    /* Máscara para que la rejilla se desvanezca en el horizonte y no tape el centro */
+    mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 100%);
+    
+    /* Brillo sutil para las líneas */
+    box-shadow: 0 0 100px rgba(0, 243, 255, 0.1) inset;
+}
+
+/* La animación que simula el movimiento del suelo */
+@keyframes moveGrid {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 60px; } /* Se mueve exactamente el tamaño de un cuadro */
+}
+
+/* Ajuste para que la niebla inferior cubra la base del suelo y no se corte feo */
+.bottom-fog {
+    z-index: 2 !important; 
+    height: 35vh !important;
+}
+
+
+/* =========================================
+   AJUSTES CARPETA 01 (PLANETAS Y FLECHAS)
+   ========================================= */
+
+/* Contenedor de planetas específico para la Carpeta 01 (Lado a lado y centrados) */
+.globes-container.flow-globes {
+    display: flex;
+    flex-direction: row;      /* Asegura que vayan en fila */
+    justify-content: center;  /* Los centra horizontalmente */
+    align-items: center;      /* Los alinea al centro verticalmente */
+    width: 100%;              /* Ocupa todo el ancho disponible */
+    gap: 6rem;                /* Separación entre ellos */
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+/* --- TEMATIZACIÓN AMARILLA PARA LOS PLANETAS EN CARPETA 01 --- */
+.holo-modal-content.theme-01 .hologram-globe {
+    border-color: var(--color-01-yellow);
+    background: radial-gradient(circle at 30% 30%, rgba(255, 204, 0, 0.3) 0%, #020810 70%);
+    box-shadow: 
+        inset -10px -10px 20px rgba(0,0,0,0.9), 
+        inset 10px 10px 20px rgba(255, 204, 0, 0.4), 
+        0 0 20px rgba(255, 204, 0, 0.2);
+}
+
+.holo-modal-content.theme-01 .globe-surface {
+    background-image: 
+        linear-gradient(rgba(255, 204, 0, 0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 204, 0, 0.3) 1px, transparent 1px);
+}
+
+.holo-modal-content.theme-01 .orbit-satellite,
+.holo-modal-content.theme-01 .globe-text {
+    color: var(--color-01-yellow);
+    filter: drop-shadow(0 0 8px var(--color-01-yellow));
+    text-shadow: 0 0 4px #000, 0 0 8px #000, 0 0 10px var(--color-01-yellow);
+}
+
+/* --- NUEVAS FLECHAS NORMALES --- */
+.flow-arrow.normal-arrow {
+    width: auto;
+    height: auto;
+    padding: 0 1rem;
+}
+
+.flow-arrow.normal-arrow i {
+    font-size: 2.5rem;
+    color: var(--color-01-yellow);
+    filter: drop-shadow(0 0 10px var(--color-01-yellow));
+    /* Animación de pulso para que parezca que fluyen los datos */
+    animation: pulseArrowFlow 1.5s infinite alternate;
+}
+
+@keyframes pulseArrowFlow {
+    0% { transform: translateX(-5px); opacity: 0.7; }
+    100% { transform: translateX(5px); opacity: 1; }
+}
+
+/* =========================================
+   MODAL PEQUEÑO Y EFECTO TERMINAL (CARPETA 01)
+   ========================================= */
+
+/* Modificador para hacer el modal más pequeño */
+.holo-modal-content.small-modal {
+    height: auto;
+    min-height: 250px;
+    max-width: 700px; /* Más angosto que el modal normal */
+    margin: auto;
+}
+
+/* Ventana tipo consola */
+.terminal-window {
+    padding: 2rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5); /* Fondo un poco más oscuro dentro del modal */
+}
+
+/* Texto de la terminal */
+.terminal-text {
+    font-family: 'Courier New', Courier, monospace; /* Fuente tipo código */
+    font-size: 1.4rem;
+    color: var(--color-01-yellow); /* Texto Amarillo */
+    line-height: 1.6;
+    text-shadow: 0 0 8px rgba(255, 204, 0, 0.6);
+    margin: 0;
+}
+
+/* Cursor parpadeante */
+.typewriter-cursor {
+    display: inline-block;
+    color: var(--color-01-yellow);
+    font-weight: bold;
+    animation: blinkCursor 0.8s infinite;
+    margin-left: 5px;
+}
+
+@keyframes blinkCursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* =========================================
+   MODAL PEQUEÑO (NIDO) PARA LOS PLANETAS
+   ========================================= */
+.planet-modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Oscurece un poco el fondo */
+    backdrop-filter: blur(4px);
+    z-index: 3000; /* MAYOR que el modal grande (2000) para que salga adelante */
+    justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;
+}
+
+.planet-modal-overlay.active { display: flex; opacity: 1; }
+
+.planet-modal-content {
+    width: 90%; max-width: 750px;
+    background: rgba(5, 5, 15, 0.95);
+    border: 2px solid var(--color-01-yellow);
+    box-shadow: 0 0 40px rgba(255, 204, 0, 0.3), inset 0 0 20px rgba(255, 204, 0, 0.1);
+    position: relative;
+    transform: scale(0.9) translateY(20px);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+}
+
+.planet-modal-overlay.active .planet-modal-content { transform: scale(1) translateY(0); }
+
+.planet-modal-body {
+    padding: 3rem 2rem;
+    text-align: center; /* Texto Centrado */
+}
+
+.planet-text {
+    font-family: var(--font-body); /* Fuente de la interfaz (Rajdhani) */
+    font-size: 1.6rem;
+    color: #fff;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.typewriter-cursor {
+    display: inline-block;
+    color: var(--color-01-yellow);
+    font-weight: bold;
+    animation: blinkCursor 0.8s infinite;
+    margin-left: 5px;
+}
+
+@keyframes blinkCursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* =========================================
+   BOTÓN SOS (ALERTA MANUAL)
+   ========================================= */
+#sos-button {
+    position: absolute;
+    bottom: 20%; /* Ajusta esta altura si lo quieres más abajo o arriba */
+    left: 50%;
+    /* Empieza oculto, pequeño y transparente */
+    transform: translateX(-50%) scale(0.5);
+    opacity: 0;
+    visibility: hidden;
+    
+    background: rgba(255, 0, 60, 0.1);
+    border: 2px solid #ff003c;
+    color: #ff003c;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    padding: 15px 50px;
+    border-radius: 50px; /* Bordes redondeados */
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255, 0, 60, 0.5), inset 0 0 20px rgba(255, 0, 60, 0.2);
+    text-shadow: 0 0 10px #ff003c;
+    
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 40; /* Por encima de los anillos */
+    transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Clase que activa la aparición */
+#sos-button.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) scale(1);
+    animation: pulseSOS 1.5s infinite alternate;
+}
+
+#sos-button:hover {
+    background: #ff003c;
+    color: #000;
+    box-shadow: 0 0 50px #ff003c, inset 0 0 10px #fff;
+}
+
+/* Animación de pulso (Latido de emergencia) */
+@keyframes pulseSOS {
+    0% { 
+        box-shadow: 0 0 20px rgba(255, 0, 60, 0.5), inset 0 0 20px rgba(255, 0, 60, 0.2); 
+        transform: translateX(-50%) scale(1);
+    }
+    100% { 
+        box-shadow: 0 0 40px rgba(255, 0, 60, 0.9), inset 0 0 30px rgba(255, 0, 60, 0.6); 
+        transform: translateX(-50%) scale(1.05);
+    }
+}
+
+/* =========================================
+   BOTÓN SOS (ALERTA MANUAL)
+   ========================================= */
+#sos-button {
+    position: absolute;
+    bottom: 20%; /* Posición vertical debajo del logo */
+    left: 50%;
+    
+    /* Estado inicial: Oculto y pequeño */
+    transform: translateX(-50%) scale(0.5);
+    opacity: 0;
+    visibility: hidden;
+    
+    background: rgba(255, 0, 60, 0.1);
+    border: 2px solid #ff003c;
+    color: #ff003c;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    padding: 15px 50px;
+    border-radius: 50px; 
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255, 0, 60, 0.5), inset 0 0 20px rgba(255, 0, 60, 0.2);
+    text-shadow: 0 0 10px #ff003c;
+    
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 40; /* Por encima de los anillos */
+    transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Clase que activa la aparición desde JavaScript */
+#sos-button.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) scale(1);
+    animation: pulseSOS 1.5s infinite alternate;
+}
+
+#sos-button:hover {
+    background: #ff003c;
+    color: #000;
+    box-shadow: 0 0 50px #ff003c, inset 0 0 10px #fff;
+}
+
+/* Animación de pulso (Latido de emergencia) */
+@keyframes pulseSOS {
+    0% { 
+        box-shadow: 0 0 20px rgba(255, 0, 60, 0.5), inset 0 0 20px rgba(255, 0, 60, 0.2); 
+        transform: translateX(-50%) scale(1);
+    }
+    100% { 
+        box-shadow: 0 0 40px rgba(255, 0, 60, 0.9), inset 0 0 30px rgba(255, 0, 60, 0.6); 
+        transform: translateX(-50%) scale(1.05);
+    }
+}

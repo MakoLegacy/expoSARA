@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.A.R.A. - Interfaz HUD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <canvas id="mineCanvas"></canvas>
+
+    <!-- NUEVOS FONDOS DE AMBIENTACIÓN -->
+    <div id="ambient-bg"></div> 
+    <div id="hud-grid"></div>   
+    
+    <!-- NUEVO: Suelo tipo Matrix -->
+    <div class="grid-floor"></div>
+
+    <div class="bottom-fog">    
+        <div class="fog fog-1"></div>
+        <div class="fog fog-2"></div>
+    </div>
+
+    <!-- NUEVA CAPA DE NUBES DE TORMENTA -->
+    <div class="storm-clouds">
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="cloud cloud-3"></div>
+        <div class="cloud cloud-4"></div>
+        <div class="cloud cloud-5"></div> <!-- Nube extra -->
+    </div>
+
+    <!-- NUEVO: Capa de Rayos Laterales -->
+    <svg id="lightning-overlay" class="lightning-lines-layer" viewBox="0 0 1920 1080" preserveAspectRatio="none">
+        <!-- Rayo Izquierdo Arriba -->
+        <path class="lightning-path" d="M 0 220 L 50 200 L 90 250 L 150 210 L 200 280 L 280 250" />
+        <!-- Rayo Izquierdo Abajo -->
+        <path class="lightning-path" d="M 0 750 L 60 780 L 110 720 L 180 770 L 240 730 L 310 780" />
+        <!-- Rayo Derecho Arriba -->
+        <path class="lightning-path" d="M 1920 220 L 1870 200 L 1830 250 L 1770 210 L 1720 280 L 1640 250" />
+        <!-- Rayo Derecho Abajo -->
+        <path class="lightning-path" d="M 1920 750 L 1860 780 L 1810 720 L 1740 770 L 1680 730 L 1610 780" />
+    </svg>
+
+    <!-- NUEVOS FONDOS DE AMBIENTACIÓN -->
+    <div id="ambient-bg"></div> <!-- Luz radial central -->
+    <div id="hud-grid"></div>   <!-- Rejilla de fondo -->
+    <div class="bottom-fog">    <!-- Niebla inferior -->
+        <div class="fog fog-1"></div>
+        <div class="fog fog-2"></div>
+    </div>
+
+    <!-- NUEVA CAPA DE NUBES DE TORMENTA -->
+    <div class="storm-clouds">
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="cloud cloud-3"></div>
+        <div class="cloud cloud-4"></div>
+    </div>
+    <div id="lightning-flash"></div>
+    <div class="scanlines"></div>
+
+    <div id="intro-screen" onclick="startSystem()">
+        <div class="intro-content">
+            <i class="fa-solid fa-satellite-dish intro-icon"></i>
+            <h1>SISTEMA S.A.R.A</h1>
+            <p>[ ESPERANDO ENLACE NEURAL ]</p>
+            <div class="intro-btn">INICIAR PROTOCOLO</div>
+        </div>
+    </div>
+
+    <div id="hud-dashboard" class="hidden">
+
+                <!-- NUEVO: Logo S.A.R.A (Oculto inicialmente) -->
+                <div class="sara-main-hud" id="sara-main-hud">
+                    <i class="fa-solid fa-bolt sara-hud-bolt"></i>
+                    <h1 class="sara-hud-title">S.A.R.A</h1>
+                    <h2 class="sara-hud-subtitle">SISTEMA DE ALERTA DE RAYOS ANTAMINA</h2>
+                </div>
+        
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="hud-column left">
+            <!-- Añadimos onclick="openPanelModal('01')" a cada panel -->
+            <div class="hud-panel locked" id="panel-portada" onclick="openPanelModal('01')">
+                <div class="panel-header"><span class="panel-num">01</span> SITUACIÓN</div>
+                <div class="panel-content">
+                    <h2>CENTRO DE CONTROL</h2>
+                    <p>Área encargada de informar las alertas de Tormentas Eléctricas</p>
+                </div>
+                <div class="hud-decorations"></div>
+            </div>
+            
+            <div class="hud-panel alert-panel locked" id="panel-problematica" onclick="openPanelModal('02')">
+                <div class="panel-header"><span class="panel-num">02</span> PROBLEMÁTICA</div>
+                <div class="panel-content">
+                    <h3 class="text-red"><i class="fa-solid fa-triangle-exclamation"></i> CAOS EN EL CENTRO DE CONTROL</h3>
+                    <p>Dudas del personal por el speech largo emitido.</p>
+                </div>
+                <div class="hud-decorations"></div>
+            </div>
+
+            <div class="hud-panel locked" id="panel-solucion" onclick="openPanelModal('03')">
+                <div class="panel-header"><span class="panel-num">03</span> PROPUESTA</div>
+                <div class="panel-content" style="text-align: center;">
+                    <h3>S.A.R.A</h3>
+                    <p>SISTEMA DE ALERTA DE RAYOS ANTAMINA</p>
+                </div>
+                <div class="hud-decorations"></div>
+            </div>
+        </div>
+
+        <!-- CENTRO -->
+        <div class="hud-center">
+            <div class="center-hologram">
+                <div class="scanning-ring ring-1"></div>
+                <div class="scanning-ring ring-2"></div>
+                <div class="scanning-ring ring-3"></div>
+                <div class="holo-logo-svg">
+                    <svg viewBox="0 0 400 260" width="100%" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <!-- Máscara 1: Encierra los anillos dentro de la montaña -->
+                            <clipPath id="mountainShape">
+                                <!-- Hombro izquierdo sutil y ladera más recostada al centro -->
+                                <path d="M 60 180 L 100 100 Q 160 90 135 85 L 170 40 Q 190 15 210 30 L 265 90 Q 285 100 300 120 L 340 180 Z" />
+                            </clipPath>
+                            <!-- Máscara 2: Hace el corte diagonal a la izquierda de los anillos -->
+                            <clipPath id="leftCut">
+                                <polygon points="110,180 80,80 400,80 400,180" />
+                            </clipPath>
+                        </defs>
+
+                        <!-- 1. Silueta de la montaña (Contorno Cyan Neón) -->
+                        <path d="M 60 180 L 115 90 Q 115 90 135 85 L 170 40 Q 190 15 210 30 L 265 90 Q 285 100 300 120 L 340 180 Z" 
+                              fill="transparent" stroke="currentColor" stroke-width="4" stroke-linejoin="round" />
+
+                        <!-- 2. Los 5 Anillos Concéntricos (MÁS DELGADOS: stroke-width="4") -->
+                        <g clip-path="url(#mountainShape)">
+                            <g clip-path="url(#leftCut)">
+                                <!-- Anillo 1 -->
+                                <circle cx="210" cy="180" r="20" fill="none" stroke="currentColor" stroke-width="4" />
+                                
+                                <!-- Anillo 2 -->
+                                <circle cx="210" cy="180" r="35" fill="none" stroke="currentColor" stroke-width="4" />
+                                
+                                <!-- Anillo 3 (Cortado al 70%) -->
+                                <circle cx="210" cy="180" r="49" fill="none" stroke="currentColor" stroke-width="4" pathLength="100" stroke-dasharray="70 30" transform="rotate(-165, 210, 180)" />
+                                
+                                <!-- Anillo 4 (Cortado al 70%) -->
+                                <circle cx="210" cy="180" r="66" fill="none" stroke="currentColor" stroke-width="4" pathLength="100" stroke-dasharray="70 30" transform="rotate(-160, 210, 180)" />
+                                
+                                <!-- Anillo 5 (Cortado al 70%) -->
+                                <circle cx="210" cy="180" r="84" fill="none" stroke="currentColor" stroke-width="4" pathLength="100" stroke-dasharray="70 30" transform="rotate(-155, 210, 180)" />
+                            </g>
+                        </g>
+
+                        <!-- 3. Texto ANTAMINA -->
+                        <text x="200" y="235" font-family="'Orbitron', sans-serif" font-size="38" font-weight="900" fill="currentColor" text-anchor="middle" letter-spacing="8" transform="scale(1, 1.3) translate(0, -50)">ANTAMINA</text>
+                    </svg>
+                </div>
+            </div>
+            <!-- NUEVO: BOTÓN SOS (Oculto por defecto) -->
+            <button id="sos-button" onclick="triggerSOS()" title="ACTIVAR ALERTA MANUAL">
+                <i class="fa-solid fa-tower-broadcast"></i> SOS
+            </button>
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <div class="hud-column right">
+            <div class="hud-panel locked" id="panel-hoja" onclick="openPanelModal('04')">
+                <div class="panel-header"><span class="panel-num">04</span> OPTIMIZACIÓN</div>
+                <div class="panel-content" style="text-align: center;">
+                    <h3>DESAFIOS Y RESPUESTAS</h3>
+                </div>                
+                <div class="hud-decorations"></div>
+            </div>
+            
+            <div class="hud-panel locked" id="panel-notificaciones" onclick="openPanelModal('05')">
+                <div class="panel-header"><span class="panel-num">05</span> NOTIFICACIONES</div>
+                <div class="panel-content" style="text-align: center;">
+                    <h3>SON LEIDAS O DESLIZADAS?</h3>
+                </div>  
+                <div class="hud-decorations"></div>
+            </div>
+
+            <div class="hud-panel locked" id="panel-mitigacion" onclick="openPanelModal('06')">
+                <div class="panel-header"><span class="panel-num">06</span> MITIGACIÓN DE RIESGOS</div>
+                <div class="panel-content" style="text-align: center;">
+                    <h3>PRIVACIDAD Y REDUNDANCIAS</h3>
+                </div>
+                <div class="hud-decorations"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL UNIVERSAL (Sirve para Iframes y para Contenido HTML) -->
+    <div id="holoModal" class="holo-modal-overlay">
+        <div class="holo-modal-content">
+            <div class="holo-header">
+                <span class="holo-title" id="holoTitle"><i class="fa-solid fa-satellite-dish"></i> PROYECCIÓN</span>
+                <button class="holo-close-btn" onclick="closeHoloModal()">&times;</button>
+            </div>
+            
+            <!-- Contenedor 1: Para Iframes (Keraunos, S.A.R.A) -->
+            <div class="holo-body" id="holoIframeContainer">
+                <iframe src="" class="holo-iframe" id="holoIframe" title="Interfaz"></iframe>
+            </div>
+
+            <!-- Contenedor 2: Para Contenido HTML (Slides de los Paneles) -->
+            <div class="holo-body holo-html-body hidden" id="holoHtmlContainer">
+                <!-- Aquí JavaScript inyectará el contenido -->
+                <div id="dynamicContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script src="js/mine.js"></script>
+
+    <!-- NUEVO MODAL PEQUEÑO (Para los planetas de la Carpeta 01) -->
+    <div id="planetModal" class="planet-modal-overlay">
+        <div class="planet-modal-content">
+            <div class="holo-header" style="border-color: var(--color-01-yellow); background: rgba(255, 204, 0, 0.1);">
+                <span class="holo-title" id="planetTitle" style="color: var(--color-01-yellow); text-shadow: 0 0 10px rgba(255,204,0,0.5);"><i class="fa-solid fa-satellite-dish"></i> INFORMACIÓN</span>
+                <button class="holo-close-btn" onclick="closePlanetModal()">&times;</button>
+            </div>
+            <div class="planet-modal-body">
+                <p class="planet-text"><span id="planet-typewriter-output"></span><span class="typewriter-cursor">_</span></p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
