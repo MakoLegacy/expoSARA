@@ -174,6 +174,7 @@ function moveToChapter(index) {
   gsap.to(focusTarget, { x: preset.fx, y: preset.fy, z: preset.fz, duration: reducedMotion ? 0 : 1.6, ease: "power3.inOut" });
   gsap.to(terrainGroup.rotation, { y: preset.ry, duration: reducedMotion ? 0 : 1.8, ease: "power3.inOut" });
   if (terrainMaterial) gsap.to(terrainMaterial.uniforms.uDigital, {value:preset.digital,duration:reducedMotion?0:1.8,ease:"power2.inOut"});
+  if (index > 0 && document.body.classList.contains("preview-digital")) setPreviewDigital(false);
   document.body.classList.toggle("digital-mode",index>=3);
   setActiveChapter(index);
 }
@@ -255,5 +256,51 @@ try {
   document.body.classList.add("no-webgl");
   if (readout) readout.textContent = "3D NO DISPONIBLE";
 }
+
+
+/* Photo-to-digital-twin experience.
+   Image is a visual concept asset, not a live photograph or operational map. */
+const photoStage = document.getElementById("photo-stage");
+const photoImage = document.getElementById("mine-photo");
+const modeButton = document.getElementById("hero-mode-toggle");
+function setPreviewDigital(active) {
+  if (!modeButton) return;
+  document.body.classList.toggle("preview-digital", active);
+  modeButton.classList.toggle("is-active", active);
+  modeButton.setAttribute("aria-pressed", String(active));
+  modeButton.innerHTML = active ? "VER MINA REALISTA <span>↙</span>" : "VER GEMELO DIGITAL <span>↗</span>";
+  if (terrainMaterial) gsap.to(terrainMaterial.uniforms.uDigital, {
+    value: active ? 1 : 0,
+    duration: reducedMotion ? 0 : .85,
+    overwrite: "auto"
+  });
+}
+function preparePhotoExperience() {
+  if (!photoStage || !photoImage) return;
+  const ready = () => document.body.classList.add("has-photo");
+  const failed = () => {
+    photoStage.style.visibility = "hidden";
+    document.body.classList.remove("has-photo");
+    console.warn("La fotografía de portada no está en public/assets/antamina-cinematic.webp; usando el 3D.");
+  };
+  photoImage.addEventListener("load", ready, { once: true });
+  photoImage.addEventListener("error", failed, { once: true });
+  if (photoImage.complete) {
+    if (photoImage.naturalWidth) ready();
+    else failed();
+  }
+  modeButton?.addEventListener("click", () => setPreviewDigital(!document.body.classList.contains("preview-digital")));
+  if (reducedMotion) return;
+  // Slight continuous parallax provides movement without treating the photograph as real 3D.
+  gsap.to(photoImage, {
+    scale: 1.14, xPercent: -2.7, ease: "none",
+    scrollTrigger: { trigger: "#inicio", start: "top top", end: "#capitulo-03 top", scrub: .8 }
+  });
+  gsap.fromTo(photoStage, { opacity: 1 }, {
+    opacity: 0, ease: "none",
+    scrollTrigger: { trigger: "#capitulo-03", start: "top 100%", end: "top 35%", scrub: .8 }
+  });
+}
+preparePhotoExperience();
 
 setActiveChapter(0);
