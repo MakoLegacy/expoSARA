@@ -40,7 +40,7 @@ const pointer = { x: 0, y: 0, smoothX: 0, smoothY: 0 };
 
 
 const reducedMotionFactor = reducedMotion ? 0 : 1;
-const shaderCommon = \`
+const shaderCommon = `
 uniform float uTime;
 uniform float uDigital;
 varying vec3 vWorld;
@@ -64,8 +64,8 @@ float heightAt(vec2 p){
  float core=mix(pit,outer,smoothstep(6.4,6.85,radius));
  return core+(fbm(p*2.7)-.5)*.055;
 }
-\`;
-const terrainVertex = shaderCommon + \`
+`;
+const terrainVertex = shaderCommon + `
 void main(){
  vec3 p=position;
  float h=heightAt(p.xz);
@@ -77,8 +77,8 @@ void main(){
  float b=heightAt(p.xz+vec2(0.,.045));
  vSlope=clamp(length(vec2(a-h,b-h))/.045,0.,1.);
  gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);
-}\`;
-const terrainFragment = shaderCommon + \`
+}`;
+const terrainFragment = shaderCommon + `
 void main(){
  float stone=fbm(vWorld.xz*2.8),grit=noise(vWorld.xz*14.);
  float strata=sin(vHeight*31.+stone*4.)*.07;
@@ -95,13 +95,13 @@ void main(){
  float ember=(1.-smoothstep(.0,.065,abs(fract(vHeight*2.7)-.5)))*uDigital;
  color+=vec3(1.,.19,.045)*ember*.23;
  gl_FragColor=vec4(color,1.);
-}\`;
-const lineFragment = shaderCommon + \`
+}`;
+const lineFragment = shaderCommon + `
 void main(){
  float scan=.55+.45*sin(uTime*1.4+vWorld.x*.4);
  vec3 c=mix(vec3(.5,.27,.13),vec3(.03,.7,.94),uDigital);
  gl_FragColor=vec4(c,(.06+.34*uDigital)*scan);
-}\`;
+}`;
 function createTerrain(){
  scene=new THREE.Scene();
  scene.background=new THREE.Color(0x070b10);
