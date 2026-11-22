@@ -11,7 +11,14 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <canvas id="terrain" aria-label="Visualización tridimensional topográfica del tajo"></canvas>
+  <canvas id="terrain" aria-label="Gemelo digital tridimensional ilustrativo del tajo"></canvas>
+  <!-- Photo-real opening scene; file supplied separately in the public/assets bundle. -->
+  <div id="photo-stage" class="photo-stage" aria-hidden="true">
+    <img id="mine-photo" src="/assets/antamina-cinematic.webp" alt="" fetchpriority="high" decoding="async" />
+    <div class="photo-atmosphere"></div>
+    <div class="photo-horizon"></div>
+    <div class="photo-scan"></div>
+  </div>
   <div class="scene-vignette"></div>
   <div class="scene-grain"></div>
 
@@ -47,17 +54,18 @@
           <p class="hero-description">Una mina real. Una nueva dimensión digital. Descubre cómo S.A.R.A. transforma la información de tormentas eléctricas en una visión más clara de la operación.</p>
           <div class="hero-actions">
             <a class="button-primary" href="#capitulo-01">INICIAR RECORRIDO <span>↓</span></a>
+            <button class="button-outline" type="button" id="hero-mode-toggle" aria-pressed="false">VER GEMELO DIGITAL <span>↗</span></button>
             <span class="hero-note">EXPERIENCIA INTERACTIVA <b>·</b> 3D / DATA / OPERACIÓN</span>
           </div>
         </div>
         <div class="hero-hud" aria-hidden="true">
-          <div class="hud-topline"><span>TERRAIN ENGINE</span><span class="hud-live"><i></i> REAL / DIGITAL</span></div>
-          <div class="hud-coordinates"><span>TAJO / ANTAMINA</span><b>REFERENCIA VISUAL</b></div>
+          <div class="hud-topline"><span>ANTAMINA / VISUAL CONCEPT</span><span class="hud-live"><i></i> REAL / DIGITAL</span></div>
+          <div class="hud-coordinates"><span>ESCENARIO HÍBRIDO</span><b>REAL → DIGITAL</b></div>
           <div class="hud-scale"><span>TOPOGRAPHY</span><span>TRANSFORMACIÓN 3D</span></div>
           <div class="hud-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
           <div class="hud-bottomline"><span>TOPOGRAPHIC FIELD</span><span>01 — 07</span></div>
         </div>
-        <div class="hero-scroll"><span class="scroll-line"></span> DESLIZA PARA DESCUBRIR</div>
+        <div class="hero-scroll"><span class="scroll-line"></span> DESLIZA PARA DESCUBRIR <span class="photo-disclaimer">/ RECREACIÓN VISUAL, NO CARTOGRAFÍA OPERACIONAL</span></div>
       </div>
     </section>
 
