@@ -185,3 +185,38 @@ h1 em, h2 em { color: var(--orange); font-style: normal; text-shadow: 0 0 38px r
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* V2 cinematic legibility and responsive staging */
+:root{--muted:#bcb5ae}
+.topbar-center,.topbar-link{font-size:12px}
+.eyebrow{font-size:12px;letter-spacing:.11em}
+.hero-kicker{font-size:14px}
+.hero-description{font-size:19px;max-width:610px;line-height:1.65;color:#e2dbd3}
+.hero-note,.hero-scroll,.scene-readout{font-size:11px}
+.hero h1{font-size:clamp(76px,9.1vw,142px);line-height:.91}
+.hero-copy{width:min(700px,59%)}
+.hero-hud{width:350px;bottom:11%;right:2%;padding:20px}
+.hud-topline,.hud-coordinates,.hud-scale,.hud-bottomline{font-size:10px}
+.chapter-copy p:not(.eyebrow){font-size:16px;line-height:1.8}
+.chapter-copy .lead{font-size:21px!important}
+.sensor-row p,.issue-card p,.capability-card p,.comparison-card p,.notification-list p,.resilience-card p{font-size:14px;line-height:1.65}
+.sensor-row h3,.capability-card h3,.comparison-card h3,.notification-list h3,.resilience-card h3{font-size:15px}
+.card-heading,.tag-row span,.sensor-state,.issue-card>span,.comparison-card>span,.resilience-card>span,.footnote,.flow-strip{font-size:10px}
+.rail-dot{width:32px;height:32px;font-size:10px}
+.scene-vignette{background:linear-gradient(90deg,rgba(5,8,12,.97) 0%,rgba(5,8,12,.84) 25%,rgba(5,8,12,.27) 56%,rgba(5,8,12,.16) 100%),linear-gradient(0deg,rgba(5,8,12,.85),transparent 26%,transparent 78%,rgba(5,8,12,.48))}
+.scene-grain{opacity:.055}
+.chapter{isolation:isolate}
+.chapter-copy,.hero-copy{filter:drop-shadow(0 10px 35px rgba(0,0,0,.65))}
+.digital-mode .brand-dot,.digital-mode h1 em,.digital-mode h2 em{color:#55d9ff}
+.digital-mode .progress-track #progress{background:linear-gradient(90deg,#ff753b,#40d7ff)}
+.digital-mode .rail-dot.is-active{border-color:#55d9ff;box-shadow:0 0 18px rgba(85,217,255,.45)}
+@media(max-width:760px){
+ .hero h1{font-size:clamp(64px,16vw,100px)}
+ .hero-copy{width:100%}
+ .hero-description{font-size:16px}
+ .hero-hud{display:none}
+ .eyebrow{font-size:10px}
+ .chapter-copy .lead{font-size:18px!important}
+ .chapter-copy p:not(.eyebrow){font-size:15px}
+ .scene-vignette{background:linear-gradient(90deg,rgba(5,8,12,.94),rgba(5,8,12,.56)),linear-gradient(0deg,#05080c,transparent 35%)}
+}
