@@ -45,3 +45,33 @@ Se añadió una capa fotográfica cinematográfica sobre el terreno WebGL. El de
 La imagen de concepto **no es topografía oficial ni una fotografía real**. El archivo es `public/assets/antamina-cinematic.webp` y se proporciona aparte en el paquete visual de esta iteración. Para verla en el proyecto local, coloca ese archivo exactamente en esa ubicación (sin cambiar el nombre), después ejecuta `npm.cmd run dev`. El código tiene degradación controlada: si no se encuentra el archivo, continúa mostrando la escena 3D anterior.
 
 La composición está inspirada en las fotos de referencia compartidas. El desplazamiento de la fotografía es parallax 2D; la geometría 3D real comienza al mostrar el gemelo digital. Esto **no constituye un modelo 3D exacto del estado actual de Antamina**.
+
+
+## V4 — Un solo tajo en toda la presentación
+
+Esta versión reconstruye la presentación como un recorrido de la misma imagen del tajo de Antamina, con desplazamientos y zoom continuos de tipo **cámara 2.5D** controlados por scroll. No es un modelo topográfico 3D fotogramétrico: con una sola fotografía no es posible volar físicamente dentro de toda la excavación. Se conserva el mismo escenario visual en los siete encuadres narrativos (apertura + seis capítulos).
+
+### Funciones recuperadas de la presentación original
+
+- Capítulos 01 al 06 con los temas originales, resumidos en pantallas más legibles.
+- Keraunos: enlace original https://qr.keraunos.co/t/mHMsMSjw7fLzlVFzMsh9K99cFG7tiC (capítulo 02).
+- S.A.R.A.: enlace original https://antito-yanac.github.io/sara/ (capítulos 03 y 05).
+- Información de StrikeGuard y Keraunos en diálogos accesibles.
+- Simulación interactiva de redundancia del capítulo 06: falla API → tres motores (fallan por separado) → Keraunos manual → StrikeGuard manual. Incluye reiniciar la simulación.
+
+### Identidad visual
+Títulos **Orbitron**, textos **Rajdhani**; azul cyan, naranja y rojo. Se eliminó la antigua pantalla de malla azul que interrumpía el viaje visual.
+
+### Instalar/actualizar
+Desde la carpeta local:
+\`\`\`powershell
+cd C:\Users\Pc\expoSARA
+git pull --ff-only origin redesign/immersive-3d-experience
+cd experience-v2
+npm.cmd install
+npm.cmd run dev
+\`\`\`
+La imagen **public/assets/antamina-cinematic.webp** del paquete visual V3 sigue siendo necesaria: no se encuentra en la rama de GitHub. La V4 usa exactamente el mismo nombre de archivo; si ya la copiaste para la V3, no debes hacer nada más.
+
+### Verificaciones
+Ejecutar \`npm run build\`. La compilación automática de GitHub Actions verifica la sintaxis y la generación del bundle. La experiencia visual y su rendimiento deben verificarse en Chrome.
