@@ -139,10 +139,17 @@ const strike = document.querySelector("#strike-final");
 const status = document.querySelector("#sim-status");
 const connectors = Object.fromEntries([...document.querySelectorAll("[data-link]")].map(el => [el.dataset.link,el]));
 let fallback = {};
+let simGeneration = 0;
+function delayedActivation(node, delay) {
+  const generation = simGeneration;
+  if (reduced) activateNode(node);
+  else gsap.delayedCall(delay, () => { if (generation === simGeneration) activateNode(node); });
+}
 function setStatus(message) { if (status) status.textContent = message; }
 function failNode(node) { node.classList.remove("active"); node.classList.add("failed"); node.querySelector("small").textContent="FUERA DE SERVICIO"; if(node.tagName==="BUTTON")node.disabled=true; }
 function activateNode(node){node.classList.add("active"); if(node.tagName==="BUTTON")node.disabled=false;}
 function resetFallback() {
+  simGeneration++;
   fallback = { api:false, motors:[false,false,false], keraunos:false };
   [api,...motors,keraunos,strike].forEach(node => {
     node.classList.remove("active","failed");
@@ -159,8 +166,7 @@ api?.addEventListener("click", () => {
   failNode(api);
   connectors["api-motors"].classList.add("on");
   motors.forEach((motor,i) => {
-    if (reduced) activateNode(motor);
-    else gsap.delayedCall(.18 + i*.21, () => activateNode(motor));
+    delayedActivation(motor, .18 + i*.21);
   });
   setStatus("API fuera de servicio. Motores 01, 02 y 03 disponibles: simula la falla de los tres.");
 });
@@ -171,7 +177,7 @@ motors.forEach((motor,i) => motor.addEventListener("click", () => {
   const count=fallback.motors.filter(Boolean).length;
   if(count===3){
     connectors["motors-keraunos"].classList.add("on");
-    if(reduced)activateNode(keraunos); else gsap.delayedCall(.35,()=>activateNode(keraunos));
+    delayedActivation(keraunos, .35);
     setStatus("Los tres motores fallaron. El respaldo pasa a Keraunos manual.");
   }else setStatus(count+" de 3 motores fuera de servicio. Sigue probando los motores activos.");
 }));
@@ -180,7 +186,7 @@ keraunos?.addEventListener("click", () => {
   fallback.keraunos = true;
   failNode(keraunos);
   connectors["keraunos-strike"].classList.add("on");
-  if(reduced)activateNode(strike); else gsap.delayedCall(.35,()=>activateNode(strike));
+  delayedActivation(strike, .35);
   setStatus("Keraunos manual fuera de servicio. Último respaldo: StrikeGuard manual.");
 });
 document.querySelector("#reset-sim")?.addEventListener("click", resetFallback);
