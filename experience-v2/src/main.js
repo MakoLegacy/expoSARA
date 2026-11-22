@@ -38,213 +38,143 @@ let particles;
 let focusTarget = new THREE.Vector3(0, -0.7, 0);
 const pointer = { x: 0, y: 0, smoothX: 0, smoothY: 0 };
 
-const noiseFunctions = `
-float hash21(vec2 p) {
-  p = fract(p * vec2(123.34, 456.21));
-  p += dot(p, p + 45.32);
-  return fract(p.x * p.y);
-}
-float noise2(vec2 p) {
-  vec2 i = floor(p);
-  vec2 f = fract(p);
-  f = f * f * (3.0 - 2.0 * f);
-  float a = hash21(i);
-  float b = hash21(i + vec2(1.0, 0.0));
-  float c = hash21(i + vec2(0.0, 1.0));
-  float d = hash21(i + vec2(1.0, 1.0));
-  return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
-}
-float fbm(vec2 p) {
-  float v = 0.0;
-  float a = 0.5;
-  for (int i = 0; i < 4; i++) {
-    v += noise2(p) * a;
-    p *= 2.03;
-    a *= 0.5;
-  }
-  return v;
-}
-float terrainHeight(vec2 p) {
-  float r = length(p);
-  float rim = 5.75 + (fbm(p * 0.24) - 0.5) * 0.34;
-  float depth = max(rim - r, 0.0);
-  float benches = floor(depth * 2.05);
-  float pit = -0.12 - benches * 0.27 + (fbm(p * 0.7) - 0.5) * 0.11;
-  float outer = 0.12 * sin(p.x * 0.58) * cos(p.y * 0.46) + (fbm(p * 0.42) - 0.5) * 0.32;
-  float blend = 1.0 - smoothstep(rim - 0.08, rim + 0.12, r);
-  return mix(outer, pit, blend);
-}
-`;
 
-const vertexShader = `
+const reducedMotionFactor = reducedMotion ? 0 : 1;
+const shaderCommon = \`
 uniform float uTime;
+uniform float uDigital;
+varying vec3 vWorld;
 varying float vHeight;
-varying float vRadius;
-varying vec2 vLocal;
-` + noiseFunctions + `
-void main() {
-  vec3 p = position;
-  float h = terrainHeight(p.xz);
-  float ripple = sin(p.x * 0.8 + uTime * 0.22) * cos(p.z * 0.7 - uTime * 0.18) * 0.025;
-  p.y = h + ripple;
-  vHeight = h;
-  vRadius = length(p.xz);
-  vLocal = p.xz;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+varying float vBench;
+varying float vSlope;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=noise(p)*a;p*=2.03;a*=.5;}return v;}
+float heightAt(vec2 p){
+ vec2 q=p+vec2(.36*sin(p.y*.25),.24*cos(p.x*.31));
+ float r=length(q*vec2(.91,1.07));
+ float jag=(fbm(q*.48)-.5)*.48 + sin(atan(q.y,q.x)*13.)*.07;
+ float radius=r+jag;
+ float depth=max(0.,6.6-radius);
+ float bench=floor(depth*1.8);
+ float local=fract(depth*1.8);
+ float terrace=bench*.36 + smoothstep(.76,.97,local)*.36;
+ float pit=-terrace;
+ float outer= .26*fbm(p*.42)+.12*sin(p.x*.45)*cos(p.y*.6);
+ float core=mix(pit,outer,smoothstep(6.4,6.85,radius));
+ return core+(fbm(p*2.7)-.5)*.055;
 }
-`;
-
-const surfaceFragment = `
-varying float vHeight;
-varying float vRadius;
-varying vec2 vLocal;
-void main() {
-  float band = 1.0 - smoothstep(0.015, 0.08, abs(fract((vHeight + 4.0) * 2.2) - 0.5));
-  float rimGlow = 1.0 - smoothstep(0.0, 1.0, abs(vRadius - 5.7));
-  vec3 deep = vec3(0.018, 0.018, 0.021);
-  vec3 earth = vec3(0.095, 0.038, 0.021);
-  vec3 base = mix(deep, earth, smoothstep(-3.6, 0.2, vHeight));
-  base += vec3(0.19, 0.052, 0.014) * band * 0.34;
-  base += vec3(0.15, 0.035, 0.008) * rimGlow * 0.42;
-  gl_FragColor = vec4(base, 1.0);
+\`;
+const terrainVertex = shaderCommon + \`
+void main(){
+ vec3 p=position;
+ float h=heightAt(p.xz);
+ p.y=h;
+ vHeight=h;
+ vWorld=p;
+ vBench=fract(max(0.,6.6-length(p.xz))*1.8);
+ float a=heightAt(p.xz+vec2(.045,0.));
+ float b=heightAt(p.xz+vec2(0.,.045));
+ vSlope=clamp(length(vec2(a-h,b-h))/.045,0.,1.);
+ gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);
+}\`;
+const terrainFragment = shaderCommon + \`
+void main(){
+ float stone=fbm(vWorld.xz*2.8),grit=noise(vWorld.xz*14.);
+ float strata=sin(vHeight*31.+stone*4.)*.07;
+ vec3 rock=mix(vec3(.13,.104,.087),vec3(.32,.235,.17),stone);
+ rock+=strata+grit*.045;
+ float light=clamp(.66+vSlope*.35+sin(vWorld.x*.25)*.12,0.,1.);
+ rock*=light;
+ float contour=1.-smoothstep(.015,.09,abs(fract(vHeight*2.7)-.5));
+ float gridX=1.-smoothstep(.012,.045,abs(fract(vWorld.x*.45)-.5));
+ float gridZ=1.-smoothstep(.012,.045,abs(fract(vWorld.z*.45)-.5));
+ float scan=.55+.45*sin(uTime*1.4-vWorld.x*.35);
+ vec3 digital=vec3(.012,.055,.072)+vec3(.01,.22,.29)*max(gridX,gridZ)*.48+vec3(.06,.65,.84)*contour*(.45+.55*scan);
+ vec3 color=mix(rock,digital,uDigital);
+ float ember=(1.-smoothstep(.0,.065,abs(fract(vHeight*2.7)-.5)))*uDigital;
+ color+=vec3(1.,.19,.045)*ember*.23;
+ gl_FragColor=vec4(color,1.);
+}\`;
+const lineFragment = shaderCommon + \`
+void main(){
+ float scan=.55+.45*sin(uTime*1.4+vWorld.x*.4);
+ vec3 c=mix(vec3(.5,.27,.13),vec3(.03,.7,.94),uDigital);
+ gl_FragColor=vec4(c,(.06+.34*uDigital)*scan);
+}\`;
+function createTerrain(){
+ scene=new THREE.Scene();
+ scene.background=new THREE.Color(0x070b10);
+ scene.fog=new THREE.FogExp2(0x070b10,.027);
+ camera=new THREE.PerspectiveCamera(46,innerWidth/innerHeight,.1,110);
+ camera.position.set(11.5,9.3,18.5);
+ camera.lookAt(0,-.8,0);
+ renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:"high-performance"});
+ renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.6));
+ renderer.setSize(innerWidth,innerHeight);
+ renderer.outputColorSpace=THREE.SRGBColorSpace;
+ renderer.toneMapping=THREE.ACESFilmicToneMapping;
+ renderer.toneMappingExposure=1.22;
+ terrainGroup=new THREE.Group();
+ terrainGroup.position.set(3.4,-.55,-1.3);
+ terrainGroup.rotation.y=-.24;
+ scene.add(terrainGroup);
+ const geometry=new THREE.PlaneGeometry(25,25,240,240);
+ geometry.rotateX(-Math.PI/2);
+ const uniforms={uTime:{value:0},uDigital:{value:0}};
+ terrainMaterial=new THREE.ShaderMaterial({uniforms,vertexShader:terrainVertex,fragmentShader:terrainFragment,side:THREE.DoubleSide});
+ wireMaterial=new THREE.ShaderMaterial({uniforms,vertexShader:terrainVertex,fragmentShader:lineFragment,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending});
+ const rock=new THREE.Mesh(geometry,terrainMaterial);
+ const grid=new THREE.LineSegments(new THREE.WireframeGeometry(geometry),wireMaterial);
+ grid.position.y=.012;
+ terrainGroup.add(rock,grid);
+ const rampPoints=[];
+ // A descending spiral haul-road, separate from the terraced rock surface.
+ for(let i=0;i<=320;i++){
+   const t=i/320,angle=t*Math.PI*4.1+.5,radius=6.3-t*4.8;
+   const x=Math.cos(angle)*radius,z=Math.sin(angle)*radius;
+   const y=-Math.floor((6.6-radius)*1.8)*.36+.09;
+   rampPoints.push(new THREE.Vector3(x,y,z));
+ }
+ const road=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(rampPoints),460,.065,5,false),new THREE.MeshStandardMaterial({color:0xb39468,roughness:1}));
+ road.name="haulRoad";
+ terrainGroup.add(road);
+ const points=[];
+ for(let i=0;i<470;i++)points.push((Math.random()-.5)*27,Math.random()*5-1.5,(Math.random()-.5)*27);
+ const pg=new THREE.BufferGeometry();
+ pg.setAttribute("position",new THREE.Float32BufferAttribute(points,3));
+ particles=new THREE.Points(pg,new THREE.PointsMaterial({color:0xd9a16c,size:.035,transparent:true,opacity:.38,depthWrite:false}));
+ scene.add(particles);
+ scene.add(new THREE.HemisphereLight(0x9ab7d4,0x24120d,2.2));
+ const sun=new THREE.DirectionalLight(0xffb778,3.1);
+ sun.position.set(-6,13,7);
+ scene.add(sun);
+ const fill=new THREE.DirectionalLight(0x4db9ed,1.5);
+ fill.position.set(8,5,-10);
+ scene.add(fill);
+ const gridFloor=new THREE.GridHelper(34,34,0x17465a,0x123042);
+ gridFloor.position.y=-5;
+ gridFloor.material.transparent=true;
+ gridFloor.material.opacity=.22;
+ scene.add(gridFloor);
 }
-`;
-
-const wireFragment = `
-uniform float uTime;
-varying float vHeight;
-varying float vRadius;
-varying vec2 vLocal;
-void main() {
-  float pulse = 0.5 + 0.5 * sin(uTime * 0.7 + vLocal.x * 0.18 + vLocal.y * 0.14);
-  float rim = 1.0 - smoothstep(0.0, 1.4, abs(vRadius - 5.7));
-  vec3 amber = vec3(1.0, 0.28, 0.075);
-  vec3 gold = vec3(1.0, 0.62, 0.27);
-  vec3 color = mix(amber, gold, clamp(rim * 0.65 + pulse * 0.18, 0.0, 1.0));
-  gl_FragColor = vec4(color, 0.31 + pulse * 0.16 + rim * 0.16);
-}
-`;
-
-function createTerrain() {
-  scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x08090b, 0.025);
-
-  camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(8.7, 8.8, 15.7);
-  camera.lookAt(0, -0.8, 0);
-
-  renderer = new THREE.WebGLRenderer({
-    canvas,
-    antialias: true,
-    alpha: true,
-    powerPreference: "high-performance"
-  });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.7));
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
-
-  terrainGroup = new THREE.Group();
-  terrainGroup.position.set(1.8, -0.78, -0.8);
-  terrainGroup.rotation.y = -0.24;
-  scene.add(terrainGroup);
-
-  const geometry = new THREE.PlaneGeometry(23, 23, 170, 170);
-  geometry.rotateX(-Math.PI / 2);
-  const uniforms = { uTime: { value: 0 } };
-
-  terrainMaterial = new THREE.ShaderMaterial({
-    uniforms,
-    vertexShader,
-    fragmentShader: surfaceFragment,
-    side: THREE.DoubleSide
-  });
-  wireMaterial = new THREE.ShaderMaterial({
-    uniforms,
-    vertexShader,
-    fragmentShader: wireFragment,
-    transparent: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-    side: THREE.DoubleSide
-  });
-
-  const surface = new THREE.Mesh(geometry, terrainMaterial);
-  const wire = new THREE.LineSegments(new THREE.WireframeGeometry(geometry), wireMaterial);
-  terrainGroup.add(surface, wire);
-
-  const rimGeometry = new THREE.BufferGeometry();
-  const rimPoints = [];
-  for (let ring = 0; ring < 13; ring++) {
-    const radius = 5.72 - ring * 0.43;
-    const level = -0.12 - ring * 0.27;
-    for (let i = 0; i <= 220; i++) {
-      const angle = (i / 220) * Math.PI * 2;
-      const rough = (Math.sin(angle * 5 + ring * 0.7) + Math.cos(angle * 9 - ring)) * 0.025;
-      const r = radius + rough;
-      rimPoints.push(Math.cos(angle) * r, level + 0.012, Math.sin(angle) * r);
-    }
-  }
-  rimGeometry.setAttribute("position", new THREE.Float32BufferAttribute(rimPoints, 3));
-  const contourMaterial = new THREE.LineBasicMaterial({
-    color: 0xff8a4a,
-    transparent: true,
-    opacity: 0.36,
-    blending: THREE.AdditiveBlending
-  });
-  const contourLines = new THREE.LineSegments(rimGeometry, contourMaterial);
-  terrainGroup.add(contourLines);
-
-  const particlePositions = [];
-  for (let i = 0; i < 650; i++) {
-    const x = (Math.random() - 0.5) * 26;
-    const z = (Math.random() - 0.5) * 26;
-    const y = (Math.random() * 5.5) - 2.1;
-    particlePositions.push(x, y, z);
-  }
-  const particleGeometry = new THREE.BufferGeometry();
-  particleGeometry.setAttribute("position", new THREE.Float32BufferAttribute(particlePositions, 3));
-  const particleMaterial = new THREE.PointsMaterial({
-    color: 0xff985b,
-    size: 0.035,
-    transparent: true,
-    opacity: 0.48,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending
-  });
-  particles = new THREE.Points(particleGeometry, particleMaterial);
-  scene.add(particles);
-
-  const ambient = new THREE.AmbientLight(0xff8a4a, 0.4);
-  const keyLight = new THREE.PointLight(0xff6b32, 38, 35);
-  keyLight.position.set(-5, 7, 4);
-  const rimLight = new THREE.PointLight(0xffc184, 24, 30);
-  rimLight.position.set(7, 4, -8);
-  scene.add(ambient, keyLight, rimLight);
-
-  const floor = new THREE.GridHelper(32, 44, 0x6c321d, 0x3a2118);
-  floor.position.y = -4.35;
-  floor.material.transparent = true;
-  floor.material.opacity = 0.15;
-  scene.add(floor);
-}
-
 function moveToChapter(index) {
   const presets = [
-    { x: 8.7, y: 8.8, z: 15.7, fx: 0, fy: -0.8, fz: 0, ry: -0.24 },
-    { x: 10.8, y: 7.5, z: 13.5, fx: 0, fy: -1.0, fz: 0, ry: -0.1 },
-    { x: 7.2, y: 5.4, z: 15.8, fx: 0, fy: -1.15, fz: 0, ry: 0.12 },
-    { x: 4.8, y: 4.8, z: 12.5, fx: 0, fy: -1.5, fz: 0, ry: 0.32 },
-    { x: 9.5, y: 6.0, z: 15.2, fx: 0, fy: -0.9, fz: 0, ry: -0.28 },
-    { x: 11.4, y: 7.3, z: 14.2, fx: 0, fy: -0.8, fz: 0, ry: -0.45 },
-    { x: 7.5, y: 5.4, z: 12.8, fx: 0, fy: -1.5, fz: 0, ry: 0.2 }
+    { x: 11.5, y: 9.3, z: 18.5, fx: 1.2, fy: -1.0, fz: 0, ry: -.24, digital: 0 },
+    { x: 10.8, y: 7.7, z: 15.3, fx: 1.2, fy: -1.0, fz: 0, ry: -.08, digital: 0 },
+    { x: 8.3, y: 5.7, z: 12.9, fx: 1.1, fy: -1.5, fz: 0, ry: .18, digital: .13 },
+    { x: 7.2, y: 7.5, z: 13.2, fx: 1.0, fy: -1.4, fz: 0, ry: .4, digital: 1 },
+    { x: 10.2, y: 7.2, z: 15.5, fx: 1.0, fy: -1.1, fz: 0, ry: .02, digital: 1 },
+    { x: 9.4, y: 5.6, z: 13.6, fx: 1.0, fy: -1.4, fz: 0, ry: -.2, digital: 1 },
+    { x: 11.5, y: 10.4, z: 17.6, fx: 1.0, fy: -1.0, fz: 0, ry: -.5, digital: 1 }
   ];
   const preset = presets[index] || presets[0];
   if (!camera || !terrainGroup) return;
   gsap.to(camera.position, { x: preset.x, y: preset.y, z: preset.z, duration: reducedMotion ? 0 : 1.6, ease: "power3.inOut" });
   gsap.to(focusTarget, { x: preset.fx, y: preset.fy, z: preset.fz, duration: reducedMotion ? 0 : 1.6, ease: "power3.inOut" });
   gsap.to(terrainGroup.rotation, { y: preset.ry, duration: reducedMotion ? 0 : 1.8, ease: "power3.inOut" });
+  if (terrainMaterial) gsap.to(terrainMaterial.uniforms.uDigital, {value:preset.digital,duration:reducedMotion?0:1.8,ease:"power2.inOut"});
+  document.body.classList.toggle("digital-mode",index>=3);
   setActiveChapter(index);
 }
 
@@ -277,6 +207,7 @@ function setupScrollExperience() {
       );
     }
   });
+  ScrollTrigger.create({trigger:document.body,start:"top top",end:"bottom bottom",onUpdate:self=>{progress.style.width=(self.progress*100).toFixed(2)+"%";}});
   ScrollTrigger.refresh();
 }
 
