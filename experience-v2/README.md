@@ -102,3 +102,37 @@ El workflow también lo adjunta en su sección Artifacts bajo el nombre SARA-V4-
 ### Pruebas antes de presentar
 
 Probar pantalla completa (F11), siete encuadres, enlaces externos y simulación del capítulo 06, así como la copia offline con el Wi-Fi apagado. La imagen es una interpretación artística, no información geoespacial operativa.
+
+
+## V5 desarrollo — vida del tajo (preview, no publicado)
+
+La rama development-v5 contiene una versión experimental sobre la misma imagen panorámica. La V4 aprobada, servida por GitHub Pages desde presentation-approved, **no se ha modificado**.
+
+- Cinco camiones mineros SVG avanzan por cuatro trayectorias ilustrativas, en el mismo espacio visual que la fotografía (cámara 2.5D).
+- Dos excavadoras realizan movimientos mecánicos sutiles.
+- Siete luminarias de la mina y los faros de los equipos se activan progresivamente con el oscurecimiento.
+- Nubes, color ambiental, lluvia leve y destellos suaves evolucionan a medida que se avanza por los seis capítulos.
+- prefers-reduced-motion desactiva los movimientos ambientales continuos.
+- Se conservaron los enlaces originales a Keraunos y S.A.R.A. y la simulación de redundancia del capítulo 06.
+- **No hay datos operacionales en vivo**: ubicación de maquinaria, vías y clima son simulaciones artísticas.
+
+Para probar en tu laptop (PowerShell, repositorio local limpio):
+
+    cd C:\Users\Pc\expoSARA
+    git switch development-v5
+    git pull --ff-only origin development-v5
+    cd experience-v2
+    npm.cmd install
+    npm.cmd run dev
+
+La ruta http://127.0.0.1:5173/?debugRoutes=1 permite mostrar las rutas ilustrativas de acarreo para calibrar su posición en la foto. La web pública de gerencia **no se actualiza** desde esta rama.
+
+Para generar la copia HTML de prueba:
+
+    npm.cmd run build:offline
+    npm.cmd run test:offline
+
+Archivo: experience-v2/dist-offline/SARA_V5_PREVIEW_OFFLINE.html.
+El workflow de desarrollo también genera el artefacto SARA-V5-PREVIEW sin publicar GitHub Pages.
+
+La implementación requiere validación visual en Chrome para ajustar la coincidencia entre los caminos pintados en la imagen y las rutas SVG superpuestas.
