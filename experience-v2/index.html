@@ -23,6 +23,148 @@
         </svg>
         <div class="world-beacon b1"></div><div class="world-beacon b2"></div><div class="world-beacon b3"></div>
       </div>
+      <div class="world-activity" aria-hidden="true">
+        <svg id="activity-map" class="activity-map" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" focusable="false">
+          <defs>
+            <linearGradient id="beam-falloff" x1="0" x2="1" y1=".5" y2=".5">
+              <stop offset="0%" stop-color="#fff8dc" stop-opacity=".72" />
+              <stop offset="100%" stop-color="#fbe5bb" stop-opacity="0" />
+            </linearGradient>
+            <linearGradient id="tower-light" x1=".5" x2=".5" y1="0" y2="1">
+              <stop offset="0%" stop-color="#fffbd6" stop-opacity=".5"/>
+              <stop offset="100%" stop-color="#ffefd2" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <g class="haul-route-guides"><path id="haul-route-upper" d="M 1590 255 C 1500 278 1450 327 1375 363 S 1250 414 1190 449 S 1100 500 1006 528"/><path id="haul-route-east" d="M 1555 498 C 1482 519 1430 555 1355 582 S 1228 622 1130 652 S 1030 678 942 705"/><path id="haul-route-floor" d="M 1250 742 C 1170 725 1092 712 1030 704 S 910 698 835 724 S 697 765 610 790"/><path id="haul-route-mid" d="M 1510 395 C 1442 425 1363 448 1300 462 S 1162 480 1105 514 S 1022 568 938 600"/></g>
+          <g class="mine-floodlights"><g class="mine-lightpoint" data-delay="0.00" transform="translate(1421 330)">
+  <path class="pylon-post" d="M0 0 L0 -15" />
+  <path class="pylon-light-beam" d="M0 -16 L-45 20 L45 20 Z" />
+  <circle class="pylon-core" cx="0" cy="-16" r="3.2"/>
+  <circle class="pylon-halo" cx="0" cy="-16" r="8"/>
+</g>
+<g class="mine-lightpoint" data-delay="0.10" transform="translate(1312 456)">
+  <path class="pylon-post" d="M0 0 L0 -15" />
+  <path class="pylon-light-beam" d="M0 -16 L-45 20 L45 20 Z" />
+  <circle class="pylon-core" cx="0" cy="-16" r="3.2"/>
+  <circle class="pylon-halo" cx="0" cy="-16" r="8"/>
+</g>
+<g class="mine-lightpoint" data-delay="0.19" transform="translate(1190 555)">
+  <path class="pylon-post" d="M0 0 L0 -15" />
+  <path class="pylon-light-beam" d="M0 -16 L-45 20 L45 20 Z" />
+  <circle class="pylon-core" cx="0" cy="-16" r="3.2"/>
+  <circle class="pylon-halo" cx="0" cy="-16" r="8"/>
+</g>
+<g class="mine-lightpoint" data-delay="0.29" transform="translate(1106 625)">
+  <path class="pylon-post" d="M0 0 L0 -15" />
+  <path class="pylon-light-beam" d="M0 -16 L-45 20 L45 20 Z" />
+  <circle class="pylon-core" cx="0" cy="-16" r="3.2"/>
+  <circle class="pylon-halo" cx="0" cy="-16" r="8"/>
+</g>
+<g class="mine-lightpoint" data-delay="0.38" transform="translate(981 711)">
+  <path class="pylon-post" d="M0 0 L0 -15" />
+  <path class="pylon-light-beam" d="M0 -16 L-45 20 L45 20 Z" />
+  <circle class="pylon-core" cx="0" cy="-16" r="3.2"/>
+  <circle class="pylon-halo" cx="0" cy="-16" r="8"/>
+</g>
+<g class="mine-lightpoint" data-delay="0.47" transform="translate(789 762)">
+  <path class="pylon-post" d="M0 0 L0 -15" />
+  <path class="pylon-light-beam" d="M0 -16 L-45 20 L45 20 Z" />
+  <circle class="pylon-core" cx="0" cy="-16" r="3.2"/>
+  <circle class="pylon-halo" cx="0" cy="-16" r="8"/>
+</g>
+<g class="mine-lightpoint" data-delay="0.57" transform="translate(1492 509)">
+  <path class="pylon-post" d="M0 0 L0 -15" />
+  <path class="pylon-light-beam" d="M0 -16 L-45 20 L45 20 Z" />
+  <circle class="pylon-core" cx="0" cy="-16" r="3.2"/>
+  <circle class="pylon-halo" cx="0" cy="-16" r="8"/>
+</g></g>
+          <g class="mine-vehicles"><g class="haul-vehicle" data-route="haul-route-upper" data-speed=".0105" data-offset=".11" data-scale=".86">
+   <ellipse class="truck-shadow" cx="-2" cy="3.8" rx="11" ry="3.1" />
+   <path class="truck-dust" d="M-10 0 Q-23 -5 -33 -1 Q-23 4 -10 3 Z" />
+   <rect class="truck-frame" x="-11" y="-4" width="19" height="8" rx="1.5" />
+   <path class="truck-haul" d="M-9 -3.4 H2 L4 3.4 H-9 Z" />
+   <rect class="truck-cab" x="5" y="-3" width="6" height="6" rx=".8" />
+   <circle class="truck-wheel" cx="-6" cy="-4.6" r="1.8" /><circle class="truck-wheel" cx="5" cy="4.6" r="1.8" />
+   <path class="truck-beam" d="M11 -4 L64 -16 L64 16 L11 4 Z" />
+   <circle class="truck-headlight" cx="11.3" cy="0" r="2.2" />
+   <circle class="truck-tail" cx="-11" cy="0" r="1.6" />
+ </g>
+<g class="haul-vehicle" data-route="haul-route-east" data-speed=".012" data-offset=".46" data-scale="1.05">
+   <ellipse class="truck-shadow" cx="-2" cy="3.8" rx="11" ry="3.1" />
+   <path class="truck-dust" d="M-10 0 Q-23 -5 -33 -1 Q-23 4 -10 3 Z" />
+   <rect class="truck-frame" x="-11" y="-4" width="19" height="8" rx="1.5" />
+   <path class="truck-haul" d="M-9 -3.4 H2 L4 3.4 H-9 Z" />
+   <rect class="truck-cab" x="5" y="-3" width="6" height="6" rx=".8" />
+   <circle class="truck-wheel" cx="-6" cy="-4.6" r="1.8" /><circle class="truck-wheel" cx="5" cy="4.6" r="1.8" />
+   <path class="truck-beam" d="M11 -4 L64 -16 L64 16 L11 4 Z" />
+   <circle class="truck-headlight" cx="11.3" cy="0" r="2.2" />
+   <circle class="truck-tail" cx="-11" cy="0" r="1.6" />
+ </g>
+<g class="haul-vehicle" data-route="haul-route-floor" data-speed=".009" data-offset=".67" data-scale="1.15">
+   <ellipse class="truck-shadow" cx="-2" cy="3.8" rx="11" ry="3.1" />
+   <path class="truck-dust" d="M-10 0 Q-23 -5 -33 -1 Q-23 4 -10 3 Z" />
+   <rect class="truck-frame" x="-11" y="-4" width="19" height="8" rx="1.5" />
+   <path class="truck-haul" d="M-9 -3.4 H2 L4 3.4 H-9 Z" />
+   <rect class="truck-cab" x="5" y="-3" width="6" height="6" rx=".8" />
+   <circle class="truck-wheel" cx="-6" cy="-4.6" r="1.8" /><circle class="truck-wheel" cx="5" cy="4.6" r="1.8" />
+   <path class="truck-beam" d="M11 -4 L64 -16 L64 16 L11 4 Z" />
+   <circle class="truck-headlight" cx="11.3" cy="0" r="2.2" />
+   <circle class="truck-tail" cx="-11" cy="0" r="1.6" />
+ </g>
+<g class="haul-vehicle" data-route="haul-route-mid" data-speed=".010" data-offset=".27" data-scale=".93">
+   <ellipse class="truck-shadow" cx="-2" cy="3.8" rx="11" ry="3.1" />
+   <path class="truck-dust" d="M-10 0 Q-23 -5 -33 -1 Q-23 4 -10 3 Z" />
+   <rect class="truck-frame" x="-11" y="-4" width="19" height="8" rx="1.5" />
+   <path class="truck-haul" d="M-9 -3.4 H2 L4 3.4 H-9 Z" />
+   <rect class="truck-cab" x="5" y="-3" width="6" height="6" rx=".8" />
+   <circle class="truck-wheel" cx="-6" cy="-4.6" r="1.8" /><circle class="truck-wheel" cx="5" cy="4.6" r="1.8" />
+   <path class="truck-beam" d="M11 -4 L64 -16 L64 16 L11 4 Z" />
+   <circle class="truck-headlight" cx="11.3" cy="0" r="2.2" />
+   <circle class="truck-tail" cx="-11" cy="0" r="1.6" />
+ </g>
+<g class="haul-vehicle" data-route="haul-route-upper" data-speed=".008" data-offset=".77" data-scale=".78">
+   <ellipse class="truck-shadow" cx="-2" cy="3.8" rx="11" ry="3.1" />
+   <path class="truck-dust" d="M-10 0 Q-23 -5 -33 -1 Q-23 4 -10 3 Z" />
+   <rect class="truck-frame" x="-11" y="-4" width="19" height="8" rx="1.5" />
+   <path class="truck-haul" d="M-9 -3.4 H2 L4 3.4 H-9 Z" />
+   <rect class="truck-cab" x="5" y="-3" width="6" height="6" rx=".8" />
+   <circle class="truck-wheel" cx="-6" cy="-4.6" r="1.8" /><circle class="truck-wheel" cx="5" cy="4.6" r="1.8" />
+   <path class="truck-beam" d="M11 -4 L64 -16 L64 16 L11 4 Z" />
+   <circle class="truck-headlight" cx="11.3" cy="0" r="2.2" />
+   <circle class="truck-tail" cx="-11" cy="0" r="1.6" />
+ </g></g>
+          <g class="mine-equipment">
+            <g class="mine-excavator" transform="translate(878 680) scale(1.05)">
+              <ellipse class="machine-shadow" cx="0" cy="6" rx="19" ry="4"/>
+              <path class="machine-tracks" d="M-18 4h28v6h-28z"/>
+              <rect class="machine-body" x="-11" y="-6" width="18" height="11" rx="2"/>
+              <g class="machine-boom">
+                <path class="machine-arm" d="M3 -5 L20 -19 L34 -10"/>
+                <path class="machine-bucket" d="M32 -13 L38 -11 L35 -3 L29 -6 Z"/>
+              </g>
+              <circle class="machine-lamp" cx="4" cy="-5" r="3"/>
+            </g>
+            <g class="mine-excavator alternate" transform="translate(1238 583) scale(.85)">
+              <ellipse class="machine-shadow" cx="0" cy="6" rx="19" ry="4"/>
+              <path class="machine-tracks" d="M-18 4h28v6h-28z"/>
+              <rect class="machine-body" x="-11" y="-6" width="18" height="11" rx="2"/>
+              <g class="machine-boom">
+                <path class="machine-arm" d="M3 -5 L20 -19 L34 -10"/>
+                <path class="machine-bucket" d="M32 -13 L38 -11 L35 -3 L29 -6 Z"/>
+              </g>
+              <circle class="machine-lamp" cx="4" cy="-5" r="3"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div class="world-weather" aria-hidden="true">
+      <div class="sky-clouds cloud-far"></div>
+      <div class="sky-clouds cloud-near"></div>
+      <div class="storm-tone"></div>
+      <div class="rain-field rain-back"></div>
+      <div class="rain-field rain-front"></div>
+      <div class="storm-flash"></div>
     </div>
     <div class="world-shade"></div><div class="world-scan"></div>
     <div class="world-coordinate">RECORRIDO CONCEPTUAL · REFERENCIA VISUAL</div>
