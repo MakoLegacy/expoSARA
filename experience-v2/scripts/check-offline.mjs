@@ -13,7 +13,7 @@ assert(jsName && cssName,"Compiled JS and CSS expected");
 
 const expectedJs=fs.readFileSync(path.join(assets,jsName),"utf8").replace(/<\/script/gi,"<\\/script");
 const expectedCss=fs.readFileSync(path.join(assets,cssName),"utf8").replace(/<\/style/gi,"<\\/style");
-const html=fs.readFileSync(path.join(output,"SARA_V4_OFFLINE.html"),"utf8");
+const html=fs.readFileSync(path.join(output,"SARA_V5_PREVIEW_OFFLINE.html"),"utf8");
 const jsMatch=html.match(/<script type="module">([\s\S]*?)<\/script>/);
 const cssMatch=html.match(/<style>([\s\S]*?)<\/style>/);
 assert(jsMatch && cssMatch,"Embedded JS/CSS expected");
