@@ -30,6 +30,8 @@ jobs:
           node-version: "22"
       - name: Instalar dependencias
         run: npm install
+      - name: Verificar rutas, enlaces y progresion climatica
+        run: npm run test:v5
       - name: Verificar compilacion
         run: npm run build
       - name: Crear preview offline V5
