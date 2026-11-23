@@ -3,7 +3,7 @@ name: Publicar S.A.R.A. V4 + respaldo offline
 on:
   push:
     branches:
-      - redesign/immersive-3d-experience
+      - presentation-approved
     paths:
       - experience-v2/**
       - .github/workflows/deploy-sara-pages.yml
