@@ -6,7 +6,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDir = path.join(root, "dist-offline");
 const photoFile = path.join(root, "public", "assets", "antamina-cinematic.webp");
 const htmlFile = path.join(outputDir, "index.html");
-const outputFile = path.join(outputDir, "SARA_V4_OFFLINE.html");
+const outputFile = path.join(outputDir, "SARA_V5_PREVIEW_OFFLINE.html");
 
 async function requiredFile(file, label) {
   try { return await fs.readFile(file); }
