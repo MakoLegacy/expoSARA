@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#050a10" />
+  <meta name="description" content="S.A.R.A. — Una experiencia inmersiva sobre la detección de tormentas eléctricas en Antamina." />
+  <title>S.A.R.A. | Experiencia inmersiva Antamina</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div id="world" class="world" aria-hidden="true">
+    <div id="world-camera" class="world-camera">
+      <img id="mine-photo" src="%BASE_URL%assets/antamina-cinematic.webp" alt="" fetchpriority="high" />
+      <div class="world-highlights">
+        <svg class="topographic-guides" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" focusable="false">
+          <path d="M 720 360 Q 1120 170 1435 300" />
+          <path d="M 660 455 Q 1120 265 1400 420" />
+          <path d="M 650 550 Q 1080 410 1330 570" />
+          <path d="M 890 670 Q 1070 585 1200 650" />
+        </svg>
+        <div class="world-beacon b1"></div><div class="world-beacon b2"></div><div class="world-beacon b3"></div>
+      </div>
+    </div>
+    <div class="world-shade"></div><div class="world-scan"></div>
+    <div class="world-coordinate">RECORRIDO CONCEPTUAL · REFERENCIA VISUAL</div>
+  </div>
+  <div id="asset-warning" class="asset-warning" role="status" hidden>Falta la imagen del tajo: coloca <code>public/assets/antamina-cinematic.webp</code> en el proyecto.</div>
+
+  <header class="site-header">
+    <a class="brand" href="#inicio" aria-label="Ir a portada S.A.R.A."><span class="brand-symbol" aria-hidden="true">◈</span> S.A.R.A<span class="orange">.</span></a>
+    <div class="header-center">SISTEMA DE ALERTA DE RAYOS ANTAMINA</div>
+    <a class="header-end" href="#capitulo-06">REDUNDANCIA <span class="arrow">↗</span></a>
+    <div class="progress"><div id="progress-bar"></div></div>
+  </header>
+
+  <nav class="section-nav" aria-label="Capítulos">
+    <span class="nav-label">RECORRIDO</span>
+    <a href="#inicio" data-nav="00" aria-label="Portada" aria-current="step">00</a>
+    <a href="#capitulo-01" data-nav="01" aria-label="01 Centro de control">01</a>
+    <a href="#capitulo-02" data-nav="02" aria-label="02 Problemática">02</a>
+    <a href="#capitulo-03" data-nav="03" aria-label="03 Propuesta S.A.R.A.">03</a>
+    <a href="#capitulo-04" data-nav="04" aria-label="04 Optimización técnica">04</a>
+    <a href="#capitulo-05" data-nav="05" aria-label="05 Notificaciones">05</a>
+    <a href="#capitulo-06" data-nav="06" aria-label="06 Redundancia">06</a>
+  </nav>
+
+  <main>
+    <section class="scene scene-hero" id="inicio" data-scene="0">
+      <div class="scene-inner hero-layout">
+        <div class="copy">
+          <p class="eyebrow"><span class="eyebrow-line"></span> UNA NUEVA VISIÓN DEL CENTRO DE CONTROL</p>
+          <h1>VER LA<br><em>ALERTA.</em></h1>
+          <p class="hero-lead">S.A.R.A. — Sistema de Alerta de Rayos Antamina</p>
+          <p class="hero-description">Del monitoreo a la acción. Una experiencia para entender cómo la información sobre tormentas llega a la operación.</p>
+          <a class="action primary-action" href="#capitulo-01">INICIAR RECORRIDO <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="hero-signature" aria-hidden="true"><span>ANTAMINA / TAJO MINERO</span><strong>UN MISMO ENTORNO.<br>SIETE PERSPECTIVAS.</strong></div>
+      </div>
+      <div class="scroll-cue">DESPLAZA PARA EXPLORAR <span aria-hidden="true">↓</span></div>
+    </section>
+
+    <section class="scene" id="capitulo-01" data-scene="1">
+      <div class="scene-inner scene-split">
+        <div class="copy">
+          <p class="eyebrow"><b>01</b> CONTEXTO OPERACIONAL</p>
+          <h2>CENTRO DE<br><em>CONTROL.</em></h2>
+          <p class="lead">Monitoreo y aviso de las alertas de tormentas eléctricas en la mina.</p>
+          <p class="body-copy">El Centro de Control de Comunicaciones y Emergencias monitorea los sistemas de detección y emite las alertas radiales.</p>
+        </div>
+        <div class="glass-stack">
+          <button type="button" class="system-tile" data-info="strikeguard" aria-label="Conocer StrikeGuard">
+            <span class="tile-mark orange-mark">01</span><span class="tile-body"><strong>STRIKEGUARD</strong><small>Detección reactiva: descarga nube–tierra.</small></span><span class="tile-arrow">+</span>
+          </button>
+          <button type="button" class="system-tile" data-info="keraunos" aria-label="Conocer Keraunos">
+            <span class="tile-mark cyan-mark">02</span><span class="tile-body"><strong>KERAUNOS</strong><small>Sistema predictivo: campo electromagnético.</small></span><span class="tile-arrow">+</span>
+          </button>
+          <div class="micro-flow"><span>DETECCIÓN</span><span>→</span><span>MONITOREO 24/7</span><span>→</span><span>AVISO RADIAL</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" id="capitulo-02" data-scene="2">
+      <div class="scene-inner scene-split">
+        <div class="copy">
+          <p class="eyebrow red-text"><b>02</b> PROBLEMÁTICA</p>
+          <h2>CUANDO LA ALERTA<br><em>NO ES CLARA.</em></h2>
+          <p class="lead">Tres puntos de fricción en las comunicaciones durante una tormenta.</p>
+          <a class="action link-action" href="https://qr.keraunos.co/t/mHMsMSjw7fLzlVFzMsh9K99cFG7tiC" target="_blank" rel="noopener noreferrer" aria-label="Abrir Keraunos en una pestaña nueva">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 1v5M12 18v5M1 12h5M18 12h5"/></svg> EXPLORAR KERAUNOS <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="problem-list">
+          <div class="problem-line"><b>01</b><div><strong>MENSAJE RADIAL</strong><span>Alertas generales sin ubicación exacta.</span></div></div>
+          <div class="problem-line"><b>02</b><div><strong>SATURACIÓN DEL CANAL</strong><span>Radios y celulares colapsan por consultas.</span></div></div>
+          <div class="problem-line"><b>03</b><div><strong>USABILIDAD</strong><span>Interfaz Keraunos poco amigable.</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" id="capitulo-03" data-scene="3">
+      <div class="scene-inner proposal-layout">
+        <div class="copy">
+          <p class="eyebrow"><b>03</b> LA PROPUESTA</p>
+          <h2>UNA SOLA<br><em>VISIÓN. S.A.R.A.</em></h2>
+          <p class="lead">Un mapa accesible e intuitivo para comprender las alertas por zona operativa.</p>
+          <a class="action link-action sara-link" href="https://antito-yanac.github.io/sara/" target="_blank" rel="noopener noreferrer" aria-label="Abrir el sistema S.A.R.A. en una pestaña nueva">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 13h7l-1 9 10-12h-7l0-8z"/></svg> ABRIR S.A.R.A. <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="feature-lineup">
+          <div><b>01</b><strong>MOTOR DE CONSULTAS</strong><span>Consulta continua de eventos.</span></div>
+          <div><b>02</b><strong>SOMBREADO AUTOMÁTICO</strong><span>Zonas afectadas según la alerta.</span></div>
+          <div><b>03</b><strong>INDEXACIÓN GPS</strong><span>Verificación de zona operativa.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" id="capitulo-04" data-scene="4">
+      <div class="scene-inner">
+        <div class="copy wide-copy">
+          <p class="eyebrow"><b>04</b> OPTIMIZACIÓN TÉCNICA</p>
+          <h2>MENOS FRICCIÓN.<br><em>MÁS CONFIANZA.</em></h2>
+          <p class="lead">Dos mejoras propuestas en la presentación original.</p>
+        </div>
+        <div class="improvement-columns">
+          <div class="improvement">
+            <div class="improvement-number">01 / LATENCIA</div>
+            <div class="compare-label">ACTUAL</div><p>Polling cada 20 segundos: riesgo de bloqueo de IP.</p>
+            <div class="compare-transform">↓ PROPUESTA</div><p>Integración directa con API de Keraunos para recibir eventos en tiempo real.</p>
+          </div>
+          <div class="improvement">
+            <div class="improvement-number">02 / SERVIDOR</div>
+            <div class="compare-label">ACTUAL</div><p>Servidor de prueba externo, sin SSL corporativo.</p>
+            <div class="compare-transform">↓ PROPUESTA</div><p>Migración a red interna y dominio corporativo.</p>
+          </div>
+        </div>
+        <p class="footnote">Propuestas de la presentación original; no indican implementación ya completada.</p>
+      </div>
+    </section>
+
+    <section class="scene" id="capitulo-05" data-scene="5">
+      <div class="scene-inner scene-split">
+        <div class="copy">
+          <p class="eyebrow"><b>05</b> SISTEMA DE NOTIFICACIONES</p>
+          <h2>ALERTAR.<br><em>INVOLUCRAR.</em></h2>
+          <p class="lead">Notificaciones que ayuden a actuar, sin saturar al trabajador.</p>
+          <a class="action link-action sara-link" href="https://antito-yanac.github.io/sara/" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 13h7l-1 9 10-12h-7l0-8z"/></svg> CONSULTAR MAPA S.A.R.A. <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="notification-points">
+          <div><b>01</b><p><strong>EVITAR EL EFECTO BASURERO</strong> No saturar con avisos que acaben siendo ignorados.</p></div>
+          <div><b>02</b><p><strong>NOTIFICACIÓN PERSISTENTE</strong> Confirmación y apagado manual de alertas críticas.</p></div>
+          <div><b>03</b><p><strong>CULTURA Y RESPUESTA</strong> Participación del trabajador al verificar su zona.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene last-scene" id="capitulo-06" data-scene="6">
+      <div class="scene-inner">
+        <div class="copy wide-copy">
+          <p class="eyebrow"><b>06</b> BLINDAJE Y MITIGACIÓN</p>
+          <h2>LA OPERACIÓN<br><em>NO SE DETIENE.</em></h2>
+          <p class="lead">Simulación interactiva de la redundancia ante fallas.</p>
+        </div>
+        <div class="resilience-panel">
+          <div class="sim-topline"><span>SIMULACIÓN DE CONTINUIDAD</span><button type="button" id="reset-sim" class="reset-button">REINICIAR ↺</button></div>
+          <div id="fallback-sim" class="fallback-sim" aria-label="Simulación de redundancia">
+            <button type="button" id="fail-api" class="sim-node active" data-stage="api"><span class="node-id">01</span><strong>API</strong><small>CLIC PARA FALLAR</small></button>
+            <div class="sim-connector" data-link="api-motors"><span>→</span></div>
+            <div class="motors" id="motors">
+              <button type="button" class="sim-node motor" data-motor="0" disabled><span class="node-id">02A</span><strong>MOTOR 01</strong><small>RESPALDO</small></button>
+              <button type="button" class="sim-node motor" data-motor="1" disabled><span class="node-id">02B</span><strong>MOTOR 02</strong><small>RESPALDO</small></button>
+              <button type="button" class="sim-node motor" data-motor="2" disabled><span class="node-id">02C</span><strong>MOTOR 03</strong><small>RESPALDO</small></button>
+            </div>
+            <div class="sim-connector" data-link="motors-keraunos"><span>→</span></div>
+            <button type="button" class="sim-node" id="fail-keraunos" disabled><span class="node-id">03</span><strong>KERAUNOS MANUAL</strong><small>RESPALDO</small></button>
+            <div class="sim-connector" data-link="keraunos-strike"><span>→</span></div>
+            <div class="sim-node terminal-node" id="strike-final"><span class="node-id">04</span><strong>STRIKEGUARD MANUAL</strong><small>ÚLTIMO RESPALDO</small></div>
+          </div>
+          <p id="sim-status" class="sim-status" role="status" aria-live="polite">Haz clic en API para simular una falla y descubrir las capas de respaldo.</p>
+          <div class="security-notes"><span>SEGURIDAD: integración auditada y gestor de API Keys (propuesta)</span><span>PRIVACIDAD: objetivo de cero registro de ubicaciones · Ley N.º 29733</span></div>
+        </div>
+        <a href="#inicio" class="back-to-top">VOLVER AL INICIO ↑</a>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="info-dialog" class="info-dialog" aria-labelledby="dialog-heading">
+    <button type="button" id="close-info" class="dialog-close" aria-label="Cerrar">✕</button>
+    <p class="eyebrow">SISTEMA DE DETECCIÓN</p>
+    <h2 id="dialog-heading"></h2>
+    <p id="dialog-text"></p>
+  </dialog>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

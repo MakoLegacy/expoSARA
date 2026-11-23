@@ -1,0 +1,67 @@
+name: Publicar S.A.R.A. V4 + respaldo offline
+
+on:
+  push:
+    branches:
+      - presentation-approved
+    paths:
+      - experience-v2/**
+      - .github/workflows/deploy-sara-pages.yml
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages-sara-v4"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Comprobar imagen requerida
+        run: |
+          if [ ! -s experience-v2/public/assets/antamina-cinematic.webp ]; then
+            echo "::error::Falta experience-v2/public/assets/antamina-cinematic.webp. Sube la imagen optimizada del paquete V3 a la rama de rediseño."
+            exit 1
+          fi
+      - name: Instalar dependencias
+        working-directory: experience-v2
+        run: npm install
+      - name: Compilar web para GitHub Pages
+        working-directory: experience-v2
+        run: npm run build:pages
+      - name: Compilar respaldo portable
+        working-directory: experience-v2
+        run: npm run build:offline
+      - name: Subir respaldo offline descargable
+        uses: actions/upload-artifact@v4
+        with:
+          name: SARA-V4-OFFLINE
+          path: experience-v2/dist-offline/SARA_V4_OFFLINE.html
+          if-no-files-found: error
+      - name: Preparar GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Subir web a GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: experience-v2/dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar
+        id: deployment
+        uses: actions/deploy-pages@v4
