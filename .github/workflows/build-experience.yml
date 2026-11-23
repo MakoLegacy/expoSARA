@@ -42,5 +42,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SARA-V5-PREVIEW
-          path: experience-v2/dist-offline/SARA_V4_OFFLINE.html
+          path: experience-v2/dist-offline/SARA_V5_PREVIEW_OFFLINE.html
           if-no-files-found: error
