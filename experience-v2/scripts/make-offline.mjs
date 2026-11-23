@@ -36,8 +36,8 @@ const photoPattern = /(<img\b(?=[^>]*\bid=["']mine-photo["'])[^>]*\bsrc=["'])[^"
 if (!scriptPattern.test(html) || !stylePattern.test(html) || !photoPattern.test(html)) {
   throw new Error("No fue posible localizar todos los recursos en el HTML compilado.");
 }
-html = html.replace(scriptPattern, "<script type=\"module\">" + js + "</script>");
-html = html.replace(stylePattern, "<style>" + css + "</style>");
+html = html.replace(scriptPattern, () => "<script type=\"module\">" + js + "</script>");
+html = html.replace(stylePattern, () => "<style>" + css + "</style>");
 html = html.replace(photoPattern, (_all, before, after) =>
   before + "data:image/webp;base64," + imageData.toString("base64") + after);
 html = html.replace(/<link\b[^>]*(?:fonts\.googleapis\.com|fonts\.gstatic\.com)[^>]*\/?>/gi, "");
