@@ -1,5 +1,6 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { createLivingWorld } from "./living-world.js";
 import "./styles.css";
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,6 +15,7 @@ const progress = document.querySelector("#progress-bar");
 const scenes = [...document.querySelectorAll("[data-scene]")];
 const navLinks = [...document.querySelectorAll("[data-nav]")];
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const livingWorld = createLivingWorld({ reducedMotion:reduced });
 
 const looks = [
   { x:  0.0, y:  0.0, zoom: 1.12, glow: .07 },
@@ -60,7 +62,7 @@ function syncScroll() {
   markActive(Math.min(looks.length - 1, Math.floor(scrollTarget + .52)));
 }
 
-function renderCamera() {
+function renderCamera(frameTime = 0) {
   smoothPosition = reduced ? scrollTarget : mix(smoothPosition, scrollTarget, .092);
   const low = Math.min(looks.length - 1, Math.floor(smoothPosition));
   const high = Math.min(looks.length - 1, low + 1);
@@ -72,6 +74,7 @@ function renderCamera() {
     (look.y + microY).toFixed(3) + '%, 0) scale(' + look.zoom.toFixed(4) + ')';
   highlights.style.opacity = look.glow.toFixed(3);
   shade.style.opacity = (1 - Math.min(.18,look.glow*.27)).toFixed(3);
+  livingWorld.render(frameTime / 1000, smoothPosition);
   requestAnimationFrame(renderCamera);
 }
 
