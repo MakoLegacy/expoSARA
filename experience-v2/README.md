@@ -75,3 +75,30 @@ La imagen **public/assets/antamina-cinematic.webp** del paquete visual V3 sigue 
 
 ### Verificaciones
 Ejecutar \`npm run build\`. La compilación automática de GitHub Actions verifica la sintaxis y la generación del bundle. La experiencia visual y su rendimiento deben verificarse en Chrome.
+
+
+## Publicación web y respaldo offline (V4)
+
+Recurso necesario: experience-v2/public/assets/antamina-cinematic.webp (imagen del paquete visual V3).
+
+### GitHub Pages
+
+1. En GitHub, abrir Settings → Pages → Build and deployment → Source → GitHub Actions.
+2. Copiar y confirmar en la rama redesign/immersive-3d-experience la imagen public/assets/antamina-cinematic.webp.
+3. El workflow .github/workflows/deploy-sara-pages.yml compilará Vite con base /expoSARA/ y desplegará en https://makolegacy.github.io/expoSARA/ una vez Pages esté habilitado.
+4. Comprobar el job deploy y probar el sitio en Chrome antes de divulgarlo. No hay que fusionar a main.
+
+### Respaldo para USB
+
+Desde experience-v2 ejecutar:
+
+    npm.cmd install
+    npm.cmd run build:offline
+
+Resultado: dist-offline/SARA_V4_OFFLINE.html. Contiene CSS, JS e imagen incrustados; ábrelo con doble clic en Chrome o Edge. No requiere localhost ni Node.js en el equipo de presentación.
+Los enlaces externos a Keraunos y S.A.R.A. seguirán necesitando internet; sin internet las fuentes web serán reemplazadas por las locales.
+El workflow también lo adjunta en su sección Artifacts bajo el nombre SARA-V4-OFFLINE.
+
+### Pruebas antes de presentar
+
+Probar pantalla completa (F11), siete encuadres, enlaces externos y simulación del capítulo 06, así como la copia offline con el Wi-Fi apagado. La imagen es una interpretación artística, no información geoespacial operativa.
