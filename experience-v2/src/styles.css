@@ -199,3 +199,128 @@ button.sim-node:disabled{cursor:not-allowed}
  html{scroll-behavior:auto}
  *,:before,:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+
+/* === S.A.R.A. V5: living mine, progressive weather and operational lighting ===
+   The image is artistic. SVG locations and routes are visual approximations only.
+   Scene layers are pointer-transparent and do not block original slide controls. */
+.world{--night-factor:0;--digital-factor:0}
+.world-camera{z-index:1}
+.world-activity{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:visible}
+.activity-map{width:100%;height:100%;display:block;overflow:visible}
+.world-weather{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;isolation:isolate}
+.world-shade{z-index:3}
+.world-scan{z-index:4}
+.world-coordinate{z-index:5}
+
+/* Mine traffic: compact semi-realistic silhouettes, no oversized iconography. */
+.haul-route-guides path{
+  fill:none;stroke:#54cfee;stroke-width:1.7;stroke-dasharray:8 8;
+  opacity:calc(var(--digital-factor) * .13);
+  filter:drop-shadow(0 0 4px rgba(70,226,255,.45));
+}
+.haul-vehicle{opacity:0;will-change:opacity;filter:drop-shadow(0 1px 2px #05070b)}
+.truck-shadow,.machine-shadow{fill:rgba(0,0,0,.36)}
+.truck-frame{fill:#373d43;stroke:#0c1419;stroke-width:.8}
+.truck-haul{fill:#bd9360;stroke:#3f3223;stroke-width:.9}
+.truck-cab{fill:#d8ba8c;stroke:#5c4835;stroke-width:.7}
+.truck-wheel{fill:#15191b}
+.truck-dust{fill:#cabba7;opacity:.07}
+.truck-beam{
+  fill:url(#beam-falloff);stroke:none;
+  opacity:calc(var(--night-factor) * .53);
+  mix-blend-mode:screen
+}
+.truck-headlight{
+  fill:#fff8df;opacity:calc(.15 + var(--night-factor) * .85);
+  filter:drop-shadow(0 0 2px #fff8eb) drop-shadow(0 0 9px #e4f7ff)
+}
+.truck-tail{fill:#e83d39;opacity:calc(.34 + var(--night-factor) * .62);filter:drop-shadow(0 0 4px #f33)}
+.mining-equipment{pointer-events:none}
+.machine-tracks{fill:#222a2e;stroke:#141c22;stroke-width:1.1}
+.machine-body{fill:#d3a15a;stroke:#75532c;stroke-width:1}
+.machine-arm{fill:none;stroke:#daa963;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.machine-bucket{fill:#a98554;stroke:#5b472e;stroke-width:1.2}
+.machine-lamp{
+  fill:#fff9df;opacity:calc(.12 + var(--night-factor) * .88);
+  filter:drop-shadow(0 0 7px #e8f7ff)
+}
+.machine-boom{will-change:transform}
+
+/* Floodlit terraces. Pylons switch on in a staggered order while the storm
+   develops. Their beams are deliberately subdued to preserve text contrast. */
+.pylon-post{fill:none;stroke:#414e53;stroke-width:2;opacity:.72}
+.pylon-light-beam{fill:url(#tower-light);opacity:calc(var(--lamp,0) * .52);mix-blend-mode:screen}
+.pylon-core{
+  fill:#fff6dc;opacity:calc(.06 + var(--lamp,0) * .94);
+  filter:drop-shadow(0 0 4px #fff7d3) drop-shadow(0 0 12px #fff7d3)
+}
+.pylon-halo{fill:#fff7d3;opacity:calc(var(--lamp,0) * .16);filter:blur(3px)}
+.world-activity .mine-lightpoint{transition:filter .5s}
+
+/* Clouds drift in distant bands; late chapters develop atmospheric perspective. */
+.sky-clouds{
+  position:absolute;left:-15%;width:135%;height:62%;top:-18%;
+  opacity:0;will-change:opacity,transform;
+  filter:blur(18px);
+  background:
+    radial-gradient(ellipse 27% 26% at 14% 40%,rgba(32,43,57,.90) 1%,transparent 95%),
+    radial-gradient(ellipse 26% 23% at 34% 32%,rgba(34,43,60,.83) 0%,transparent 94%),
+    radial-gradient(ellipse 35% 25% at 59% 47%,rgba(22,34,52,.87) 0%,transparent 90%),
+    radial-gradient(ellipse 31% 22% at 82% 32%,rgba(32,44,61,.9),transparent 94%),
+    linear-gradient(180deg,rgba(8,16,31,.64),transparent);
+}
+.cloud-far{animation:cloudDriftFar 90s ease-in-out infinite alternate}
+.cloud-near{top:-8%;height:70%;left:-30%;width:145%;filter:blur(27px);
+  background:
+    radial-gradient(ellipse 29% 23% at 25% 24%,rgba(8,18,31,.96),transparent 96%),
+    radial-gradient(ellipse 39% 28% at 57% 35%,rgba(16,25,37,.92),transparent 96%),
+    radial-gradient(ellipse 30% 22% at 84% 26%,rgba(14,20,34,.93),transparent 96%);
+  animation:cloudDriftNear 105s ease-in-out infinite alternate
+}
+@keyframes cloudDriftFar{from{transform:translate3d(-2%,0,0)}to{transform:translate3d(7%,1%,0)}}
+@keyframes cloudDriftNear{from{transform:translate3d(5%,0,0)}to{transform:translate3d(-4%,2%,0)}}
+.storm-tone{
+  position:absolute;inset:0;opacity:0;will-change:opacity;
+  background:
+    linear-gradient(180deg,rgba(9,18,34,.78) 0%,rgba(6,17,26,.53) 50%,rgba(0,9,15,.38) 100%),
+    radial-gradient(ellipse at 85% 25%,rgba(14,31,51,.45),transparent 70%)
+}
+/* Two fine rain layers give depth without broad, opaque stripes. */
+.rain-field{
+  position:absolute;inset:-16%;opacity:0;will-change:opacity,transform;
+  mix-blend-mode:screen;
+  background:repeating-linear-gradient(103deg,
+      transparent 0px,transparent 33px,
+      rgba(190,230,255,.10) 34px,
+      transparent 35px,transparent 55px,
+      rgba(185,224,247,.08) 56px,
+      transparent 57px);
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,black 19%,black 88%,transparent);
+  mask-image:linear-gradient(180deg,transparent 0%,black 19%,black 88%,transparent);
+}
+.rain-back{background-size:190px 190px;animation:rainFallFar 1.6s linear infinite}
+.rain-front{background-size:280px 280px;filter:blur(.45px);animation:rainFallNear .8s linear infinite}
+@keyframes rainFallFar{from{transform:translate3d(1%,-8%,0)}to{transform:translate3d(-2%,8%,0)}}
+@keyframes rainFallNear{from{transform:translate3d(0,-9%,0)}to{transform:translate3d(-4%,9%,0)}}
+.storm-flash{
+  position:absolute;inset:0;opacity:0;pointer-events:none;
+  background:radial-gradient(ellipse at 77% 19%,rgba(197,229,255,.62),rgba(130,192,237,.10) 48%,transparent 75%);
+  mix-blend-mode:screen;will-change:opacity
+}
+
+/* Development-only route calibration: append ?debugRoutes=1 to localhost URL. */
+.world.debug-routes .haul-route-guides path{
+  opacity:.85;stroke:#ffbf70;stroke-width:3;stroke-dasharray:14 7;
+  filter:drop-shadow(0 0 5px #f80)
+}
+@media(max-width:760px){
+  .sky-clouds{filter:blur(14px)}
+  .cloud-near{filter:blur(19px)}
+  .pylon-light-beam{opacity:calc(var(--lamp,0) * .36)}
+  .truck-beam{opacity:calc(var(--night-factor) * .33)}
+}
+@media(prefers-reduced-motion:reduce){
+  .cloud-far,.cloud-near,.rain-back,.rain-front{animation:none}
+  .haul-vehicle,.mine-excavator,.sky-clouds{will-change:auto}
+}
