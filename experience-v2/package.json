@@ -9,7 +9,8 @@
     "preview": "vite preview --host 127.0.0.1",
     "build:pages": "vite build --base /expoSARA/",
     "build:offline": "vite build --base ./ --outDir dist-offline && node scripts/make-offline.mjs",
-    "test:v5": "node scripts/check-v5.mjs"
+    "test:v5": "node scripts/check-v5.mjs",
+    "test:offline": "node scripts/check-offline.mjs"
   },
   "dependencies": {
     "gsap": "^3.13.0",
