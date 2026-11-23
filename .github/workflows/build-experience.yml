@@ -1,21 +1,22 @@
-name: Build immersive S.A.R.A. experience
+name: V5 Desarrollo - Validacion sin publicar
 
 on:
   push:
     branches:
-      - "redesign/**"
+      - development-v5
     paths:
       - "experience-v2/**"
       - ".github/workflows/build-experience.yml"
   pull_request:
-    branches:
-      - main
     paths:
       - "experience-v2/**"
       - ".github/workflows/build-experience.yml"
 
+permissions:
+  contents: read
+
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -26,8 +27,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-      - name: Install dependencies
+          node-version: "22"
+      - name: Instalar dependencias
         run: npm install
-      - name: Build production bundle
+      - name: Verificar compilacion
         run: npm run build
+      - name: Crear preview offline V5
+        run: npm run build:offline
+      - name: Guardar preview sin publicar
+        uses: actions/upload-artifact@v4
+        with:
+          name: SARA-V5-PREVIEW
+          path: experience-v2/dist-offline/SARA_V4_OFFLINE.html
+          if-no-files-found: error
