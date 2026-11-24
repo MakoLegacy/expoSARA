@@ -32,6 +32,11 @@ assert.equal((html.match(/data-scene="\d"/g)||[]).length,6,"Exactly 6 executive 
 assert.equal((html.match(/data-nav="\d\d"/g)||[]).length,6,"6 numbered navigation links");
 assert((html.match(/data-beat="/g)||[]).length>=40,"Cinematic semantic graphic beats");
 assert(html.includes("SISTEMA DE ALERTA Y RESPUESTA ANTAMINA"));
+assert.equal((html.match(/class="sara-mark"/g)||[]).length,2,"New three-stroke identity appears on cover and closing");
+assert(html.includes("DETECTAR <b>·</b> COMPRENDER <b>·</b> RESPONDER"));
+assert(!html.includes("RUEDA O FLECHAS PARA AVANZAR"),"Old slide cue removed");
+assert(css.includes(".scene .eyebrow"),"Chapter titles enlarged");
+
 assert(html.includes("Sistema de Alerta y Respuesta Antamina"));
 assert(html.includes("DE LA DETECCIÓN"));
 assert(html.includes("STRIKEGUARD") && html.includes("KERAUNOS"));
