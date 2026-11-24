@@ -33,7 +33,7 @@ Sistema de Alerta y Respuesta Antamina
 **Expón:** (Aquí vemos una oportunidad que va más allá de la interfaz. Hoy los trabajadores no tienen una práctica formal establecida de consultar condiciones de tormenta antes de salir a campo. Nuestra propuesta es fomentar voluntariamente esa consulta previa como hábito preventivo, siempre con el apoyo de las áreas responsables. La web hoy muestra la información y los avisos cuando el usuario ingresa; no envía notificaciones en segundo plano como una aplicación móvil. Por eso la revisión previa no garantiza información durante toda la jornada: el personal debe seguir atento a la radio y cumplir los procedimientos. Queremos fortalecer la participación del trabajador, no trasladarle toda la responsabilidad del alertamiento.)
 
 ## 06 — Valor para Antamina
-**En pantalla:** «Menos fricción. Más visibilidad operativa». Centro de Control, personal de campo, operación y liderazgo.
+**En pantalla:** «Más claridad. Más visibilidad operativa». Centro de Control, personal de campo, operación y liderazgo.
 
 **Expón:** (El valor esperado se distribuye en tres niveles: facilitar la consulta para el Centro de Control, mejorar la comprensión por zona para el trabajador y abrir una oportunidad de estandarización para la operación. Pero no mostraremos porcentajes de reducción ni beneficios como hechos logrados sin mediciones. Lo correcto es validarlos durante un piloto con indicadores concretos: concordancia con Keraunos, antigüedad del último dato, tiempo de comprensión y recurrencia de consultas al Centro de Control.)
 
@@ -51,3 +51,26 @@ Sistema de Alerta y Respuesta Antamina
 - No presentar cambios de protocolo ni obligaciones nuevas como aprobados.
 - No criticar sistemas existentes ni atribuir disminuciones de incidentes o consultas sin indicadores medidos.
 - Enfatizar que S.A.R.A. complementa las comunicaciones y los procedimientos oficiales.
+
+
+## V6.1 — Sincronizar animaciones con el discurso
+
+Las animaciones de entrada de cada capítulo duran unos segundos y finalizan sin requerir seguir moviendo el scroll. Después se activa una secuencia de motion graphics **independiente y repetitiva**, con una pausa entre ciclos. No representa información en vivo.
+
+**Control del expositor:** el botón circular **↻** (abajo a la derecha) o la tecla **R** repiten la animación de la pantalla actual. Las flechas y la rueda avanzan o retroceden entre capítulos completos. Los enlaces y la simulación opcional funcionan como antes. En equipos con preferencia de movimiento reducido, la secuencia secundaria no se reproduce.
+
+**01 · Contexto:** al explicar los sistemas, la trayectoria luminosa avanza **detección → monitoreo → aviso radial**. No implica transmisión radial simulada real.
+
+**02 · Problemática:** una señal explicativa viaja desde la comunicación hacia la pregunta **¿qué sucede en mi zona?**. La secuencia no indica fallo de las radios; representa la necesidad de una lectura complementaria.
+
+**03 · Solución:** se iluminan sucesivamente las cuatro zonas. Es un esquema, **no reproduce alertas ni códigos de color vigentes**.
+
+**04 · Ingeniería:** pulsos de datos recorren el esquema **web Keraunos → tres motores → S.A.R.A.**. Es un diagrama de flujo ilustrativo. La consulta real tiene fuente común y se realiza mediante los scripts existentes.
+
+**05 · Cultura:** se destaca secuencialmente **antes de salir: consultar**, **durante: escuchar avisos oficiales**, **ante la alerta: responder**. Se ilumina el aviso *dentro de la web*, sin falsas notificaciones push.
+
+**06 · Valor:** el indicador vertical resalta uno por uno los posibles beneficios para las tres audiencias. No aparecen métricas inventadas.
+
+**07 · Futuro:** se iluminan **validar → fortalecer → escalar** y se dibuja el símbolo final de tres diagonales de S.A.R.A.
+
+**Recomendación de uso:** avanzar al capítulo, dejar concluir la entrada cinematográfica, introducir el mensaje, y utilizar **R** cuando quieras que la ilustración vuelva a recorrer el concepto central. Evitar accionar las animaciones de manera continua si distrae del mensaje.
