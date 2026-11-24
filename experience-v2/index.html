@@ -123,6 +123,12 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 13h7l-1 9 10-12h-7l0-8z"/></svg> DEMOSTRAR S.A.R.A. <span aria-hidden="true">↗</span>
           </a>
           <p class="context-note beat" data-beat=".66">La consulta web complementa los avisos radiales. No los sustituye.</p>
+          <div class="sara-qr-widget beat" data-beat=".56">
+            <button class="sara-qr-trigger" type="button" id="show-sara-qr" aria-label="Ampliar código QR para que el público abra el mapa de S.A.R.A." title="Ampliar QR para el auditorio">
+              <img src="%BASE_URL%assets/qr-sara.svg" width="176" height="176" alt="Código QR: abre el mapa web de S.A.R.A." loading="eager"/>
+            </button>
+            <div class="sara-qr-label"><strong>ESCANEA S.A.R.A.</strong><span>ABRIR MAPA</span><small>PULSA PARA AMPLIAR ↗</small></div>
+          </div>
         </div>
         <div class="narrative-visual zone-visual">
           <div class="zone-header beat" data-beat=".18"><span class="signal-dot"></span> CONSULTA OPERATIVA POR ZONA</div>
@@ -239,6 +245,15 @@
     </section>
   </main>
 
+
+  <dialog id="sara-qr-dialog" class="sara-qr-dialog" aria-labelledby="sara-qr-title">
+    <button type="button" class="dialog-close" id="close-sara-qr" aria-label="Cerrar código QR">✕</button>
+    <p class="eyebrow">ACCESO DIRECTO · PERSONAL DE CAMPO</p>
+    <h2 id="sara-qr-title">EXPLORA S.A.R.A.</h2>
+    <img src="%BASE_URL%assets/qr-sara.svg" width="360" height="360" alt="Código QR para abrir https://antito-yanac.github.io/sara/"/>
+    <p>Escanea con la cámara de tu teléfono para abrir el mapa de S.A.R.A.</p>
+    <a href="https://antito-yanac.github.io/sara/" target="_blank" rel="noopener noreferrer">ABRIR MAPA DE S.A.R.A. ↗</a>
+  </dialog>
   <dialog id="info-dialog" class="info-dialog" aria-labelledby="dialog-heading">
     <button type="button" id="close-info" class="dialog-close" aria-label="Cerrar">✕</button>
     <p class="eyebrow">SISTEMA DE DETECCIÓN</p>
