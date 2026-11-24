@@ -3,7 +3,7 @@ import { createLivingWorld } from "./living-world.js";
 import "./styles.css";
 
 /**
- * V5 cinematic presentation controller.
+ * V6 hybrid executive presentation controller.
  *
  * Wheel, keyboard, chapter markers and swipe are COMMANDS, not a scrubber.
  * A command selects a chapter; GSAP then plays a fully time-driven animation
@@ -25,11 +25,19 @@ const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const livingWorld = createLivingWorld({ reducedMotion: reduced });
 
 const looks = [
+  // 01: Open pit panorama, detection context.
   { x: 0,    y: 0,    zoom: 1.12, glow: .00 },
-  { x: -2.2, y: -1.0, zoom: 1.22, glow: .05 },
-  { x: -3.8, y: 1.2,  zoom: 1.35, glow: .10 },
-  { x: .8,   y: -.9,  zoom: 1.42, glow: .18 },
-  { x: 2.2,  y: 1.6,  zoom: 1.36, glow: .12 },
+  // 02: Move toward haul-road benches as the operational friction appears.
+  { x: -2.2, y: -1.0, zoom: 1.22, glow: .04 },
+  // 03: Clear front view for the four-zone lookup.
+  { x: -3.8, y: 1.2,  zoom: 1.35, glow: .12 },
+  // 04: Detail of the mine while the three inquiry engines are explained.
+  { x: .8,   y: -.9,  zoom: 1.42, glow: .20 },
+  // 05: A quiet, more open frame for consultation and prevention.
+  { x: 2.0,  y: 1.1,  zoom: 1.30, glow: .10 },
+  // 06: Operational benefits under an advancing atmospheric front.
+  { x: -1.1, y: 1.5,  zoom: 1.36, glow: .14 },
+  // 07: Return to a balanced overview for the leadership decision.
   { x: .3,   y: 0,    zoom: 1.23, glow: .04 }
 ];
 
