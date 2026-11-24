@@ -1,82 +1,68 @@
-# S.A.R.A. — Presentación ejecutiva (V5 en desarrollo)
+# S.A.R.A. — Presentación ejecutiva híbrida V6
 
-**Sistema de Alerta y Respuesta Antamina**
+**Nombre completo:** Sistema de Alerta y Respuesta Antamina.  
+**Código de la presentación:** rama de desarrollo \`development-v5\` del repositorio expoSARA (se conserva esta rama para no romper el mecanismo de publicación).  
+**Código del producto S.A.R.A.:** https://github.com/antito-yanac/sara (otro repositorio).
 
-Esta rama implementa una exposición ejecutiva para Presidencia y Vicepresidencias de Antamina. El producto principal S.A.R.A. se encuentra en [antito-yanac/sara](https://github.com/antito-yanac/sara); este repositorio contiene **solo la presentación**.
+## Enlaces
 
-## Estados de publicación
+- **Presentación formal V4:** https://makolegacy.github.io/expoSARA/ — sale exclusivamente de \`presentation-approved\`. No se cambia sin autorización.
+- **Vista previa V6:** https://makolegacy.github.io/expoSARA/preview/ — sale del código de \`development-v5\` después de pasar las pruebas. Es experimental.
 
-| Rama | Uso |
-| --- | --- |
-| presentation-approved | Versión estable que publica el enlace público de GitHub Pages |
-| development-v5 | Desarrollo experimental, pruebas y respaldo offline; **no actualiza el sitio público** |
+No se requiere localhost, instalar herramientas ni usar la laptop original para ver la vista previa desde otra PC.
 
-El enlace público sigue siendo https://makolegacy.github.io/expoSARA/ y no se modifica al actualizar esta rama.
+## Siete capítulos narrativos
 
-## Seis movimientos narrativos
+1. **Contexto operacional:** De la detección a la decisión; StrikeGuard, Keraunos, monitoreo del Centro de Control y aviso radial.
+2. **Problemática:** La alerta se comunica, pero el trabajador puede requerir más claridad por zona. No se descalifican los sistemas oficiales.
+3. **Solución:** Cuatro zonas, una lectura más clara. Enlace a S.A.R.A., sin fingir alertas en vivo en la maqueta.
+4. **Ingeniería:** Tres motores actuales que consultan la misma web Keraunos desde tres computadoras. Posible integración API futura.
+5. **Cultura preventiva:** Propuesta de consulta previa a salir a campo; durante las actividades se mantienen los avisos radiales oficiales y las medidas de seguridad.
+6. **Valor esperado:** Centro de Control, personal de campo y liderazgo; beneficios por medir, no indicadores inventados.
+7. **Visión:** Validar, fortalecer y escalar con un piloto controlado. Diagrama opcional de continuidad API futura → motores web → Keraunos manual → StrikeGuard manual.
 
-1. **De la detección a la decisión** — aparecen progresivamente StrikeGuard y Keraunos, fuentes de contexto para el Centro de Control.
-2. **La información existe; el reto es comprenderla** — la fricción operativa se revela en tres momentos.
-3. **No creamos otro detector** — Keraunos, tres motores instalados en tres computadoras, S.A.R.A. y personal de campo se conectan visualmente. Los tres motores comparten fuente Keraunos; no equivalen a redundancia de origen.
-4. **Cuatro zonas, una lectura más clara** — consulta visual de Yanacancha, Oficinas Mina, Tajo y Tucush y enlace directo a S.A.R.A. Las posiciones son esquemáticas, no geográficas.
-5. **Menos fricción, más visibilidad** — beneficios esperados para Centro de Control, campo y liderazgo, sujetos a evaluación.
-6. **De una solución operativa a una capacidad confiable** — validar, fortalecer y escalar, con evolución posible a respuesta a emergencias (no implementada ni aprobada). Una demostración opcional de continuidad se abre en un diálogo.
+## Precisión operacional
 
-El contenido visible está basado en el guion ejecutivo acordado. El guion oral lo desarrolla el expositor: evitamos saturar los capítulos con párrafos.
+La V6 distingue expresamente información operativa actual y propuestas:
 
-## Motion graphics y narrativa visual
+- **Actualmente no existe una práctica formal de consulta previa** por parte del personal de campo, según el contexto facilitado por el operador. S.A.R.A. podría ayudar a fomentar ese hábito, sujeto a coordinación y validación institucional.
+- **No hay notificaciones web en segundo plano para quien no tenga abierto el sistema.** No se simula una notificación push; el aviso del capítulo 05 se identifica como visible dentro de la consulta web.
+- Las comunicaciones del Centro de Control y los procedimientos oficiales siguen siendo esenciales durante toda la jornada. Una consulta inicial no garantiza una alerta posterior.
+- Las tres computadoras consultan la misma fuente Keraunos; eso no equivale a redundancia completa del origen.
+- La integración API y el módulo de respuesta a emergencias son planes futuros. No se presentan como capacidades plenamente implementadas ni aprobadas.
+- El tajo se muestra como **ilustración cinematográfica**, nunca como cartografía actualizada o telemetría real.
 
-- Un mismo escenario del tajo permanece durante todos los capítulos. La cámara 2.5D se desplaza/escala de manera continua; no hay cortes de escenas.
-- Cada capítulo se representa en una composición a pantalla completa. **Un gesto de rueda del mouse, una flecha, un botón o un deslizamiento táctil inicia toda la secuencia del capítulo de forma autónoma.** No es una barra de tiempo de video.
-- La cámara viaja con easing durante 2,65 segundos. Los gráficos y textos entran de forma escalonada mediante una línea de tiempo GSAP; sus movimientos terminan aunque el presentador no vuelva a tocar el mouse.
-- Avanzar: rueda abajo, flecha derecha/abajo, PageDown, espacio o control →. Retroceder: rueda arriba, flecha izquierda/arriba, PageUp o control ←. Home/End permiten abrir el primer/último capítulo. Cada gesto se limita a un capítulo para evitar saltos por inercia.
-- Las transiciones pueden recorrerse hacia atrás: al regresar a un capítulo, su animación narrativa se reproduce nuevamente. El presentador conserva el control del ritmo entre capítulos.
-- Se retiraron completamente los camiones y excavadoras artificiales de la iteración previa. Solo quedan nubes, oscurecimiento, lluvia ligera y destellos ambientales discretos.
-- Se respetan preferencias del sistema para movimiento reducido.
-- Los accesos originales a Keraunos y S.A.R.A. son enlaces externos interactivos. La simulación de respaldo es conceptual, no certificación de continuidad.
-- El tajo es una **interpretación artística**, no cartografía minera ni información operacional en vivo.
+## Motion graphics
 
-## Ejecutar en Windows (PowerShell / VS Code)
+Se mantiene una sola escena minera y siete puntos de cámara 2.5D. Un único gesto de rueda del mouse, flechas, PageUp/Down o pulsaciones de controles inicia la transición completa y autónoma, sin necesitar mantener el scroll. Los 75+ elementos narrativos se revelan gradualmente. Los camiones artificiales siguen eliminados. Se mantienen efectos discretos de nubes, lluvia y oscurecimiento.
 
-Desde la carpeta raíz del repositorio:
+## Ejecutar y probar en Windows
 
-    cd C:\Users\Pc\expoSARA
-    git status
-    git switch development-v5
-    git pull --ff-only origin development-v5
-    cd experience-v2
-    npm.cmd install
-    npm.cmd run dev
+\`\`\`powershell
+cd C:\Users\Pc\expoSARA
+git status
+git switch development-v5
+git pull --ff-only origin development-v5
+cd experience-v2
+npm.cmd install
+npm.cmd run dev
+\`\`\`
 
 Abrir http://127.0.0.1:5173/ .
 
-## Pruebas
+\`\`\`powershell
+npm.cmd run test:v6
+npm.cmd run build
+npm.cmd run build:offline
+npm.cmd run test:offline
+\`\`\`
 
-    npm.cmd run test:v5
-    npm.cmd run build
-    npm.cmd run build:offline
-    npm.cmd run test:offline
+El respaldo local es \`dist-offline/SARA_V6_PREVIEW_OFFLINE.html\`. El workflow entrega un artefacto llamado \`SARA-V6-PREVIEW\`. Para usarlo en una PC de otra persona basta descargar el archivo HTML o abrir el sitio de pruebas.
 
-GitHub Actions ejecuta las mismas comprobaciones automáticamente en development-v5 sin publicar Pages. El respaldo de desarrollo se adjunta como SARA-V5-PREVIEW, con el archivo SARA_V5_PREVIEW_OFFLINE.html.
+## Guion de exposición
 
-El archivo public/assets/antamina-cinematic.webp debe existir para generar tanto la versión web como el respaldo offline.
+Ver [GUIA_EXPOSICION_V6.md](./GUIA_EXPOSICION_V6.md). Contiene lo que debe decirse en cada capítulo y diferencia funciones actuales de propuestas.
 
-## Control de calidad para gerencia
+## Control de publicación
 
-Validar en Chrome y en el proyector real: legibilidad desde el auditorio, ritmo de apariciones por scroll, ubicación de botones, tiempos de carga, enlaces externos, contraste con tormenta, modo offline y la demostración opcional de continuidad. **No fusionar a presentation-approved hasta la aprobación explícita del usuario.**
-
-
-## Dos enlaces públicos, una sola publicación segura
-
-- **Formal (V4 aprobada):** https://makolegacy.github.io/expoSARA/
-- **Pruebas (V5 experimental):** https://makolegacy.github.io/expoSARA/preview/
-
-El workflow de GitHub Pages situado en presentation-approved compila ambas ramas por separado y publica una carpeta preview/ bajo la web formal. La portada principal siempre se construye desde presentation-approved, **nunca desde development-v5**.
-
-Tras cada cambio en development-v5, el workflow de validación realiza pruebas de contenido y compilación. Solo si pasan, solicita automáticamente una nueva publicación combinada al workflow de la rama aprobada. No se requiere Node.js, localhost ni acceso a la laptop del expositor para revisar la URL experimental desde otra PC.
-
-### Detalle técnico de continuidad (simulación conceptual)
-
-El diagrama se abre desde el capítulo 06 y empieza con **API Keraunos, motor único (arquitectura futura propuesta)** en el centro. Cada clic completa una animación independiente: falla API → se despliega a un lado y se dibuja la línea hacia **tres motores actuales de consulta web**; tras fallar los tres → aparece **Keraunos manual**; tras su indisponibilidad → aparece **StrikeGuard manual**. Los motores web consultan la misma fuente, por lo que no se representa redundancia de origen.
-
-**No afirmar que la integración API esté implementada ni que esta demostración certifique disponibilidad operativa.** Esta presentación es informativa, no un sistema de toma de decisiones en vivo.
+GitHub Actions valida la rama de desarrollo y solicita una publicación combinada que compila **la raíz formal desde \`presentation-approved\`** y **la carpeta \`preview/\` desde \`development-v5\`**. Nunca se fusiona automáticamente la V6 a la versión formal. El cambio a versión aprobada requiere autorización explícita y validación de la exposición en pantalla/proyector.
