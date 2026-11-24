@@ -20,5 +20,8 @@ assert(jsMatch && cssMatch,"Embedded JS/CSS expected");
 assert.equal(jsMatch[1],expectedJs,"Embedded JS differs from production bundle");
 assert.equal(cssMatch[1],expectedCss,"Embedded CSS differs from production bundle");
 assert(html.includes("data:image/webp;base64,"),"Embedded photographic image expected");
+assert.equal((html.match(/data:image\/svg\+xml;base64,/g)||[]).length,2,"Both QR images must work offline");
+assert(!html.includes("qr-sara.svg"),"No external QR asset dependency in standalone file");
+assert(html.includes("https://antito-yanac.github.io/sara/"),"QR destination link preserved");
 assert(!html.includes('<script type="module" crossorigin src='),"No external JS dependency expected");
 console.log("Offline V6 verified: JavaScript and CSS are byte-for-byte identical to the compiled bundles.");
