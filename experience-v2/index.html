@@ -170,20 +170,54 @@
         </div>
         <div class="resilience-panel">
           <div class="sim-topline"><span>SIMULACIÓN DE CONTINUIDAD</span><button type="button" id="reset-sim" class="reset-button">REINICIAR ↺</button></div>
-          <div id="fallback-sim" class="fallback-sim" aria-label="Simulación de redundancia">
-            <button type="button" id="fail-api" class="sim-node active" data-stage="api"><span class="node-id">01</span><strong>API</strong><small>CLIC PARA FALLAR</small></button>
-            <div class="sim-connector" data-link="api-motors"><span>→</span></div>
-            <div class="motors" id="motors">
-              <button type="button" class="sim-node motor" data-motor="0" disabled><span class="node-id">02A</span><strong>MOTOR 01</strong><small>RESPALDO</small></button>
-              <button type="button" class="sim-node motor" data-motor="1" disabled><span class="node-id">02B</span><strong>MOTOR 02</strong><small>RESPALDO</small></button>
-              <button type="button" class="sim-node motor" data-motor="2" disabled><span class="node-id">02C</span><strong>MOTOR 03</strong><small>RESPALDO</small></button>
-            </div>
-            <div class="sim-connector" data-link="motors-keraunos"><span>→</span></div>
-            <button type="button" class="sim-node" id="fail-keraunos" disabled><span class="node-id">03</span><strong>KERAUNOS MANUAL</strong><small>RESPALDO</small></button>
-            <div class="sim-connector" data-link="keraunos-strike"><span>→</span></div>
-            <div class="sim-node terminal-node" id="strike-final"><span class="node-id">04</span><strong>STRIKEGUARD MANUAL</strong><small>ÚLTIMO RESPALDO</small></div>
+          <p class="continuity-design-note">ESCENARIO PROPUESTO: API Keraunos como fuente principal y tres motores actuales de consulta web como respaldo. La integración API está pendiente de validación.</p>
+      <div class="continuity-viewport">
+        <div id="fallback-sim" class="continuity-track" aria-label="Diagrama de respaldo progresivo">
+          <div class="continuity-stage stage-api" data-stage="api">
+            <button type="button" id="fail-api" class="sim-node sim-primary active">
+              <span class="node-id">01 · PROPUESTA</span>
+              <strong>API KERAUNOS</strong>
+              <span class="node-subtitle">Motor único de consulta directa</span>
+              <small>SIMULAR FALLA DE API</small>
+            </button>
           </div>
-          <p id="sim-status" class="sim-status" role="status" aria-live="polite">Haz clic en API para simular una falla y descubrir las capas de respaldo.</p>
+          <div class="continuity-link" data-link="api-motors" hidden aria-hidden="true">
+            <span class="link-line"></span><span class="link-arrow">›</span>
+          </div>
+          <div class="continuity-stage stage-motors" data-stage="motors" hidden>
+            <div class="engine-stage-heading">CONSULTA WEB DE RESPALDO</div>
+            <div class="motors" id="motors">
+              <button type="button" class="sim-node motor" data-motor="0" disabled><span class="node-id">02A</span><strong>MOTOR 01</strong><small>RESPALDO WEB</small></button>
+              <button type="button" class="sim-node motor" data-motor="1" disabled><span class="node-id">02B</span><strong>MOTOR 02</strong><small>RESPALDO WEB</small></button>
+              <button type="button" class="sim-node motor" data-motor="2" disabled><span class="node-id">02C</span><strong>MOTOR 03</strong><small>RESPALDO WEB</small></button>
+            </div>
+            <span class="engine-stage-caption">Los 3 consultan la misma web Keraunos</span>
+          </div>
+          <div class="continuity-link" data-link="motors-keraunos" hidden aria-hidden="true">
+            <span class="link-line"></span><span class="link-arrow">›</span>
+          </div>
+          <div class="continuity-stage stage-keraunos" data-stage="keraunos" hidden>
+            <button type="button" class="sim-node" id="fail-keraunos" disabled>
+              <span class="node-id">03 · MANUAL</span><strong>KERAUNOS</strong>
+              <span class="node-subtitle">Consulta manual directa</span>
+              <small>SIMULAR INDISPONIBILIDAD</small>
+            </button>
+          </div>
+          <div class="continuity-link" data-link="keraunos-strike" hidden aria-hidden="true">
+            <span class="link-line"></span><span class="link-arrow">›</span>
+          </div>
+          <div class="continuity-stage stage-strike" data-stage="strike" hidden>
+            <div class="sim-node terminal-node" id="strike-final">
+              <span class="node-id">04 · PROCEDIMIENTO</span>
+              <strong>STRIKEGUARD</strong>
+              <span class="node-subtitle">Comunicación manual establecida</span>
+              <small>RESPALDO PROCEDIMENTAL</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p id="sim-status" class="sim-status" role="status" aria-live="polite">Escenario inicial: un motor consulta la API de Keraunos. Haz clic para simular una falla.</p>
+          <p class="continuity-summary">SIMULACIÓN DE DISEÑO · Los tres motores web comparten la fuente Keraunos. El respaldo manual sigue los procedimientos oficiales.</p>
           <div class="security-notes"><span>SEGURIDAD: integración auditada y gestor de API Keys (propuesta)</span><span>PRIVACIDAD: objetivo de cero registro de ubicaciones · Ley N.º 29733</span></div>
         </div>
         <a href="#inicio" class="back-to-top">VOLVER AL INICIO ↑</a>
