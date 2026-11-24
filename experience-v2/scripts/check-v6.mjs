@@ -9,6 +9,7 @@ const html=fs.readFileSync(path.join(root,"index.html"),"utf8");
 const main=fs.readFileSync(path.join(root,"src","main.js"),"utf8");
 const css=fs.readFileSync(path.join(root,"src","styles.css"),"utf8");
 const weather=fs.readFileSync(path.join(root,"src","living-world.js"),"utf8");
+const chapterMotion=fs.readFileSync(path.join(root,"src","chapter-motion.js"),"utf8");
 
 assert.equal(clamp01(-10),0);
 assert.equal(clamp01(2),1);
@@ -102,5 +103,28 @@ assert(html.includes("FUENTE ACTUAL") && html.includes("WEB KERAUNOS"),"Three en
 assert(html.includes("integración API") && html.includes("sujetas a validación"),"API remains proposed");
 assert(html.includes("Beneficios esperados"),"No unjustified measured claims");
 assert(css.includes(".prevention-timeline"),"Distinct motion-graphic prevention sequence");
+
+
+// Motion graphics must be substantive timed explanations, not opacity-only slides.
+assert(html.includes("MÁS CLARIDAD.") && html.includes("MÁS VISIBILIDAD OPERATIVA."),"Executive chapter 06 uses positive, unambiguous terminology");
+assert(!html.includes("MENOS FRICCIÓN"),"Discard overly negative chapter 06 heading");
+assert(html.includes('id="replay-motion"'),"Presenter can replay each explanation on demand");
+for(const cue of ["signal-journey","signal-packet","problem-signal","radio-path",
+                  "zone-scan-packet","flow-packet","value-rail","prevention-timeline"]){
+  assert(html.includes(cue),"Missing explanatory graphic: "+cue);
+}
+assert(main.includes('import { createChapterMotion }'),"Motion graphics controller is loaded");
+assert(main.includes('chapterMotion.play(next.scene)'),"Autonomous motion graphics start after chapter entrance");
+assert(main.includes('chapterMotion.stop()'),"Previous chapter motion stops on navigation");
+assert(main.includes('event.key.toLowerCase() === "r"'),"Presenter keyboard shortcut R repeats explanation");
+assert(main.includes('replayButton?.addEventListener("click"'),"Replay control is functional");
+assert(chapterMotion.includes('repeat: -1') && chapterMotion.includes('repeatDelay: 3.8'),"Explanation loops quietly while presenter speaks");
+assert(chapterMotion.includes('function makeSequence(scene)'),"Story-specific animation sequences exist");
+for(let sceneIndex=0;sceneIndex<7;sceneIndex++){
+  assert(chapterMotion.includes('index === '+sceneIndex),"Chapter "+(sceneIndex+1)+" has a story animation");
+}
+assert(chapterMotion.includes("createChapterMotion"),"Reduced-motion safe scene choreography exported");
+assert(chapterMotion.includes("reducedMotion"),"Accessibility: respect reduced motion");
+assert(css.includes("V6.1 — SEMANTIC CINEMATIC MOTION GRAPHICS"),"Presentation visuals are styled");
 
 console.log("S.A.R.A. hybrid executive V6: seven autonomous chapters, operational context, prevention culture, fallback — OK");
