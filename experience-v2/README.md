@@ -64,3 +64,19 @@ El archivo public/assets/antamina-cinematic.webp debe existir para generar tanto
 ## Control de calidad para gerencia
 
 Validar en Chrome y en el proyector real: legibilidad desde el auditorio, ritmo de apariciones por scroll, ubicación de botones, tiempos de carga, enlaces externos, contraste con tormenta, modo offline y la demostración opcional de continuidad. **No fusionar a presentation-approved hasta la aprobación explícita del usuario.**
+
+
+## Dos enlaces públicos, una sola publicación segura
+
+- **Formal (V4 aprobada):** https://makolegacy.github.io/expoSARA/
+- **Pruebas (V5 experimental):** https://makolegacy.github.io/expoSARA/preview/
+
+El workflow de GitHub Pages situado en presentation-approved compila ambas ramas por separado y publica una carpeta preview/ bajo la web formal. La portada principal siempre se construye desde presentation-approved, **nunca desde development-v5**.
+
+Tras cada cambio en development-v5, el workflow de validación realiza pruebas de contenido y compilación. Solo si pasan, solicita automáticamente una nueva publicación combinada al workflow de la rama aprobada. No se requiere Node.js, localhost ni acceso a la laptop del expositor para revisar la URL experimental desde otra PC.
+
+### Detalle técnico de continuidad (simulación conceptual)
+
+El diagrama se abre desde el capítulo 06 y empieza con **API Keraunos, motor único (arquitectura futura propuesta)** en el centro. Cada clic completa una animación independiente: falla API → se despliega a un lado y se dibuja la línea hacia **tres motores actuales de consulta web**; tras fallar los tres → aparece **Keraunos manual**; tras su indisponibilidad → aparece **StrikeGuard manual**. Los motores web consultan la misma fuente, por lo que no se representa redundancia de origen.
+
+**No afirmar que la integración API esté implementada ni que esta demostración certifique disponibilidad operativa.** Esta presentación es informativa, no un sistema de toma de decisiones en vivo.
