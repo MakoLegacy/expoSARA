@@ -50,7 +50,7 @@ let wheelTotal = 0;
 let wheelGestureUsed = false;
 let touchStart = null;
 const cameraState = { position: 0 };
-const CHAPTER_LOCK_MS = 1250;
+const CHAPTER_LOCK_MS = 2300;
 const WHEEL_GAP_MS = 240;
 const WHEEL_THRESHOLD = 48;
 const clamp = (value, a, b) => Math.min(b, Math.max(a, value));
@@ -81,8 +81,7 @@ function setChapterStatus(index, updateHash) {
   });
   if (updateHash) {
     // One presentational history entry, not one for every wheel increment.
-    window.history.replaceState(null, "", window.location.pathname +
-      window.location.search + "#" + scenes[index].id);
+    window.history.replaceState(null, "", "#" + scenes[index].id);
   }
 }
 
@@ -216,8 +215,10 @@ window.addEventListener("wheel", event => {
     event.deltaMode === 2 ? event.deltaY * window.innerHeight : event.deltaY;
   wheelTotal += units;
   if (wheelGestureUsed || Math.abs(wheelTotal) < WHEEL_THRESHOLD) return;
-  if (now - lastNavigationAt < CHAPTER_LOCK_MS) return;
+  // Ignore the rest of this gesture when a transition is still playing.
+  // Otherwise trackpad momentum could unexpectedly skip an additional chapter.
   wheelGestureUsed = true;
+  if (now - lastNavigationAt < CHAPTER_LOCK_MS) return;
   showChapter(activeIndex + Math.sign(wheelTotal));
 }, { passive: false });
 
