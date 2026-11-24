@@ -42,7 +42,17 @@ assert.equal((html.match(/class="value-row beat"/g)||[]).length,3,"3 stakeholder
 assert.equal((html.match(/class="future-step beat"/g)||[]).length,3,"3 future priorities");
 assert(html.includes("https://qr.keraunos.co/t/mHMsMSjw7fLzlVFzMsh9K99cFG7tiC"));
 assert(html.includes("https://antito-yanac.github.io/sara/"));
-assert(html.includes('id="fallback-sim"'),"Optional redundancy demonstration preserved");
+assert(html.includes('id="continuity-track"'),"Progressively revealed contingency stage retained");
+assert(html.includes('data-stage="api"') && html.includes('data-stage="motors"') && html.includes('data-stage="keraunos"') && html.includes('data-stage="strike"'),"API-first continuity flow");
+assert(html.includes("API KERAUNOS"),"Primary API scenario clearly labeled");
+assert(html.includes("motor único de consulta directa") || html.includes("Motor único de consulta directa"),"Primary API uses a single engine");
+assert(html.includes("Los 3 consultan la misma web Keraunos"),"Shared web Keraunos source not misrepresented");
+assert(html.includes('data-link="api-motors"') && html.includes('data-link="motors-keraunos"') && html.includes('data-link="keraunos-strike"'),"All three connecting edges");
+assert(main.includes("getBoundingClientRect"),"FLIP layout transition of previous stages");
+assert(main.includes('extendContinuity("motors","api-motors"'),"API failure opens web-engine backup");
+assert(main.includes('extendContinuity("keraunos","motors-keraunos"'),"Three motor failures open manual Keraunos");
+assert(main.includes('extendContinuity("strike","keraunos-strike"'),"Manual Keraunos failure opens StrikeGuard");
+
 assert(html.includes('id="show-continuity"'),"Technical detail accessed on demand");
 assert(html.includes('id="mine-photo"'),"One persistent mine scene");
 assert(!html.includes('class="haul-vehicle"'),"No artificial trucks");
