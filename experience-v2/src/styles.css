@@ -635,3 +635,86 @@ main:after{display:none}
  .operational-chain{flex-wrap:nowrap;gap:5px;padding:14px 8px}
  .operational-chain span{padding-inline:2px}
 }
+
+
+/* V6.2 — Scannable QR installed in slide 03 (preview only).
+   A white quiet-zone and pixel-sharp SVG make it usable on a projector.
+   Click the QR to open a large, high-contrast auditorium version. */
+#capitulo-03 .story-copy{position:relative}
+.sara-qr-widget{
+  position:absolute;right:0;top:208px;
+  display:flex;align-items:center;flex-direction:column;
+  width:188px;max-width:33%;gap:9px;z-index:4;
+}
+.sara-qr-trigger{
+  display:block;cursor:zoom-in;background:#fff;
+  border:7px solid #fff;padding:0;border-radius:4px;
+  width:176px;max-width:100%;aspect-ratio:1;
+  box-shadow:0 5px 27px rgba(0,0,0,.55),0 0 0 1px rgba(117,219,250,.7);
+  transition:box-shadow .2s,border-color .2s;
+}
+.sara-qr-trigger:hover,.sara-qr-trigger:focus-visible{
+  box-shadow:0 7px 32px rgba(0,0,0,.7),0 0 0 2px var(--orange);
+}
+.sara-qr-trigger img{width:100%;height:100%;display:block;object-fit:contain;image-rendering:pixelated}
+.sara-qr-label{text-align:center;pointer-events:none}
+.sara-qr-label strong{display:block;font:700 12px var(--title);letter-spacing:.04em;color:var(--orange)}
+.sara-qr-label span{display:block;margin-top:5px;font:700 11px var(--title);color:#e6f6ff;letter-spacing:.03em}
+.sara-qr-label small{display:block;margin-top:5px;font:600 15px var(--body);color:#d8e5ed}
+
+.sara-qr-dialog{
+  width:min(510px,94vw);max-height:95dvh;overflow:auto;
+  padding:26px 28px 32px;text-align:center;color:#fff;
+  background:linear-gradient(145deg,#071c2b,#04101d);
+  border:1px solid var(--cyan);box-shadow:0 30px 95px rgba(0,0,0,.8)
+}
+.sara-qr-dialog::backdrop{background:rgba(1,6,13,.9);backdrop-filter:blur(8px)}
+.sara-qr-dialog .eyebrow{font-size:11px;margin:0 15px 14px}
+.sara-qr-dialog h2{font:800 clamp(21px,2.1vw,28px) var(--title);margin:0 0 20px}
+.sara-qr-dialog img{
+  display:block;width:min(340px,100%);height:auto;aspect-ratio:1;
+  background:#fff;image-rendering:pixelated;
+  border:12px solid #fff;margin:0 auto;box-shadow:0 0 22px rgba(89,221,251,.2)
+}
+.sara-qr-dialog p:not(.eyebrow){margin:17px auto;font-size:21px;line-height:1.23;max-width:390px}
+.sara-qr-dialog a{display:inline-block;font:700 12px var(--title);padding:13px 15px;color:var(--orange);border:1px solid var(--orange)}
+.sara-qr-dialog .dialog-close{right:16px;top:12px}
+
+/* The QR is a functional information asset, not a looping motion effect.
+   Do not pulse, distort or rotate it: those effects harm scanning. */
+@media(max-width:1350px) and (min-width:851px){
+  .sara-qr-widget{width:164px;top:208px}
+  .sara-qr-trigger{width:152px}
+  .sara-qr-label strong{font-size:11px}
+  .sara-qr-label small{font-size:13px}
+}
+@media(max-width:1100px) and (min-width:851px){
+  .sara-qr-widget{width:125px;top:213px}
+  .sara-qr-trigger{width:120px;border-width:5px}
+  .sara-qr-label strong{font-size:9px}
+  .sara-qr-label span{font-size:9px}
+  .sara-qr-label small{font-size:11px}
+}
+@media(max-height:760px) and (min-width:851px){
+  .sara-qr-widget{top:191px;gap:5px}
+  .sara-qr-trigger{width:min(150px,100%);border-width:6px}
+  .sara-qr-label span{margin-top:3px}
+  .sara-qr-label small{margin-top:3px}
+}
+@media(max-width:850px){
+  .sara-qr-widget{
+    position:relative;right:auto;top:auto;
+    flex-direction:row;align-items:center;gap:9px;
+    width:100%;max-width:none;margin-top:10px
+  }
+  .sara-qr-trigger{width:78px;flex:0 0 78px;border-width:4px}
+  .sara-qr-label{text-align:left}
+  .sara-qr-label strong{font-size:11px}
+  .sara-qr-label span{font-size:10px}
+  .sara-qr-label small{font-size:12px}
+  .sara-qr-dialog{padding:20px 14px}
+}
+@media(max-height:580px) and (max-width:850px){
+  .sara-qr-widget{margin-top:4px}
+  .sara-qr-trigger{width:58px;flex-basis:58px}
+}
