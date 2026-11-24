@@ -55,6 +55,12 @@
     <a href="#capitulo-06" data-nav="06" aria-label="06 Continuidad y visión">06</a>
   </nav>
 
+  <div class="presentation-controls" role="group" aria-label="Navegación de la exposición">
+    <button type="button" id="prev-chapter" aria-label="Capítulo anterior" disabled>←</button>
+    <output id="chapter-count" aria-live="polite">01 / 06</output>
+    <button type="button" id="next-chapter" aria-label="Capítulo siguiente">→</button>
+  </div>
+
   <main>
     <!-- 01 — The detection systems emerge progressively as the presenter speaks. -->
     <section class="scene scene-hero" id="inicio" data-scene="0" aria-labelledby="title-01">
@@ -84,7 +90,7 @@
           <div class="identity-foot beat" data-beat=".66"><span class="signal-dot"></span> LA INFORMACIÓN YA EXISTE</div>
         </div>
       </div>
-      <span class="scroll-cue">DESPLAZA PARA REVELAR <span aria-hidden="true">↓</span></span>
+      <span class="scroll-cue">RUEDA O FLECHAS PARA AVANZAR <span aria-hidden="true">↓</span></span>
     </section>
 
     <!-- 02 — Subtraction: three friction points collapse into clarity. -->
