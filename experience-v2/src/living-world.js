@@ -1,10 +1,8 @@
 /**
- * S.A.R.A. V5 — living mine visualization.
- * Visual-only 2.5D choreography. Roads and equipment are illustrative and
- * are not based on official Antamina coordinates, geofences, or live telemetry.
- *
- * Everything tied to the world-camera belongs to one SVG coordinate space.
- * The camera's transform is inherited by both the photograph and equipment.
+ * S.A.R.A. — environmental story layer.
+ * Light clouds and rain respond to chapter position 0..5. The background photo
+ * is cinematic illustration, not live operational weather or mine telemetry.
+ * No synthetic vehicles or machinery are drawn.
  */
 export const clamp01 = value => Math.min(1, Math.max(0, value));
 
@@ -13,105 +11,44 @@ export function smoothstep(start, end, value) {
   return t * t * (3 - 2 * t);
 }
 
-/** Returns bounded scene intensity values for chapter position 0..6. */
 export function climateAt(position) {
   return {
-    cloud: smoothstep(0.65, 3.8, position),
-    darkness: smoothstep(1.6, 5.6, position),
-    lights: smoothstep(2.3, 5.1, position),
-    rain: smoothstep(3.7, 5.7, position),
-    digital: smoothstep(2.1, 4.3, position),
-    lightning: smoothstep(4.75, 6, position),
+    cloud: smoothstep(.6, 3.1, position),
+    darkness: smoothstep(1.3, 4.7, position),
+    rain: smoothstep(3.0, 4.9, position),
+    digital: smoothstep(1.8, 3.6, position),
+    lightning: smoothstep(3.8, 5, position),
   };
 }
 
 export function createLivingWorld({ reducedMotion = false } = {}) {
-  const world = document.querySelector("#world");
-  const photo = document.querySelector("#mine-photo");
-  const cloudFar = document.querySelector(".cloud-far");
-  const cloudNear = document.querySelector(".cloud-near");
+  const clouds = [document.querySelector(".cloud-far"), document.querySelector(".cloud-near")];
   const dark = document.querySelector(".storm-tone");
-  const rainBack = document.querySelector(".rain-back");
-  const rainFront = document.querySelector(".rain-front");
+  const rain = [document.querySelector(".rain-back"), document.querySelector(".rain-front")];
   const flash = document.querySelector(".storm-flash");
-  const pylons = [...document.querySelectorAll(".mine-lightpoint")];
-  const machines = [...document.querySelectorAll(".mine-excavator")];
-
-  const trucks = [...document.querySelectorAll(".haul-vehicle")].flatMap(element => {
-    const path = document.getElementById(element.dataset.route);
-    if (!path || typeof path.getTotalLength !== "function") return [];
-    const length = path.getTotalLength();
-    if (length <= 0) return [];
-    return [{
-      element,
-      path,
-      length,
-      speed: Number(element.dataset.speed) || 0.01,
-      offset: Number(element.dataset.offset) || 0,
-      scale: Number(element.dataset.scale) || 1,
-    }];
-  });
-  const available = Boolean(world && photo && cloudFar && cloudNear && dark && rainBack && rainFront && flash);
+  const available = Boolean(dark && flash && clouds.every(Boolean) && rain.every(Boolean));
   let lastFrame = -Infinity;
-
-  // Visual development aid: show the 4 approximate haul paths for calibration.
-  if (available && new URLSearchParams(window.location.search).get("debugRoutes") === "1") {
-    world.classList.add("debug-routes");
-  }
 
   function render(timeSeconds, chapterPosition) {
     if (!available) return;
-    if (!reducedMotion && timeSeconds - lastFrame < 1 / 30) return;
+    if (!reducedMotion && timeSeconds - lastFrame < 1/30) return;
     lastFrame = timeSeconds;
 
     const climate = climateAt(chapterPosition);
-    world.style.setProperty("--night-factor", climate.lights.toFixed(3));
-    world.style.setProperty("--digital-factor", climate.digital.toFixed(3));
+    clouds[0].style.opacity = (climate.cloud * .53).toFixed(3);
+    clouds[1].style.opacity = (climate.cloud * .39).toFixed(3);
+    dark.style.opacity = (climate.darkness * .66).toFixed(3);
+    rain[0].style.opacity = (climate.rain * .21).toFixed(3);
+    rain[1].style.opacity = (climate.rain * .18).toFixed(3);
 
-    // Opacity is intentionally restrained to keep the mining landscape legible.
-    cloudFar.style.opacity = (climate.cloud * 0.67).toFixed(3);
-    cloudNear.style.opacity = (climate.cloud * 0.54).toFixed(3);
-    dark.style.opacity = (climate.darkness * 0.74).toFixed(3);
-    rainBack.style.opacity = (climate.rain * 0.30).toFixed(3);
-    rainFront.style.opacity = (climate.rain * 0.27).toFixed(3);
-
-    // Mild, isolated double lightning pulse late in the story, not rapid strobe.
-    const cycle = (timeSeconds + 4.1) % 19;
-    const first = clamp01(1 - Math.abs(cycle - 9.1) / 0.22);
-    const second = clamp01(1 - Math.abs(cycle - 9.56) / 0.18);
-    const lightningOpacity = reducedMotion ? 0 : climate.lightning * (first * .16 + second * .08);
-    flash.style.opacity = lightningOpacity.toFixed(3);
-
-    pylons.forEach((pylon, index) => {
-      const delay = Number(pylon.dataset.delay) || 0;
-      const on = smoothstep(2.55 + delay, 4.9 + delay, chapterPosition);
-      pylon.style.setProperty("--lamp", on.toFixed(3));
-    });
-
-    // Moving trucks are synchronized to the SVG haul-road space and inherit
-    // the same transform as the mine image. They fade out at route endpoints.
-    for (const truck of trucks) {
-      const phase = ((timeSeconds * truck.speed + truck.offset) % 1 + 1) % 1;
-      const at = phase * truck.length;
-      const point = truck.path.getPointAtLength(at);
-      const before = truck.path.getPointAtLength(Math.max(0, at - 2.5));
-      const after = truck.path.getPointAtLength(Math.min(truck.length, at + 2.5));
-      const heading = Math.atan2(after.y - before.y, after.x - before.x) * 180 / Math.PI;
-      const alpha = smoothstep(0, .10, phase) * (1 - smoothstep(.90, 1, phase));
-      truck.element.setAttribute("transform",
-        "translate(" + point.x.toFixed(2) + " " + point.y.toFixed(2) + ") rotate(" +
-        heading.toFixed(2) + ") scale(" + truck.scale + ")");
-      truck.element.style.opacity = alpha.toFixed(3);
-    }
-
-    // Small excavator boom movement is a hint of activity, not a large cartoon.
-    machines.forEach((machine, index) => {
-      const boom = machine.querySelector(".machine-boom");
-      if (!boom) return;
-      const angle = reducedMotion ? -3 : -3 + Math.sin(timeSeconds * (.30 + index * .04) + index * 1.7) * 8;
-      boom.setAttribute("transform", "rotate(" + angle.toFixed(2) + " 3 -5)");
-    });
+    // Gentle distant atmospheric flashes late in the story. No bright strobe.
+    const cycle = (timeSeconds + 4.2) % 23;
+    const first = clamp01(1 - Math.abs(cycle - 10.1) / .28);
+    const second = clamp01(1 - Math.abs(cycle - 10.67) / .19);
+    flash.style.opacity = reducedMotion
+      ? "0"
+      : (climate.lightning * (first * .1 + second * .035)).toFixed(3);
   }
 
-  return { render, trucksCount: trucks.length, lightsCount: pylons.length };
+  return { render };
 }
