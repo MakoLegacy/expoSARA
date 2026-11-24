@@ -27,7 +27,7 @@ jobs:
         with:
           ref: presentation-approved
           path: approved
-      - name: Descargar version de pruebas (development-v5)
+      - name: Descargar version experimental V6 (development-v5)
         uses: actions/checkout@v4
         with:
           ref: development-v5
@@ -57,10 +57,10 @@ jobs:
       - name: Instalar dependencias de preview
         working-directory: preview-src/experience-v2
         run: npm install
-      - name: Verificar pruebas de la V5
+      - name: Verificar pruebas de la V6
         working-directory: preview-src/experience-v2
-        run: npm run test:v5
-      - name: Compilar V5 solo en /expoSARA/preview/
+        run: npm run test:v6
+      - name: Compilar V6 solo en /expoSARA/preview/
         working-directory: preview-src/experience-v2
         run: npm run build -- --base /expoSARA/preview/ --outDir dist-preview
       - name: Unir preview al artefacto formal sin modificar su raiz
