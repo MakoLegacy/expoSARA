@@ -411,3 +411,29 @@ main:after{display:none}
  .stage-keraunos,.stage-strike{width:175px}
  .continuity-link{flex-basis:36px;min-width:36px}
 }
+
+
+/* S.A.R.A. symbol: three ascending diagonal strokes, denoting
+   detectar · comprender · responder. Deliberately minimal. */
+.brand-symbol{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+.sara-mark{width:40px;height:38px;display:block;fill:none;stroke-width:4.4;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.sara-mark .mark-one{stroke:var(--orange)}
+.sara-mark .mark-two{stroke:var(--cyan)}
+.sara-mark .mark-three{stroke:var(--orange)}
+.brand-symbol .sara-mark{filter:drop-shadow(0 0 6px rgba(69,217,253,.20))}
+.sara-closing{display:flex;align-items:center;gap:13px;margin-top:20px;opacity:.9}
+.sara-closing .sara-mark{width:35px;height:35px}
+.sara-closing span{font:700 11px/1.5 var(--font-title, var(--title, Arial));letter-spacing:.07em;color:#b7d9e7}
+
+/* Chapter labels: designed for large-screen executive presentations. */
+.scene .eyebrow{
+  font-size:clamp(16px,1.32vw,20px);
+  letter-spacing:.07em;line-height:1.45;
+}
+.scene .eyebrow:before{width:17px}
+@media(max-width:850px){
+  .scene .eyebrow{font-size:clamp(14px,2.3vw,17px);line-height:1.36;letter-spacing:.04em}
+}
+@media(max-height:740px) and (min-width:851px){
+ .scene .eyebrow{font-size:clamp(14px,1.12vw,17px)}
+}
