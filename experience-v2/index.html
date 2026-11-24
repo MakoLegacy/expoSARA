@@ -4,329 +4,194 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#050a10" />
-  <meta name="description" content="S.A.R.A. — Una experiencia inmersiva sobre la detección de tormentas eléctricas en Antamina." />
-  <title>S.A.R.A. | Experiencia inmersiva Antamina</title>
+  <meta name="description" content="S.A.R.A. — Sistema de Alerta y Respuesta Antamina. De la detección a la decisión." />
+  <title>S.A.R.A. | De la detección a la decisión</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
+  <!-- One continuous 2.5D mine environment. This is an artistic representation,
+       never live telemetry or an accurate operational geospatial model. -->
   <div id="world" class="world" aria-hidden="true">
     <div id="world-camera" class="world-camera">
       <img id="mine-photo" src="%BASE_URL%assets/antamina-cinematic.webp" alt="" fetchpriority="high" />
       <div class="world-highlights">
-        <svg class="topographic-guides" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" focusable="false">
+        <svg class="topographic-guides" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
           <path d="M 720 360 Q 1120 170 1435 300" />
           <path d="M 660 455 Q 1120 265 1400 420" />
           <path d="M 650 550 Q 1080 410 1330 570" />
           <path d="M 890 670 Q 1070 585 1200 650" />
         </svg>
-        <div class="world-beacon b1"></div><div class="world-beacon b2"></div><div class="world-beacon b3"></div>
-      </div>
-      <div class="world-activity" aria-hidden="true">
-        <svg id="activity-map" class="activity-map" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" focusable="false">
-          <defs>
-            <linearGradient id="beam-falloff" x1="0" x2="1" y1=".5" y2=".5">
-              <stop offset="0%" stop-color="#fff8dc" stop-opacity=".72" />
-              <stop offset="100%" stop-color="#fbe5bb" stop-opacity="0" />
-            </linearGradient>
-            <linearGradient id="tower-light" x1=".5" x2=".5" y1="0" y2="1">
-              <stop offset="0%" stop-color="#fffbd6" stop-opacity=".5"/>
-              <stop offset="100%" stop-color="#ffefd2" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <g class="haul-route-guides"><path id="haul-route-upper" d="M 1590 255 C 1500 278 1450 327 1375 363 S 1250 414 1190 449 S 1100 500 1006 528"/><path id="haul-route-east" d="M 1555 498 C 1482 519 1430 555 1355 582 S 1228 622 1130 652 S 1030 678 942 705"/><path id="haul-route-floor" d="M 1250 742 C 1170 725 1092 712 1030 704 S 910 698 835 724 S 697 765 610 790"/><path id="haul-route-mid" d="M 1510 395 C 1442 425 1363 448 1300 462 S 1162 480 1105 514 S 1022 568 938 600"/></g>
-          <g class="mine-floodlights"><g class="mine-lightpoint" data-delay="0.00" transform="translate(1421 330)">
-  <path class="pylon-post" d="M0 0 L0 -15" />
-  <path class="pylon-light-beam" d="M0 -16 L-45 20 L45 20 Z" />
-  <circle class="pylon-core" cx="0" cy="-16" r="3.2"/>
-  <circle class="pylon-halo" cx="0" cy="-16" r="8"/>
-</g>
-<g class="mine-lightpoint" data-delay="0.10" transform="translate(1312 456)">
-  <path class="pylon-post" d="M0 0 L0 -15" />
-  <path class="pylon-light-beam" d="M0 -16 L-45 20 L45 20 Z" />
-  <circle class="pylon-core" cx="0" cy="-16" r="3.2"/>
-  <circle class="pylon-halo" cx="0" cy="-16" r="8"/>
-</g>
-<g class="mine-lightpoint" data-delay="0.19" transform="translate(1190 555)">
-  <path class="pylon-post" d="M0 0 L0 -15" />
-  <path class="pylon-light-beam" d="M0 -16 L-45 20 L45 20 Z" />
-  <circle class="pylon-core" cx="0" cy="-16" r="3.2"/>
-  <circle class="pylon-halo" cx="0" cy="-16" r="8"/>
-</g>
-<g class="mine-lightpoint" data-delay="0.29" transform="translate(1106 625)">
-  <path class="pylon-post" d="M0 0 L0 -15" />
-  <path class="pylon-light-beam" d="M0 -16 L-45 20 L45 20 Z" />
-  <circle class="pylon-core" cx="0" cy="-16" r="3.2"/>
-  <circle class="pylon-halo" cx="0" cy="-16" r="8"/>
-</g>
-<g class="mine-lightpoint" data-delay="0.38" transform="translate(981 711)">
-  <path class="pylon-post" d="M0 0 L0 -15" />
-  <path class="pylon-light-beam" d="M0 -16 L-45 20 L45 20 Z" />
-  <circle class="pylon-core" cx="0" cy="-16" r="3.2"/>
-  <circle class="pylon-halo" cx="0" cy="-16" r="8"/>
-</g>
-<g class="mine-lightpoint" data-delay="0.47" transform="translate(789 762)">
-  <path class="pylon-post" d="M0 0 L0 -15" />
-  <path class="pylon-light-beam" d="M0 -16 L-45 20 L45 20 Z" />
-  <circle class="pylon-core" cx="0" cy="-16" r="3.2"/>
-  <circle class="pylon-halo" cx="0" cy="-16" r="8"/>
-</g>
-<g class="mine-lightpoint" data-delay="0.57" transform="translate(1492 509)">
-  <path class="pylon-post" d="M0 0 L0 -15" />
-  <path class="pylon-light-beam" d="M0 -16 L-45 20 L45 20 Z" />
-  <circle class="pylon-core" cx="0" cy="-16" r="3.2"/>
-  <circle class="pylon-halo" cx="0" cy="-16" r="8"/>
-</g></g>
-          <g class="mine-vehicles"><g class="haul-vehicle" data-route="haul-route-upper" data-speed=".0105" data-offset=".11" data-scale=".86">
-   <ellipse class="truck-shadow" cx="-2" cy="3.8" rx="11" ry="3.1" />
-   <path class="truck-dust" d="M-10 0 Q-23 -5 -33 -1 Q-23 4 -10 3 Z" />
-   <rect class="truck-frame" x="-11" y="-4" width="19" height="8" rx="1.5" />
-   <path class="truck-haul" d="M-9 -3.4 H2 L4 3.4 H-9 Z" />
-   <rect class="truck-cab" x="5" y="-3" width="6" height="6" rx=".8" />
-   <circle class="truck-wheel" cx="-6" cy="-4.6" r="1.8" /><circle class="truck-wheel" cx="5" cy="4.6" r="1.8" />
-   <path class="truck-beam" d="M11 -4 L64 -16 L64 16 L11 4 Z" />
-   <circle class="truck-headlight" cx="11.3" cy="0" r="2.2" />
-   <circle class="truck-tail" cx="-11" cy="0" r="1.6" />
- </g>
-<g class="haul-vehicle" data-route="haul-route-east" data-speed=".012" data-offset=".46" data-scale="1.05">
-   <ellipse class="truck-shadow" cx="-2" cy="3.8" rx="11" ry="3.1" />
-   <path class="truck-dust" d="M-10 0 Q-23 -5 -33 -1 Q-23 4 -10 3 Z" />
-   <rect class="truck-frame" x="-11" y="-4" width="19" height="8" rx="1.5" />
-   <path class="truck-haul" d="M-9 -3.4 H2 L4 3.4 H-9 Z" />
-   <rect class="truck-cab" x="5" y="-3" width="6" height="6" rx=".8" />
-   <circle class="truck-wheel" cx="-6" cy="-4.6" r="1.8" /><circle class="truck-wheel" cx="5" cy="4.6" r="1.8" />
-   <path class="truck-beam" d="M11 -4 L64 -16 L64 16 L11 4 Z" />
-   <circle class="truck-headlight" cx="11.3" cy="0" r="2.2" />
-   <circle class="truck-tail" cx="-11" cy="0" r="1.6" />
- </g>
-<g class="haul-vehicle" data-route="haul-route-floor" data-speed=".009" data-offset=".67" data-scale="1.15">
-   <ellipse class="truck-shadow" cx="-2" cy="3.8" rx="11" ry="3.1" />
-   <path class="truck-dust" d="M-10 0 Q-23 -5 -33 -1 Q-23 4 -10 3 Z" />
-   <rect class="truck-frame" x="-11" y="-4" width="19" height="8" rx="1.5" />
-   <path class="truck-haul" d="M-9 -3.4 H2 L4 3.4 H-9 Z" />
-   <rect class="truck-cab" x="5" y="-3" width="6" height="6" rx=".8" />
-   <circle class="truck-wheel" cx="-6" cy="-4.6" r="1.8" /><circle class="truck-wheel" cx="5" cy="4.6" r="1.8" />
-   <path class="truck-beam" d="M11 -4 L64 -16 L64 16 L11 4 Z" />
-   <circle class="truck-headlight" cx="11.3" cy="0" r="2.2" />
-   <circle class="truck-tail" cx="-11" cy="0" r="1.6" />
- </g>
-<g class="haul-vehicle" data-route="haul-route-mid" data-speed=".010" data-offset=".27" data-scale=".93">
-   <ellipse class="truck-shadow" cx="-2" cy="3.8" rx="11" ry="3.1" />
-   <path class="truck-dust" d="M-10 0 Q-23 -5 -33 -1 Q-23 4 -10 3 Z" />
-   <rect class="truck-frame" x="-11" y="-4" width="19" height="8" rx="1.5" />
-   <path class="truck-haul" d="M-9 -3.4 H2 L4 3.4 H-9 Z" />
-   <rect class="truck-cab" x="5" y="-3" width="6" height="6" rx=".8" />
-   <circle class="truck-wheel" cx="-6" cy="-4.6" r="1.8" /><circle class="truck-wheel" cx="5" cy="4.6" r="1.8" />
-   <path class="truck-beam" d="M11 -4 L64 -16 L64 16 L11 4 Z" />
-   <circle class="truck-headlight" cx="11.3" cy="0" r="2.2" />
-   <circle class="truck-tail" cx="-11" cy="0" r="1.6" />
- </g>
-<g class="haul-vehicle" data-route="haul-route-upper" data-speed=".008" data-offset=".77" data-scale=".78">
-   <ellipse class="truck-shadow" cx="-2" cy="3.8" rx="11" ry="3.1" />
-   <path class="truck-dust" d="M-10 0 Q-23 -5 -33 -1 Q-23 4 -10 3 Z" />
-   <rect class="truck-frame" x="-11" y="-4" width="19" height="8" rx="1.5" />
-   <path class="truck-haul" d="M-9 -3.4 H2 L4 3.4 H-9 Z" />
-   <rect class="truck-cab" x="5" y="-3" width="6" height="6" rx=".8" />
-   <circle class="truck-wheel" cx="-6" cy="-4.6" r="1.8" /><circle class="truck-wheel" cx="5" cy="4.6" r="1.8" />
-   <path class="truck-beam" d="M11 -4 L64 -16 L64 16 L11 4 Z" />
-   <circle class="truck-headlight" cx="11.3" cy="0" r="2.2" />
-   <circle class="truck-tail" cx="-11" cy="0" r="1.6" />
- </g></g>
-          <g class="mine-equipment">
-            <g class="mine-excavator" transform="translate(878 680) scale(1.05)">
-              <ellipse class="machine-shadow" cx="0" cy="6" rx="19" ry="4"/>
-              <path class="machine-tracks" d="M-18 4h28v6h-28z"/>
-              <rect class="machine-body" x="-11" y="-6" width="18" height="11" rx="2"/>
-              <g class="machine-boom">
-                <path class="machine-arm" d="M3 -5 L20 -19 L34 -10"/>
-                <path class="machine-bucket" d="M32 -13 L38 -11 L35 -3 L29 -6 Z"/>
-              </g>
-              <circle class="machine-lamp" cx="4" cy="-5" r="3"/>
-            </g>
-            <g class="mine-excavator alternate" transform="translate(1238 583) scale(.85)">
-              <ellipse class="machine-shadow" cx="0" cy="6" rx="19" ry="4"/>
-              <path class="machine-tracks" d="M-18 4h28v6h-28z"/>
-              <rect class="machine-body" x="-11" y="-6" width="18" height="11" rx="2"/>
-              <g class="machine-boom">
-                <path class="machine-arm" d="M3 -5 L20 -19 L34 -10"/>
-                <path class="machine-bucket" d="M32 -13 L38 -11 L35 -3 L29 -6 Z"/>
-              </g>
-              <circle class="machine-lamp" cx="4" cy="-5" r="3"/>
-            </g>
-          </g>
-        </svg>
       </div>
     </div>
-    <div class="world-weather" aria-hidden="true">
-      <div class="sky-clouds cloud-far"></div>
-      <div class="sky-clouds cloud-near"></div>
-      <div class="storm-tone"></div>
-      <div class="rain-field rain-back"></div>
-      <div class="rain-field rain-front"></div>
-      <div class="storm-flash"></div>
+    <div class="world-weather">
+      <div class="sky-clouds cloud-far"></div><div class="sky-clouds cloud-near"></div>
+      <div class="storm-tone"></div><div class="rain-field rain-back"></div>
+      <div class="rain-field rain-front"></div><div class="storm-flash"></div>
     </div>
-    <div class="world-shade"></div><div class="world-scan"></div>
-    <div class="world-coordinate">RECORRIDO CONCEPTUAL · REFERENCIA VISUAL</div>
+    <div class="world-shade"></div>
+    <div class="world-coordinate">ANTAMINA · REPRESENTACIÓN CINEMATOGRÁFICA</div>
   </div>
-  <div id="asset-warning" class="asset-warning" role="status" hidden>Falta la imagen del tajo: coloca <code>public/assets/antamina-cinematic.webp</code> en el proyecto.</div>
+  <div id="asset-warning" class="asset-warning" role="status" hidden>
+    Falta la imagen: coloca <code>public/assets/antamina-cinematic.webp</code> en el proyecto.
+  </div>
 
   <header class="site-header">
-    <a class="brand" href="#inicio" aria-label="Ir a portada S.A.R.A."><span class="brand-symbol" aria-hidden="true">◈</span> S.A.R.A<span class="orange">.</span></a>
-    <div class="header-center">SISTEMA DE ALERTA DE RAYOS ANTAMINA</div>
-    <a class="header-end" href="#capitulo-06">REDUNDANCIA <span class="arrow">↗</span></a>
+    <a class="brand" href="#inicio" aria-label="S.A.R.A. — volver a la apertura">
+      <span class="brand-symbol" aria-hidden="true">◈</span> S.A.R.A<span class="orange">.</span>
+    </a>
+    <span class="header-center">SISTEMA DE ALERTA Y RESPUESTA ANTAMINA</span>
+    <a class="header-end" href="#capitulo-06">VISIÓN DE FUTURO <span aria-hidden="true">↗</span></a>
     <div class="progress"><div id="progress-bar"></div></div>
   </header>
-
-  <nav class="section-nav" aria-label="Capítulos">
-    <span class="nav-label">RECORRIDO</span>
-    <a href="#inicio" data-nav="00" aria-label="Portada" aria-current="step">00</a>
-    <a href="#capitulo-01" data-nav="01" aria-label="01 Centro de control">01</a>
-    <a href="#capitulo-02" data-nav="02" aria-label="02 Problemática">02</a>
-    <a href="#capitulo-03" data-nav="03" aria-label="03 Propuesta S.A.R.A.">03</a>
-    <a href="#capitulo-04" data-nav="04" aria-label="04 Optimización técnica">04</a>
-    <a href="#capitulo-05" data-nav="05" aria-label="05 Notificaciones">05</a>
-    <a href="#capitulo-06" data-nav="06" aria-label="06 Redundancia">06</a>
+  <nav class="section-nav" aria-label="Recorrido ejecutivo">
+    <span class="nav-label">HISTORIA</span>
+    <a href="#inicio" data-nav="01" aria-label="01 De la detección a la decisión" aria-current="step">01</a>
+    <a href="#capitulo-02" data-nav="02" aria-label="02 La oportunidad">02</a>
+    <a href="#capitulo-03" data-nav="03" aria-label="03 Cómo funciona S.A.R.A.">03</a>
+    <a href="#capitulo-04" data-nav="04" aria-label="04 La solución en acción">04</a>
+    <a href="#capitulo-05" data-nav="05" aria-label="05 Valor para Antamina">05</a>
+    <a href="#capitulo-06" data-nav="06" aria-label="06 Continuidad y visión">06</a>
   </nav>
 
   <main>
-    <section class="scene scene-hero" id="inicio" data-scene="0">
-      <div class="scene-inner hero-layout">
-        <div class="copy">
-          <p class="eyebrow"><span class="eyebrow-line"></span> UNA NUEVA VISIÓN DEL CENTRO DE CONTROL</p>
-          <h1>VER LA<br><em>ALERTA.</em></h1>
-          <p class="hero-lead">S.A.R.A. — Sistema de Alerta de Rayos Antamina</p>
-          <p class="hero-description">Del monitoreo a la acción. Una experiencia para entender cómo la información sobre tormentas llega a la operación.</p>
-          <a class="action primary-action" href="#capitulo-01">INICIAR RECORRIDO <span aria-hidden="true">↓</span></a>
+    <!-- 01 — The detection systems emerge progressively as the presenter speaks. -->
+    <section class="scene scene-hero" id="inicio" data-scene="0" aria-labelledby="title-01">
+      <div class="scene-inner story-layout hero-story">
+        <div class="story-copy">
+          <p class="eyebrow beat" data-beat="0">01 / NUESTRA PROPUESTA</p>
+          <h1 id="title-01" class="beat" data-beat="0">DE LA DETECCIÓN<br><em>A LA DECISIÓN.</em></h1>
+          <p class="lead beat" data-beat=".05"><strong>S.A.R.A.</strong> — Sistema de Alerta y Respuesta Antamina</p>
+          <p class="support-line beat" data-beat=".14">Una forma más clara de comprender las alertas eléctricas en la operación.</p>
+          <a class="action primary-action beat" data-beat=".24" href="#capitulo-02">EXPLORAR PROPUESTA <span aria-hidden="true">↓</span></a>
         </div>
-        <div class="hero-signature" aria-hidden="true"><span>ANTAMINA / TAJO MINERO</span><strong>UN MISMO ENTORNO.<br>SIETE PERSPECTIVAS.</strong></div>
-      </div>
-      <div class="scroll-cue">DESPLAZA PARA EXPLORAR <span aria-hidden="true">↓</span></div>
-    </section>
-
-    <section class="scene" id="capitulo-01" data-scene="1">
-      <div class="scene-inner scene-split">
-        <div class="copy">
-          <p class="eyebrow"><b>01</b> CONTEXTO OPERACIONAL</p>
-          <h2>CENTRO DE<br><em>CONTROL.</em></h2>
-          <p class="lead">Monitoreo y aviso de las alertas de tormentas eléctricas en la mina.</p>
-          <p class="body-copy">El Centro de Control de Comunicaciones y Emergencias monitorea los sistemas de detección y emite las alertas radiales.</p>
-        </div>
-        <div class="glass-stack">
-          <button type="button" class="system-tile" data-info="strikeguard" aria-label="Conocer StrikeGuard">
-            <span class="tile-mark orange-mark">01</span><span class="tile-body"><strong>STRIKEGUARD</strong><small>Detección reactiva: descarga nube–tierra.</small></span><span class="tile-arrow">+</span>
+        <div class="narrative-visual systems-visual">
+          <p class="visual-eyebrow beat" data-beat=".14">SISTEMAS DE DETECCIÓN Y MONITOREO</p>
+          <button type="button" class="system-identity beat" data-beat=".27" data-info="strikeguard">
+            <span class="identity-glyph glyph-orange" aria-hidden="true">
+              <svg viewBox="0 0 48 48"><path d="M27 4L11 26h12l-3 18 18-25H25z" /></svg>
+            </span>
+            <span><strong>STRIKEGUARD</strong><small>Detección reactiva</small></span><span class="identity-plus" aria-hidden="true">+</span>
           </button>
-          <button type="button" class="system-tile" data-info="keraunos" aria-label="Conocer Keraunos">
-            <span class="tile-mark cyan-mark">02</span><span class="tile-body"><strong>KERAUNOS</strong><small>Sistema predictivo: campo electromagnético.</small></span><span class="tile-arrow">+</span>
+          <div class="system-join beat" data-beat=".41" aria-hidden="true"><span></span><span>Y</span><span></span></div>
+          <button type="button" class="system-identity beat" data-beat=".47" data-info="keraunos">
+            <span class="identity-glyph glyph-cyan" aria-hidden="true">
+              <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="16"/><circle cx="24" cy="24" r="8"/><path d="M24 2v10M24 36v10M2 24h10M36 24h10"/></svg>
+            </span>
+            <span><strong>KERAUNOS</strong><small>Monitoreo predictivo</small></span><span class="identity-plus" aria-hidden="true">+</span>
           </button>
-          <div class="micro-flow"><span>DETECCIÓN</span><span>→</span><span>MONITOREO 24/7</span><span>→</span><span>AVISO RADIAL</span></div>
+          <div class="identity-foot beat" data-beat=".66"><span class="signal-dot"></span> LA INFORMACIÓN YA EXISTE</div>
         </div>
       </div>
+      <span class="scroll-cue">DESPLAZA PARA REVELAR <span aria-hidden="true">↓</span></span>
     </section>
 
-    <section class="scene" id="capitulo-02" data-scene="2">
-      <div class="scene-inner scene-split">
-        <div class="copy">
-          <p class="eyebrow red-text"><b>02</b> PROBLEMÁTICA</p>
-          <h2>CUANDO LA ALERTA<br><em>NO ES CLARA.</em></h2>
-          <p class="lead">Tres puntos de fricción en las comunicaciones durante una tormenta.</p>
-          <a class="action link-action" href="https://qr.keraunos.co/t/mHMsMSjw7fLzlVFzMsh9K99cFG7tiC" target="_blank" rel="noopener noreferrer" aria-label="Abrir Keraunos en una pestaña nueva">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 1v5M12 18v5M1 12h5M18 12h5"/></svg> EXPLORAR KERAUNOS <span aria-hidden="true">↗</span>
+    <!-- 02 — Subtraction: three friction points collapse into clarity. -->
+    <section class="scene" id="capitulo-02" data-scene="1" aria-labelledby="title-02">
+      <div class="scene-inner story-layout">
+        <div class="story-copy">
+          <p class="eyebrow beat" data-beat="0">02 / OPORTUNIDAD DE MEJORA</p>
+          <h2 id="title-02" class="beat" data-beat="0">LA INFORMACIÓN EXISTE.<br><em>EL RETO ES COMPRENDERLA.</em></h2>
+          <p class="lead beat" data-beat=".09">El problema no es la falta de información. Es la fricción para entenderla.</p>
+          <a class="action link-action beat" data-beat=".62" href="https://qr.keraunos.co/t/mHMsMSjw7fLzlVFzMsh9K99cFG7tiC" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16"/></svg> VER KERAUNOS <span aria-hidden="true">↗</span>
           </a>
         </div>
-        <div class="problem-list">
-          <div class="problem-line"><b>01</b><div><strong>MENSAJE RADIAL</strong><span>Alertas generales sin ubicación exacta.</span></div></div>
-          <div class="problem-line"><b>02</b><div><strong>SATURACIÓN DEL CANAL</strong><span>Radios y celulares colapsan por consultas.</span></div></div>
-          <div class="problem-line"><b>03</b><div><strong>USABILIDAD</strong><span>Interfaz Keraunos poco amigable.</span></div></div>
+        <div class="narrative-visual opportunity-visual">
+          <div class="friction beat" data-beat=".17"><span class="friction-index">01</span><strong>INFORMACIÓN DISTRIBUIDA</strong><span class="friction-symbol" aria-hidden="true">−</span></div>
+          <div class="friction beat" data-beat=".31"><span class="friction-index">02</span><strong>CONSULTAS RECURRENTES</strong><span class="friction-symbol" aria-hidden="true">−</span></div>
+          <div class="friction beat" data-beat=".45"><span class="friction-index">03</span><strong>CLARIDAD POR ZONA</strong><span class="friction-symbol" aria-hidden="true">+</span></div>
+          <div class="friction-result beat" data-beat=".64"><span class="result-line"></span><strong>MENOS PASOS.<br><em>MENOS INCERTIDUMBRE.</em></strong></div>
         </div>
       </div>
     </section>
 
-    <section class="scene" id="capitulo-03" data-scene="3">
-      <div class="scene-inner proposal-layout">
-        <div class="copy">
-          <p class="eyebrow"><b>03</b> LA PROPUESTA</p>
-          <h2>UNA SOLA<br><em>VISIÓN. S.A.R.A.</em></h2>
-          <p class="lead">Un mapa accesible e intuitivo para comprender las alertas por zona operativa.</p>
-          <a class="action link-action sara-link" href="https://antito-yanac.github.io/sara/" target="_blank" rel="noopener noreferrer" aria-label="Abrir el sistema S.A.R.A. en una pestaña nueva">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 13h7l-1 9 10-12h-7l0-8z"/></svg> ABRIR S.A.R.A. <span aria-hidden="true">↗</span>
+    <!-- 03 — Explanatory architecture: 3 independent computer processes,
+         but a shared Keraunos source. This is NOT full source redundancy. -->
+    <section class="scene" id="capitulo-03" data-scene="2" aria-labelledby="title-03">
+      <div class="scene-inner story-layout architecture-layout">
+        <div class="story-copy">
+          <p class="eyebrow beat" data-beat="0">03 / CÓMO FUNCIONA</p>
+          <h2 id="title-03" class="beat" data-beat="0">NO CREAMOS<br><em>OTRO DETECTOR.</em></h2>
+          <p class="lead beat" data-beat=".10">Conectamos la información con el usuario.</p>
+          <p class="support-line beat" data-beat=".25">Tres motores de consulta, instalados en tres computadoras, interpretan los estados de alerta publicados por Keraunos.</p>
+        </div>
+        <div class="narrative-visual architecture-visual" aria-label="Keraunos alimenta tres motores de consulta, cuyos resultados llegan a S.A.R.A. para presentarse al personal de campo">
+          <div class="flow-source beat" data-beat=".14"><span class="node-tag">FUENTE DE INFORMACIÓN</span><strong>KERAUNOS</strong></div>
+          <div class="flow-rail beat" data-beat=".25"><span></span></div>
+          <div class="engine-grid">
+            <div class="engine beat" data-beat=".29"><span class="engine-number">01</span><strong>MOTOR</strong><small>EQUIPO 01</small></div>
+            <div class="engine beat" data-beat=".38"><span class="engine-number">02</span><strong>MOTOR</strong><small>EQUIPO 02</small></div>
+            <div class="engine beat" data-beat=".47"><span class="engine-number">03</span><strong>MOTOR</strong><small>EQUIPO 03</small></div>
+          </div>
+          <div class="flow-rail accent-rail beat" data-beat=".56"><span></span></div>
+          <div class="flow-destination beat" data-beat=".62"><span class="node-tag">LECTURA OPERATIVA</span><strong>S.A.R.A.</strong><span class="flow-arrow" aria-hidden="true">→</span><strong>CAMPO</strong></div>
+          <p class="flow-caption beat" data-beat=".72">Los tres motores consultan la misma fuente; no reemplazan a Keraunos.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 — Four zone visuals are deliberately schematic, not map coordinates. -->
+    <section class="scene" id="capitulo-04" data-scene="3" aria-labelledby="title-04">
+      <div class="scene-inner story-layout">
+        <div class="story-copy">
+          <p class="eyebrow beat" data-beat="0">04 / SOLUCIÓN EN ACCIÓN</p>
+          <h2 id="title-04" class="beat" data-beat="0">CUATRO ZONAS.<br><em>UNA LECTURA MÁS CLARA.</em></h2>
+          <p class="lead beat" data-beat=".10">Una interfaz web para consultar el nivel de alerta por zona operativa.</p>
+          <a class="action sara-link beat" data-beat=".53" href="https://antito-yanac.github.io/sara/" target="_blank" rel="noopener noreferrer" aria-label="Abrir S.A.R.A. en una nueva pestaña">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 13h7l-1 9 10-12h-7l0-8z"/></svg> DEMOSTRAR S.A.R.A. <span aria-hidden="true">↗</span>
           </a>
+          <p class="context-note beat" data-beat=".65">Complementa las comunicaciones oficiales. No las sustituye.</p>
         </div>
-        <div class="feature-lineup">
-          <div><b>01</b><strong>MOTOR DE CONSULTAS</strong><span>Consulta continua de eventos.</span></div>
-          <div><b>02</b><strong>SOMBREADO AUTOMÁTICO</strong><span>Zonas afectadas según la alerta.</span></div>
-          <div><b>03</b><strong>INDEXACIÓN GPS</strong><span>Verificación de zona operativa.</span></div>
+        <div class="narrative-visual zone-visual">
+          <div class="zone-header beat" data-beat=".18"><span class="signal-dot"></span> CONSULTA VISUAL POR ZONA</div>
+          <div class="zone-grid">
+            <div class="zone-item beat" data-beat=".25"><span class="zone-ring"><span>01</span></span><strong>YANACANCHA</strong></div>
+            <div class="zone-item beat" data-beat=".35"><span class="zone-ring"><span>02</span></span><strong>OFICINAS MINA</strong></div>
+            <div class="zone-item beat" data-beat=".45"><span class="zone-ring"><span>03</span></span><strong>TAJO</strong></div>
+            <div class="zone-item beat" data-beat=".55"><span class="zone-ring"><span>04</span></span><strong>TUCUSH</strong></div>
+          </div>
+          <div class="zone-caption beat" data-beat=".67">ESQUEMA CONCEPTUAL · LOS COLORES REALES LOS DEFINE LA ALERTA</div>
         </div>
       </div>
     </section>
 
-    <section class="scene" id="capitulo-04" data-scene="4">
-      <div class="scene-inner">
-        <div class="copy wide-copy">
-          <p class="eyebrow"><b>04</b> OPTIMIZACIÓN TÉCNICA</p>
-          <h2>MENOS FRICCIÓN.<br><em>MÁS CONFIANZA.</em></h2>
-          <p class="lead">Dos mejoras propuestas en la presentación original.</p>
+    <!-- 05 — Stakeholders, one at a time, with no unmeasured percentages. -->
+    <section class="scene" id="capitulo-05" data-scene="4" aria-labelledby="title-05">
+      <div class="scene-inner story-layout">
+        <div class="story-copy">
+          <p class="eyebrow beat" data-beat="0">05 / VALOR PARA ANTAMINA</p>
+          <h2 id="title-05" class="beat" data-beat="0">MENOS FRICCIÓN.<br><em>MÁS VISIBILIDAD OPERATIVA.</em></h2>
+          <p class="lead beat" data-beat=".09">Simplificar también es innovar.</p>
+          <p class="context-note beat" data-beat=".62">Beneficios esperados que deben medirse durante una validación operativa.</p>
         </div>
-        <div class="improvement-columns">
-          <div class="improvement">
-            <div class="improvement-number">01 / LATENCIA</div>
-            <div class="compare-label">ACTUAL</div><p>Polling cada 20 segundos: riesgo de bloqueo de IP.</p>
-            <div class="compare-transform">↓ PROPUESTA</div><p>Integración directa con API de Keraunos para recibir eventos en tiempo real.</p>
-          </div>
-          <div class="improvement">
-            <div class="improvement-number">02 / SERVIDOR</div>
-            <div class="compare-label">ACTUAL</div><p>Servidor de prueba externo, sin SSL corporativo.</p>
-            <div class="compare-transform">↓ PROPUESTA</div><p>Migración a red interna y dominio corporativo.</p>
-          </div>
-        </div>
-        <p class="footnote">Propuestas de la presentación original; no indican implementación ya completada.</p>
-      </div>
-    </section>
-
-    <section class="scene" id="capitulo-05" data-scene="5">
-      <div class="scene-inner scene-split">
-        <div class="copy">
-          <p class="eyebrow"><b>05</b> SISTEMA DE NOTIFICACIONES</p>
-          <h2>ALERTAR.<br><em>INVOLUCRAR.</em></h2>
-          <p class="lead">Notificaciones que ayuden a actuar, sin saturar al trabajador.</p>
-          <a class="action link-action sara-link" href="https://antito-yanac.github.io/sara/" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 13h7l-1 9 10-12h-7l0-8z"/></svg> CONSULTAR MAPA S.A.R.A. <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-        <div class="notification-points">
-          <div><b>01</b><p><strong>EVITAR EL EFECTO BASURERO</strong> No saturar con avisos que acaben siendo ignorados.</p></div>
-          <div><b>02</b><p><strong>NOTIFICACIÓN PERSISTENTE</strong> Confirmación y apagado manual de alertas críticas.</p></div>
-          <div><b>03</b><p><strong>CULTURA Y RESPUESTA</strong> Participación del trabajador al verificar su zona.</p></div>
+        <div class="narrative-visual value-visual">
+          <div class="value-row beat" data-beat=".22"><span class="value-number">01</span><div><strong>CENTRO DE CONTROL</strong><p>Facilitar la comunicación y reducir consultas repetitivas.</p></div><span class="value-arrow" aria-hidden="true">↗</span></div>
+          <div class="value-row beat" data-beat=".38"><span class="value-number">02</span><div><strong>PERSONAL DE CAMPO</strong><p>Información accesible y comprensible por zona.</p></div><span class="value-arrow" aria-hidden="true">↗</span></div>
+          <div class="value-row beat" data-beat=".54"><span class="value-number">03</span><div><strong>OPERACIÓN Y LIDERAZGO</strong><p>Más estandarización y mejor visibilidad.</p></div><span class="value-arrow" aria-hidden="true">↗</span></div>
         </div>
       </div>
     </section>
 
-    <section class="scene last-scene" id="capitulo-06" data-scene="6">
-      <div class="scene-inner">
-        <div class="copy wide-copy">
-          <p class="eyebrow"><b>06</b> BLINDAJE Y MITIGACIÓN</p>
-          <h2>LA OPERACIÓN<br><em>NO SE DETIENE.</em></h2>
-          <p class="lead">Simulación interactiva de la redundancia ante fallas.</p>
+    <!-- 06 — Executive ask, with technical fallback available on demand. -->
+    <section class="scene scene-last" id="capitulo-06" data-scene="5" aria-labelledby="title-06">
+      <div class="scene-inner story-layout">
+        <div class="story-copy">
+          <p class="eyebrow beat" data-beat="0">06 / CONTINUIDAD Y VISIÓN</p>
+          <h2 id="title-06" class="beat" data-beat="0">DE UNA SOLUCIÓN OPERATIVA<br><em>A UNA CAPACIDAD CONFIABLE.</em></h2>
+          <p class="lead beat" data-beat=".09">Una solución nacida en la operación, pensada para la operación.</p>
+          <p class="support-line beat" data-beat=".47">Proponemos una evaluación piloto controlada, con responsables definidos y criterios medibles.</p>
+          <button class="action secondary-action beat" data-beat=".63" id="show-continuity" type="button">EXPLORAR RESPALDOS <span aria-hidden="true">↗</span></button>
+          <a class="back-to-top beat" data-beat=".72" href="#inicio">VOLVER AL INICIO ↑</a>
         </div>
-        <div class="resilience-panel">
-          <div class="sim-topline"><span>SIMULACIÓN DE CONTINUIDAD</span><button type="button" id="reset-sim" class="reset-button">REINICIAR ↺</button></div>
-          <div id="fallback-sim" class="fallback-sim" aria-label="Simulación de redundancia">
-            <button type="button" id="fail-api" class="sim-node active" data-stage="api"><span class="node-id">01</span><strong>API</strong><small>CLIC PARA FALLAR</small></button>
-            <div class="sim-connector" data-link="api-motors"><span>→</span></div>
-            <div class="motors" id="motors">
-              <button type="button" class="sim-node motor" data-motor="0" disabled><span class="node-id">02A</span><strong>MOTOR 01</strong><small>RESPALDO</small></button>
-              <button type="button" class="sim-node motor" data-motor="1" disabled><span class="node-id">02B</span><strong>MOTOR 02</strong><small>RESPALDO</small></button>
-              <button type="button" class="sim-node motor" data-motor="2" disabled><span class="node-id">02C</span><strong>MOTOR 03</strong><small>RESPALDO</small></button>
-            </div>
-            <div class="sim-connector" data-link="motors-keraunos"><span>→</span></div>
-            <button type="button" class="sim-node" id="fail-keraunos" disabled><span class="node-id">03</span><strong>KERAUNOS MANUAL</strong><small>RESPALDO</small></button>
-            <div class="sim-connector" data-link="keraunos-strike"><span>→</span></div>
-            <div class="sim-node terminal-node" id="strike-final"><span class="node-id">04</span><strong>STRIKEGUARD MANUAL</strong><small>ÚLTIMO RESPALDO</small></div>
-          </div>
-          <p id="sim-status" class="sim-status" role="status" aria-live="polite">Haz clic en API para simular una falla y descubrir las capas de respaldo.</p>
-          <div class="security-notes"><span>SEGURIDAD: integración auditada y gestor de API Keys (propuesta)</span><span>PRIVACIDAD: objetivo de cero registro de ubicaciones · Ley N.º 29733</span></div>
+        <div class="narrative-visual future-visual">
+          <div class="future-step beat" data-beat=".18"><span class="future-index">01</span><div><strong>VALIDAR</strong><p>Precisión, actualización y experiencia de usuario.</p></div></div>
+          <div class="future-connector beat" data-beat=".31"></div>
+          <div class="future-step beat" data-beat=".37"><span class="future-index">02</span><div><strong>FORTALECER</strong><p>Integración, seguridad y continuidad operativa.</p></div></div>
+          <div class="future-connector beat" data-beat=".50"></div>
+          <div class="future-step beat" data-beat=".56"><span class="future-index">03</span><div><strong>ESCALAR</strong><p>Evolución controlada con las áreas responsables.</p></div></div>
         </div>
-        <a href="#inicio" class="back-to-top">VOLVER AL INICIO ↑</a>
       </div>
     </section>
   </main>
@@ -334,8 +199,33 @@
   <dialog id="info-dialog" class="info-dialog" aria-labelledby="dialog-heading">
     <button type="button" id="close-info" class="dialog-close" aria-label="Cerrar">✕</button>
     <p class="eyebrow">SISTEMA DE DETECCIÓN</p>
-    <h2 id="dialog-heading"></h2>
-    <p id="dialog-text"></p>
+    <h2 id="dialog-heading"></h2><p id="dialog-text"></p>
+  </dialog>
+
+  <dialog id="continuity-dialog" class="continuity-dialog" aria-labelledby="continuity-heading">
+    <div class="continuity-head">
+      <div><p class="eyebrow">DETALLE TÉCNICO OPCIONAL</p><h2 id="continuity-heading">CONTINUIDAD ANTE FALLAS</h2></div>
+      <button type="button" id="close-continuity" class="dialog-close" aria-label="Cerrar detalle de continuidad">✕</button>
+    </div>
+    <p class="continuity-disclaimer">Simulación conceptual de una estrategia de respaldo. No certifica disponibilidad ni independencia de la fuente Keraunos.</p>
+    <div class="resilience-panel">
+      <div class="sim-topline"><span>SIMULACIÓN INTERACTIVA</span><button type="button" id="reset-sim" class="reset-button">REINICIAR ↺</button></div>
+      <div id="fallback-sim" class="fallback-sim" aria-label="Simulación de redundancia">
+        <button type="button" id="fail-api" class="sim-node active" data-stage="api"><span class="node-id">01</span><strong>FUENTE / CONSULTA</strong><small>CLIC PARA SIMULAR FALLA</small></button>
+        <div class="sim-connector" data-link="api-motors"><span>→</span></div>
+        <div class="motors" id="motors">
+          <button type="button" class="sim-node motor" data-motor="0" disabled><span class="node-id">02A</span><strong>MOTOR 01</strong><small>RESPALDO</small></button>
+          <button type="button" class="sim-node motor" data-motor="1" disabled><span class="node-id">02B</span><strong>MOTOR 02</strong><small>RESPALDO</small></button>
+          <button type="button" class="sim-node motor" data-motor="2" disabled><span class="node-id">02C</span><strong>MOTOR 03</strong><small>RESPALDO</small></button>
+        </div>
+        <div class="sim-connector" data-link="motors-keraunos"><span>→</span></div>
+        <button type="button" class="sim-node" id="fail-keraunos" disabled><span class="node-id">03</span><strong>KERAUNOS MANUAL</strong><small>RESPALDO</small></button>
+        <div class="sim-connector" data-link="keraunos-strike"><span>→</span></div>
+        <div class="sim-node terminal-node" id="strike-final"><span class="node-id">04</span><strong>STRIKEGUARD MANUAL</strong><small>ÚLTIMO RESPALDO</small></div>
+      </div>
+      <p id="sim-status" class="sim-status" role="status" aria-live="polite">Haz clic para iniciar la simulación.</p>
+    </div>
+    <p class="continuity-disclaimer">Los procesos dependen de la información disponible de sus sistemas de origen. El uso manual no equivale a una continuidad digital automática.</p>
   </dialog>
   <script type="module" src="/src/main.js"></script>
 </body>
