@@ -17,7 +17,7 @@ assert.equal(smoothstep(0,1,1),1);
 
 const keys=["cloud","darkness","rain","digital","lightning"];
 let last=climateAt(0);
-for(let chapter=0;chapter<=5;chapter+=.05){
+for(let chapter=0;chapter<=6;chapter+=.05){
   const state=climateAt(chapter);
   for(const key of keys){
     assert(state[key]>=0 && state[key]<=1,key+" bounded");
@@ -26,11 +26,11 @@ for(let chapter=0;chapter<=5;chapter+=.05){
   last=state;
 }
 assert.equal(climateAt(0).rain,0);
-assert.equal(climateAt(5).rain,1);
+assert.equal(climateAt(6).rain,1);
 
-assert.equal((html.match(/data-scene="\d"/g)||[]).length,6,"Exactly 6 executive narrative chapters");
-assert.equal((html.match(/data-nav="\d\d"/g)||[]).length,6,"6 numbered navigation links");
-assert((html.match(/data-beat="/g)||[]).length>=40,"Cinematic semantic graphic beats");
+assert.equal((html.match(/data-scene="\d"/g)||[]).length,7,"Exactly 7 hybrid executive narrative chapters");
+assert.equal((html.match(/data-nav="\d\d"/g)||[]).length,7,"7 numbered navigation links");
+assert((html.match(/data-beat="/g)||[]).length>=60,"Semantic time-driven visual beats for seven chapters");
 assert(html.includes("SISTEMA DE ALERTA Y RESPUESTA ANTAMINA"));
 assert.equal((html.match(/class="sara-mark"/g)||[]).length,2,"New three-stroke identity appears on cover and closing");
 assert(html.includes("DETECTAR <b>·</b> COMPRENDER <b>·</b> RESPONDER"));
@@ -77,4 +77,30 @@ assert(!weather.includes("getPointAtLength"),"No truck path animation");
 assert(css.includes("position:fixed"),"Cinematic fixed-scene scrollytelling");
 assert(css.includes("V5.1 — CINEMATIC PRESENTATION MODE"),"The layout is fixed-stage presentation mode");
 assert(main.includes("onComplete()"),"Transitions finish without further wheel input");
-console.log("S.A.R.A. executive V5: six movements, story beats, links, architecture, weather and no vehicles — OK");
+
+// V6 semantic and safety regressions
+assert(html.includes('id="capitulo-07"'),"Technical continuity has its own final chapter");
+assert(html.includes('01 / CONTEXTO OPERACIONAL'));
+assert(html.includes('02 / LA PROBLEMÁTICA'));
+assert(html.includes('03 / LA SOLUCIÓN'));
+assert(html.includes('04 / INGENIERÍA APLICADA'));
+assert(html.includes('05 / CULTURA PREVENTIVA'));
+assert(html.includes('06 / VALOR PARA ANTAMINA'));
+assert(html.includes('07 / CONTINUIDAD Y VISIÓN'));
+assert(html.includes('id="chapter-count"') && html.includes('01 / 07'),"Navigation counter starts with seven");
+assert(html.includes('href="#capitulo-07"'),"Navigation reaches final chapter");
+assert.equal((main.match(/zoom:\s*[0-9.]+/g)||[]).length,7,"One cinematic camera mark per chapter");
+assert(html.includes("MONITOREO 24/7") && html.includes("AVISO RADIAL"),"Official radio channel is explained");
+assert(html.includes("No los sustituye"),"S.A.R.A. does not replace official notices");
+assert(html.includes("Hoy no existe una práctica formal de consulta"),"Current consultation gap is explicit");
+assert(html.includes("CONSULTA PREVIA: HÁBITO PROPUESTO"),"A proposed habit is not presented as existing procedure");
+assert(html.includes("no envía avisos en segundo plano"),"In-app-only alerts are disclosed accurately");
+assert(html.includes("AVISO DENTRO DE S.A.R.A."),"No misleading push notification depiction");
+assert.equal((html.match(/class="prevention-step beat"/g)||[]).length,3,"Prevention lifecycle: before, during, when alert arrives");
+assert(html.includes("ANTE UNA ALERTA") && html.includes("RESPONDER"));
+assert(html.includes("FUENTE ACTUAL") && html.includes("WEB KERAUNOS"),"Three engines use existing web source");
+assert(html.includes("integración API") && html.includes("sujetas a validación"),"API remains proposed");
+assert(html.includes("Beneficios esperados"),"No unjustified measured claims");
+assert(css.includes(".prevention-timeline"),"Distinct motion-graphic prevention sequence");
+
+console.log("S.A.R.A. hybrid executive V6: seven autonomous chapters, operational context, prevention culture, fallback — OK");
