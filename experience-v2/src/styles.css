@@ -292,3 +292,13 @@ button.sim-node:disabled{cursor:default}
  .beat{opacity:1!important;transform:none!important;filter:none!important}
  *,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
+
+/* Strategic north star: emergency response is a roadmap, not a shipped claim. */
+.evolution-foot{margin-top:18px;padding:15px 18px;border-left:2px solid var(--orange);background:rgba(6,28,38,.66)}
+.evolution-foot strong{display:block;font:700 12px var(--title);color:var(--orange);line-height:1.5}
+.evolution-foot span{display:block;margin-top:6px;color:#d7e4ee;font-size:17px;line-height:1.25}
+@media(max-width:850px){
+ .evolution-foot{margin-top:10px;padding:9px 12px}
+ .evolution-foot strong{font-size:10px}
+ .evolution-foot span{font-size:14px}
+}
