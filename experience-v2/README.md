@@ -27,8 +27,10 @@ El contenido visible está basado en el guion ejecutivo acordado. El guion oral 
 ## Motion graphics y narrativa visual
 
 - Un mismo escenario del tajo permanece durante todos los capítulos. La cámara 2.5D se desplaza/escala de manera continua; no hay cortes de escenas.
-- Cada capítulo usa una composición sticky, con revelaciones semánticas graduadas según el avance del scroll.
-- El mismo movimiento se puede recorrer hacia atrás; no depende de tiempos fijos ni se disparan animaciones no relacionadas con la historia.
+- Cada capítulo se representa en una composición a pantalla completa. **Un gesto de rueda del mouse, una flecha, un botón o un deslizamiento táctil inicia toda la secuencia del capítulo de forma autónoma.** No es una barra de tiempo de video.
+- La cámara viaja con easing durante 2,65 segundos. Los gráficos y textos entran de forma escalonada mediante una línea de tiempo GSAP; sus movimientos terminan aunque el presentador no vuelva a tocar el mouse.
+- Avanzar: rueda abajo, flecha derecha/abajo, PageDown, espacio o control →. Retroceder: rueda arriba, flecha izquierda/arriba, PageUp o control ←. Home/End permiten abrir el primer/último capítulo. Cada gesto se limita a un capítulo para evitar saltos por inercia.
+- Las transiciones pueden recorrerse hacia atrás: al regresar a un capítulo, su animación narrativa se reproduce nuevamente. El presentador conserva el control del ritmo entre capítulos.
 - Se retiraron completamente los camiones y excavadoras artificiales de la iteración previa. Solo quedan nubes, oscurecimiento, lluvia ligera y destellos ambientales discretos.
 - Se respetan preferencias del sistema para movimiento reducido.
 - Los accesos originales a Keraunos y S.A.R.A. son enlaces externos interactivos. La simulación de respaldo es conceptual, no certificación de continuidad.
