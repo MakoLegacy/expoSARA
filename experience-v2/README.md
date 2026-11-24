@@ -1,138 +1,64 @@
-# S.A.R.A. — Digital Mining Experience (prototipo v0.1)
+# S.A.R.A. — Presentación ejecutiva (V5 en desarrollo)
 
-Esta versión es una experiencia de presentación independiente. **No reemplaza los archivos originales del repositorio**: el HTML, CSS y JavaScript actuales permanecen intactos en la raíz.
+**Sistema de Alerta y Respuesta Antamina**
 
-## Requisitos
+Esta rama implementa una exposición ejecutiva para Presidencia y Vicepresidencias de Antamina. El producto principal S.A.R.A. se encuentra en [antito-yanac/sara](https://github.com/antito-yanac/sara); este repositorio contiene **solo la presentación**.
 
-- Node.js LTS y npm
-- Navegador moderno con WebGL
-- Visual Studio Code (opcional)
+## Estados de publicación
 
-## Ejecutar localmente
+| Rama | Uso |
+| --- | --- |
+| presentation-approved | Versión estable que publica el enlace público de GitHub Pages |
+| development-v5 | Desarrollo experimental, pruebas y respaldo offline; **no actualiza el sitio público** |
 
-Desde la raíz del repositorio, entra a la carpeta experience-v2 y ejecuta:
+El enlace público sigue siendo https://makolegacy.github.io/expoSARA/ y no se modifica al actualizar esta rama.
 
-    npm install
-    npm run dev
+## Seis movimientos narrativos
 
-Vite mostrará la dirección local para abrir la experiencia en el navegador.
+1. **De la detección a la decisión** — aparecen progresivamente StrikeGuard y Keraunos, fuentes de contexto para el Centro de Control.
+2. **La información existe; el reto es comprenderla** — la fricción operativa se revela en tres momentos.
+3. **No creamos otro detector** — Keraunos, tres motores instalados en tres computadoras, S.A.R.A. y personal de campo se conectan visualmente. Los tres motores comparten fuente Keraunos; no equivalen a redundancia de origen.
+4. **Cuatro zonas, una lectura más clara** — consulta visual de Yanacancha, Oficinas Mina, Tajo y Tucush y enlace directo a S.A.R.A. Las posiciones son esquemáticas, no geográficas.
+5. **Menos fricción, más visibilidad** — beneficios esperados para Centro de Control, campo y liderazgo, sujetos a evaluación.
+6. **De una solución operativa a una capacidad confiable** — validar, fortalecer y escalar, con evolución posible a respuesta a emergencias (no implementada ni aprobada). Una demostración opcional de continuidad se abre en un diálogo.
 
-## Compilar para producción
+El contenido visible está basado en el guion ejecutivo acordado. El guion oral lo desarrolla el expositor: evitamos saturar los capítulos con párrafos.
 
-    npm run build
-    npm run preview
+## Motion graphics y narrativa visual
 
-## Qué incluye esta primera iteración
+- Un mismo escenario del tajo permanece durante todos los capítulos. La cámara 2.5D se desplaza/escala de manera continua; no hay cortes de escenas.
+- Cada capítulo usa una composición sticky, con revelaciones semánticas graduadas según el avance del scroll.
+- El mismo movimiento se puede recorrer hacia atrás; no depende de tiempos fijos ni se disparan animaciones no relacionadas con la historia.
+- Se retiraron completamente los camiones y excavadoras artificiales de la iteración previa. Solo quedan nubes, oscurecimiento, lluvia ligera y destellos ambientales discretos.
+- Se respetan preferencias del sistema para movimiento reducido.
+- Los accesos originales a Keraunos y S.A.R.A. son enlaces externos interactivos. La simulación de respaldo es conceptual, no certificación de continuidad.
+- El tajo es una **interpretación artística**, no cartografía minera ni información operacional en vivo.
 
-- Escena WebGL con Three.js.
-- Tajo procedural con terrazas, malla topográfica y curvas de nivel.
-- Partículas, iluminación cálida y cámara con movimiento suave.
-- Navegación narrativa de siete capítulos y cámara dirigida por scroll mediante GSAP ScrollTrigger.
-- Diseño responsive y soporte para la preferencia de movimiento reducido.
-- Contenido organizado a partir de las seis secciones de la presentación original.
+## Ejecutar en Windows (PowerShell / VS Code)
 
-## Alcance y validación pendiente
-
-Este es un primer prototipo visual. Aún debe probarse en tu laptop y ajustarse con tus comentarios. Las métricas de altitud/coordenadas mostradas en la interfaz son elementos gráficos de ambientación, no datos topográficos operacionales. Las propuestas técnicas y declaraciones de seguridad se mantienen como contenido de la presentación base y deben validarse antes de presentarse como hechos implementados.
-
-
-## V3: apertura fotorrealista y transformación digital
-
-Se añadió una capa fotográfica cinematográfica sobre el terreno WebGL. El desplazamiento anima la fotografía y la difumina progresivamente para revelar el gemelo digital 3D en el capítulo de la propuesta S.A.R.A. La portada incorpora el botón «Ver gemelo digital», que permite comparar los dos modos.
-
-### Recurso visual requerido
-
-La imagen de concepto **no es topografía oficial ni una fotografía real**. El archivo es `public/assets/antamina-cinematic.webp` y se proporciona aparte en el paquete visual de esta iteración. Para verla en el proyecto local, coloca ese archivo exactamente en esa ubicación (sin cambiar el nombre), después ejecuta `npm.cmd run dev`. El código tiene degradación controlada: si no se encuentra el archivo, continúa mostrando la escena 3D anterior.
-
-La composición está inspirada en las fotos de referencia compartidas. El desplazamiento de la fotografía es parallax 2D; la geometría 3D real comienza al mostrar el gemelo digital. Esto **no constituye un modelo 3D exacto del estado actual de Antamina**.
-
-
-## V4 — Un solo tajo en toda la presentación
-
-Esta versión reconstruye la presentación como un recorrido de la misma imagen del tajo de Antamina, con desplazamientos y zoom continuos de tipo **cámara 2.5D** controlados por scroll. No es un modelo topográfico 3D fotogramétrico: con una sola fotografía no es posible volar físicamente dentro de toda la excavación. Se conserva el mismo escenario visual en los siete encuadres narrativos (apertura + seis capítulos).
-
-### Funciones recuperadas de la presentación original
-
-- Capítulos 01 al 06 con los temas originales, resumidos en pantallas más legibles.
-- Keraunos: enlace original https://qr.keraunos.co/t/mHMsMSjw7fLzlVFzMsh9K99cFG7tiC (capítulo 02).
-- S.A.R.A.: enlace original https://antito-yanac.github.io/sara/ (capítulos 03 y 05).
-- Información de StrikeGuard y Keraunos en diálogos accesibles.
-- Simulación interactiva de redundancia del capítulo 06: falla API → tres motores (fallan por separado) → Keraunos manual → StrikeGuard manual. Incluye reiniciar la simulación.
-
-### Identidad visual
-Títulos **Orbitron**, textos **Rajdhani**; azul cyan, naranja y rojo. Se eliminó la antigua pantalla de malla azul que interrumpía el viaje visual.
-
-### Instalar/actualizar
-Desde la carpeta local:
-\`\`\`powershell
-cd C:\Users\Pc\expoSARA
-git pull --ff-only origin redesign/immersive-3d-experience
-cd experience-v2
-npm.cmd install
-npm.cmd run dev
-\`\`\`
-La imagen **public/assets/antamina-cinematic.webp** del paquete visual V3 sigue siendo necesaria: no se encuentra en la rama de GitHub. La V4 usa exactamente el mismo nombre de archivo; si ya la copiaste para la V3, no debes hacer nada más.
-
-### Verificaciones
-Ejecutar \`npm run build\`. La compilación automática de GitHub Actions verifica la sintaxis y la generación del bundle. La experiencia visual y su rendimiento deben verificarse en Chrome.
-
-
-## Publicación web y respaldo offline (V4)
-
-Recurso necesario: experience-v2/public/assets/antamina-cinematic.webp (imagen del paquete visual V3).
-
-### GitHub Pages
-
-1. En GitHub, abrir Settings → Pages → Build and deployment → Source → GitHub Actions.
-2. Copiar y confirmar en la rama redesign/immersive-3d-experience la imagen public/assets/antamina-cinematic.webp.
-3. El workflow .github/workflows/deploy-sara-pages.yml compilará Vite con base /expoSARA/ y desplegará en https://makolegacy.github.io/expoSARA/ una vez Pages esté habilitado.
-4. Comprobar el job deploy y probar el sitio en Chrome antes de divulgarlo. No hay que fusionar a main.
-
-### Respaldo para USB
-
-Desde experience-v2 ejecutar:
-
-    npm.cmd install
-    npm.cmd run build:offline
-
-Resultado: dist-offline/SARA_V4_OFFLINE.html. Contiene CSS, JS e imagen incrustados; ábrelo con doble clic en Chrome o Edge. No requiere localhost ni Node.js en el equipo de presentación.
-Los enlaces externos a Keraunos y S.A.R.A. seguirán necesitando internet; sin internet las fuentes web serán reemplazadas por las locales.
-El workflow también lo adjunta en su sección Artifacts bajo el nombre SARA-V4-OFFLINE.
-
-### Pruebas antes de presentar
-
-Probar pantalla completa (F11), siete encuadres, enlaces externos y simulación del capítulo 06, así como la copia offline con el Wi-Fi apagado. La imagen es una interpretación artística, no información geoespacial operativa.
-
-
-## V5 desarrollo — vida del tajo (preview, no publicado)
-
-La rama development-v5 contiene una versión experimental sobre la misma imagen panorámica. La V4 aprobada, servida por GitHub Pages desde presentation-approved, **no se ha modificado**.
-
-- Cinco camiones mineros SVG avanzan por cuatro trayectorias ilustrativas, en el mismo espacio visual que la fotografía (cámara 2.5D).
-- Dos excavadoras realizan movimientos mecánicos sutiles.
-- Siete luminarias de la mina y los faros de los equipos se activan progresivamente con el oscurecimiento.
-- Nubes, color ambiental, lluvia leve y destellos suaves evolucionan a medida que se avanza por los seis capítulos.
-- prefers-reduced-motion desactiva los movimientos ambientales continuos.
-- Se conservaron los enlaces originales a Keraunos y S.A.R.A. y la simulación de redundancia del capítulo 06.
-- **No hay datos operacionales en vivo**: ubicación de maquinaria, vías y clima son simulaciones artísticas.
-
-Para probar en tu laptop (PowerShell, repositorio local limpio):
+Desde la carpeta raíz del repositorio:
 
     cd C:\Users\Pc\expoSARA
+    git status
     git switch development-v5
     git pull --ff-only origin development-v5
     cd experience-v2
     npm.cmd install
     npm.cmd run dev
 
-La ruta http://127.0.0.1:5173/?debugRoutes=1 permite mostrar las rutas ilustrativas de acarreo para calibrar su posición en la foto. La web pública de gerencia **no se actualiza** desde esta rama.
+Abrir http://127.0.0.1:5173/ .
 
-Para generar la copia HTML de prueba:
+## Pruebas
 
+    npm.cmd run test:v5
+    npm.cmd run build
     npm.cmd run build:offline
     npm.cmd run test:offline
 
-Archivo: experience-v2/dist-offline/SARA_V5_PREVIEW_OFFLINE.html.
-El workflow de desarrollo también genera el artefacto SARA-V5-PREVIEW sin publicar GitHub Pages.
+GitHub Actions ejecuta las mismas comprobaciones automáticamente en development-v5 sin publicar Pages. El respaldo de desarrollo se adjunta como SARA-V5-PREVIEW, con el archivo SARA_V5_PREVIEW_OFFLINE.html.
 
-La implementación requiere validación visual en Chrome para ajustar la coincidencia entre los caminos pintados en la imagen y las rutas SVG superpuestas.
+El archivo public/assets/antamina-cinematic.webp debe existir para generar tanto la versión web como el respaldo offline.
+
+## Control de calidad para gerencia
+
+Validar en Chrome y en el proyector real: legibilidad desde el auditorio, ritmo de apariciones por scroll, ubicación de botones, tiempos de carga, enlaces externos, contraste con tormenta, modo offline y la demostración opcional de continuidad. **No fusionar a presentation-approved hasta la aprobación explícita del usuario.**
