@@ -44,3 +44,20 @@ jobs:
           name: SARA-V5-PREVIEW
           path: experience-v2/dist-offline/SARA_V5_PREVIEW_OFFLINE.html
           if-no-files-found: error
+
+
+  publish-preview:
+    name: Actualizar /preview/ sin modificar la version formal
+    needs: test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Solicitar publicacion combinada desde presentation-approved
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --method POST \
+            "/repos/${{ github.repository }}/actions/workflows/deploy-sara-pages.yml/dispatches" \
+            -f ref=presentation-approved
