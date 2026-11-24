@@ -43,6 +43,9 @@ jobs:
       - name: Instalar dependencias formales
         working-directory: approved/experience-v2
         run: npm install
+      - name: Verificar textos, identidad y continuidad de V4
+        working-directory: approved/experience-v2
+        run: node scripts/check-approved.mjs
       - name: Compilar V4 formal en /expoSARA/
         working-directory: approved/experience-v2
         run: npm run build:pages
