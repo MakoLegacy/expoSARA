@@ -51,5 +51,7 @@ assert(!main.includes("ScrollTrigger"),"No conflicting one-shot scroll animation
 assert(main.includes("smoothstep(beat.start,beat.start+.115,phase)"));
 assert(weather.includes("createLivingWorld"));
 assert(!weather.includes("getPointAtLength"),"No truck path animation");
-assert(css.includes("position:sticky"),"Cinematic sticky scrollytelling");
+assert(css.includes("position:fixed"),"Cinematic fixed-scene scrollytelling");
+assert(css.includes("main:after"),"Last chapter has enough scroll length");
+assert(main.includes("visibility=entering*exiting"),"Chapter crossfades without empty viewport");
 console.log("S.A.R.A. executive V5: six movements, story beats, links, architecture, weather and no vehicles — OK");
