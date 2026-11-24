@@ -1,5 +1,6 @@
 import { gsap } from "gsap";
 import { createLivingWorld } from "./living-world.js";
+import { createChapterMotion } from "./chapter-motion.js";
 import "./styles.css";
 
 /**
@@ -21,8 +22,10 @@ const navLinks = [...document.querySelectorAll("[data-nav]")];
 const previousButton = document.querySelector("#prev-chapter");
 const nextButton = document.querySelector("#next-chapter");
 const chapterCount = document.querySelector("#chapter-count");
+const replayButton = document.querySelector("#replay-motion");
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const livingWorld = createLivingWorld({ reducedMotion: reduced });
+const chapterMotion = createChapterMotion({ reducedMotion: reduced });
 
 const looks = [
   // 01: Open pit panorama, detection context.
@@ -106,6 +109,7 @@ function showChapter(index, { initial = false, updateHash = true } = {}) {
   const previousIndex = activeIndex;
   activeIndex = index;
 
+  chapterMotion.stop();
   if (activeTimeline) activeTimeline.kill();
   gsap.killTweensOf(camera);
   gsap.killTweensOf(highlights);
@@ -145,6 +149,7 @@ function showChapter(index, { initial = false, updateHash = true } = {}) {
     gsap.set(highlights, { opacity: looks[index].glow });
     gsap.set(shade, { opacity: 1 - Math.min(.12, looks[index].glow * .26) });
     cameraState.position = index;
+    chapterMotion.play(next.scene);
     return;
   }
 
@@ -154,6 +159,8 @@ function showChapter(index, { initial = false, updateHash = true } = {}) {
       if (previousIndex >= 0 && previousIndex !== index) {
         gsap.set(story[previousIndex].inner, { autoAlpha: 0, x: 0 });
       }
+      // Explanatory graphics continue on their own while the presenter speaks.
+      if (activeIndex === index && !isModalOpen()) chapterMotion.play(next.scene);
     }
   });
   activeTimeline = timeline;
@@ -233,6 +240,11 @@ window.addEventListener("wheel", event => {
 window.addEventListener("keydown", event => {
   if (isModalOpen() || event.altKey || event.ctrlKey || event.metaKey) return;
   if (event.target.closest("input,textarea,select,[contenteditable=true]")) return;
+  if (event.key.toLowerCase() === "r") {
+    event.preventDefault();
+    chapterMotion.play(scenes[activeIndex]);
+    return;
+  }
   const next = ["ArrowDown", "ArrowRight", "PageDown", " "];
   const previous = ["ArrowUp", "ArrowLeft", "PageUp"];
   if (next.includes(event.key) || previous.includes(event.key)) {
@@ -275,6 +287,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 previousButton?.addEventListener("click", () => showChapter(activeIndex - 1));
 nextButton?.addEventListener("click", () => showChapter(activeIndex + 1));
+replayButton?.addEventListener("click", () => {
+  if (!isModalOpen() && activeIndex >= 0) chapterMotion.play(scenes[activeIndex]);
+});
 window.addEventListener("hashchange", () => showChapter(getChapterFromHash(), { updateHash: false }));
 
 // Initialize invisible inactive chapters; opening chapter plays automatically.
@@ -318,10 +333,12 @@ infoDialog?.addEventListener("click",e=>{if(e.target===infoDialog)infoDialog.clo
 // completely redundant. Three motors consult the same Keraunos source.
 const continuityDialog=document.querySelector("#continuity-dialog");
 document.querySelector("#show-continuity")?.addEventListener("click",()=>{
+  chapterMotion.stop();
   continuityDialog?.showModal();
   resetFallback();
 });
 document.querySelector("#close-continuity")?.addEventListener("click",()=>continuityDialog?.close());
+continuityDialog?.addEventListener("close", () => chapterMotion.play(scenes[activeIndex]));
 continuityDialog?.addEventListener("click",e=>{
   if(e.target===continuityDialog)continuityDialog.close();
 });
