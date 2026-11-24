@@ -149,7 +149,7 @@ function markFailed(node){
   node.querySelector("small").textContent="FUERA DE SERVICIO";
   if(node.tagName==="BUTTON")node.disabled=true;
 }
-function markActive(node,label){
+function markBackupActive(node,label){
   node.classList.add("active");
   if(node.tagName==="BUTTON")node.disabled=false;
   if(label)node.querySelector("small").textContent=label;
@@ -220,7 +220,7 @@ function resetFallback(){
   motors.forEach(node=>node.querySelector("small").textContent="RESPALDO WEB");
   keraunos.querySelector("small").textContent="SIMULAR INDISPONIBILIDAD";
   strike.querySelector("small").textContent="RESPALDO PROCEDIMENTAL";
-  markActive(api);
+  markBackupActive(api);
   setStatus("Escenario inicial propuesto: un motor consulta la API de Keraunos. Haz clic para simular una falla.");
 }
 
@@ -230,7 +230,7 @@ api?.addEventListener("click",()=>{
   markFailed(api);
   setStatus("API no disponible. La estrategia de respaldo abre los 3 motores que consultan la web Keraunos.");
   extendContinuity("motors","api-motors",()=>{
-    motors.forEach(node=>markActive(node,"SIMULAR FALLA"));
+    motors.forEach(node=>markBackupActive(node,"SIMULAR FALLA"));
     setStatus("Motores 01, 02 y 03 de consulta web disponibles. Simula sus fallas individualmente.");
   });
 });
@@ -246,7 +246,7 @@ motors.forEach((motor,i)=>motor.addEventListener("click",()=>{
   }
   setStatus("Los tres motores web quedaron inoperativos. Se abre la consulta manual de Keraunos.");
   extendContinuity("keraunos","motors-keraunos",()=>{
-    markActive(keraunos,"SIMULAR INDISPONIBILIDAD");
+    markBackupActive(keraunos,"SIMULAR INDISPONIBILIDAD");
     setStatus("Consulta manual Keraunos disponible. Puedes simular su indisponibilidad.");
   });
 }));
@@ -256,7 +256,7 @@ keraunos?.addEventListener("click",()=>{
   markFailed(keraunos);
   setStatus("Keraunos manual no está disponible. Continúa el procedimiento manual con StrikeGuard.");
   extendContinuity("strike","keraunos-strike",()=>{
-    markActive(strike,"ÚLTIMO RESPALDO");
+    markBackupActive(strike,"ÚLTIMO RESPALDO");
     setStatus("Última capa: comunicación manual con StrikeGuard, según el procedimiento vigente. Fin de la simulación.");
   });
 });
