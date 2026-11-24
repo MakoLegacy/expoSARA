@@ -48,7 +48,7 @@ assert(html.includes('id="mine-photo"'),"One persistent mine scene");
 assert(!html.includes('class="haul-vehicle"'),"No artificial trucks");
 assert(!html.includes('class="mine-excavator'),"No artificial excavators");
 assert(!main.includes("ScrollTrigger"),"No conflicting one-shot scroll animations");
-assert(main.includes("smoothstep(beat.start,beat.start+.115,phase)"));
+assert(main.includes("smoothstep(beat.start,beat.start+.12,phase)"),"Scrubbed story reveals work");
 assert(weather.includes("createLivingWorld"));
 assert(!weather.includes("getPointAtLength"),"No truck path animation");
 assert(css.includes("position:fixed"),"Cinematic fixed-scene scrollytelling");
