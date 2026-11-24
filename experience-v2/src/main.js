@@ -42,19 +42,15 @@ const mix = (a,b,t) => a + (b-a)*t;
 const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
 
 function getStoryPosition() {
-  const center = window.scrollY + window.innerHeight * .52;
-  const stops = scenes.map(scene => scene.offsetTop + scene.offsetHeight * .51);
-  if (center <= stops[0]) return 0;
-  for (let i=0;i<stops.length-1;i++) {
-    if (center <= stops[i+1])
-      return i + clamp((center - stops[i]) / (stops[i+1] - stops[i]),0,1);
-  }
-  return stops.length-1;
+  // Entire viewport is always filled: fixed chapter compositions are crossfaded
+  // while the document scrolls through six 150svh narrative sections.
+  const first = scenes[0]?.offsetTop || 0;
+  const step = scenes[0]?.offsetHeight || window.innerHeight;
+  return clamp((window.scrollY-first)/Math.max(1,step),0,scenes.length-1);
 }
 
 function sectionProgress(scene) {
-  const scrollable = Math.max(1,scene.offsetHeight-window.innerHeight);
-  return clamp01((elapsedScrollY - scene.offsetTop)/scrollable);
+  return clamp01((elapsedScrollY - scene.offsetTop)/Math.max(1,scene.offsetHeight));
 }
 
 function markActive(index) {
@@ -76,28 +72,28 @@ function syncScroll() {
 }
 
 function updateBeats() {
-  // Elements are revealed progressively in the same viewport. Scrubbing back
-  // reverses each transition. Nothing is triggered by a timer.
-  for (const group of story) {
-    const section = group.scene;
-    // Skip the expensive writes for chapters well outside the viewport.
-    if(section.offsetTop > elapsedScrollY + window.innerHeight*1.5 ||
-       section.offsetTop + section.offsetHeight < elapsedScrollY-window.innerHeight*.5)continue;
+  // Fixed viewport layers enter/exit with crossfades near chapter boundaries.
+  // Avoid scroll-jank blank intervals and preserve backwards scrubbing.
+  for (let i=0;i<story.length;i++) {
+    const group=story[i];
+    const entering=i===0 ? 1 : smoothstep(i-.24,i,storyTarget);
+    const exiting=i===story.length-1 ? 1 : 1-smoothstep(i+.76,i+1,storyTarget);
+    const visibility=entering*exiting;
+    group.inner.style.opacity=reduced ? (visibility>.5?"1":"0") : visibility.toFixed(3);
+    group.inner.style.pointerEvents=visibility>.65?"auto":"none";
+    group.inner.inert=visibility<.55;
+    if(visibility<.005)continue;
 
-    const phase = sectionProgress(section);
-    const exit = 1-smoothstep(.94,1,phase);
-    group.inner.style.opacity = reduced ? "1" : exit.toFixed(3);
+    const phase=sectionProgress(group.scene);
     for (const beat of group.beats) {
       if(reduced){
-        beat.el.style.opacity="1";
-        beat.el.style.transform="none";
-        beat.el.style.filter="none";
+        beat.el.style.opacity="1";beat.el.style.transform="none";beat.el.style.filter="none";
         continue;
       }
-      const arrival = beat.start===0 ? 1 : smoothstep(beat.start,beat.start+.115,phase);
-      beat.el.style.opacity = arrival.toFixed(3);
-      beat.el.style.transform = "translate3d(0,"+((1-arrival)*25).toFixed(1)+"px,0)";
-      beat.el.style.filter = arrival<.999 ? "blur("+((1-arrival)*2.6).toFixed(2)+"px)" : "none";
+      const arrival=beat.start===0 ? 1 : smoothstep(beat.start,beat.start+.12,phase);
+      beat.el.style.opacity=arrival.toFixed(3);
+      beat.el.style.transform="translate3d(0,"+((1-arrival)*25).toFixed(1)+"px,0)";
+      beat.el.style.filter=arrival<.999?"blur("+((1-arrival)*2.6).toFixed(2)+"px)":"none";
     }
   }
 }
