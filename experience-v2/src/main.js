@@ -322,59 +322,129 @@ const motors=[...document.querySelectorAll("[data-motor]")];
 const keraunos=document.querySelector("#fail-keraunos");
 const strike=document.querySelector("#strike-final");
 const status=document.querySelector("#sim-status");
-const connectors=Object.fromEntries([...document.querySelectorAll("[data-link]")].map(el=>[el.dataset.link,el]));
-let fallback={},generation=0;
+const backupTrack=document.querySelector("#continuity-track");
+const stages=Object.fromEntries([...document.querySelectorAll(".continuity-stage[data-stage]")].map(el=>[el.dataset.stage,el]));
+const connectors=Object.fromEntries([...document.querySelectorAll(".continuity-link[data-link]")].map(el=>[el.dataset.link,el]));
+const trackElements=[...document.querySelectorAll(".continuity-stage,.continuity-link")];
+let fallback={},flowTimeline=null,simBusy=false;
+
 function setStatus(message){if(status)status.textContent=message}
-function failNode(node){
-  node.classList.remove("active");node.classList.add("failed");
+function markFailed(node){
+  node.classList.remove("active");
+  node.classList.add("failed");
   node.querySelector("small").textContent="FUERA DE SERVICIO";
   if(node.tagName==="BUTTON")node.disabled=true;
 }
-function activateNode(node){
+function markActive(node,label){
   node.classList.add("active");
   if(node.tagName==="BUTTON")node.disabled=false;
+  if(label)node.querySelector("small").textContent=label;
 }
-function delayedActivation(node,delay){
-  const cycle=generation;
-  if(reduced)activateNode(node);
-  else gsap.delayedCall(delay,()=>{if(cycle===generation)activateNode(node)});
+function visibleTrackElements(){
+  return trackElements.filter(el=>!el.hidden);
 }
+
+// FLIP layout animation: before opening a new branch, existing nodes occupy
+// the center. After opening it, all visible nodes move into the wider layout.
+// The camera does not move and the diagram grows from its middle.
+function extendContinuity(stageName,linkName,after){
+  if(simBusy)return;
+  simBusy=true;
+  const oldNodes=visibleTrackElements();
+  const from=new Map(oldNodes.map(el=>[el,el.getBoundingClientRect()]));
+  const stage=stages[stageName];
+  const link=connectors[linkName];
+  stage.hidden=false; link.hidden=false;
+  const to=new Map(oldNodes.map(el=>[el,el.getBoundingClientRect()]));
+
+  if(reduced){
+    gsap.set(trackElements,{clearProps:"all"});
+    simBusy=false;
+    after?.();
+    return;
+  }
+  if(flowTimeline)flowTimeline.kill();
+  gsap.set([stage,link],{autoAlpha:0});
+  gsap.set(link.querySelector(".link-line"),{scaleX:0,transformOrigin:"left center"});
+  gsap.set(link.querySelector(".link-arrow"),{opacity:0,x:-7});
+
+  flowTimeline=gsap.timeline({
+    defaults:{ease:"power3.inOut"},
+    onComplete(){
+      simBusy=false;
+      after?.();
+    }
+  });
+  // Move every earlier block as the whole diagram makes room to its left.
+  for(const el of oldNodes){
+    const dx=from.get(el).left-to.get(el).left;
+    const dy=from.get(el).top-to.get(el).top;
+    if(Math.abs(dx)>1||Math.abs(dy)>1){
+      flowTimeline.fromTo(el,{x:dx,y:dy},{x:0,y:0,duration:1.0},0);
+    }
+  }
+  flowTimeline.to(link,{autoAlpha:1,duration:.15},.32);
+  flowTimeline.to(link.querySelector(".link-line"),{scaleX:1,duration:.63,ease:"power2.out"},.34);
+  flowTimeline.to(link.querySelector(".link-arrow"),{opacity:1,x:0,duration:.28},.83);
+  flowTimeline.fromTo(stage,{autoAlpha:0,x:24,scale:.95},{autoAlpha:1,x:0,scale:1,duration:.75,ease:"power3.out"},.62);
+}
+
 function resetFallback(){
-  generation++;
+  if(flowTimeline)flowTimeline.kill();
+  simBusy=false;
   fallback={api:false,motors:[false,false,false],keraunos:false};
+  stages.api.hidden=false;
+  for(const name of ["motors","keraunos","strike"])stages[name].hidden=true;
+  Object.values(connectors).forEach(link=>link.hidden=true);
+  gsap.set(trackElements,{clearProps:"all"});
+  document.querySelectorAll(".link-line,.link-arrow").forEach(el=>gsap.set(el,{clearProps:"all"}));
   [api,...motors,keraunos,strike].forEach(node=>{
     node.classList.remove("active","failed");
-    node.querySelector("small").textContent=node===api?"CLIC PARA SIMULAR FALLA":node===strike?"ÚLTIMO RESPALDO":"RESPALDO";
     if(node.tagName==="BUTTON")node.disabled=true;
   });
-  Object.values(connectors).forEach(el=>el.classList.remove("on","failed"));
-  activateNode(api);
-  setStatus("Haz clic en FUENTE / CONSULTA para iniciar la simulación conceptual.");
+  api.querySelector("small").textContent="SIMULAR FALLA DE API";
+  motors.forEach(node=>node.querySelector("small").textContent="RESPALDO WEB");
+  keraunos.querySelector("small").textContent="SIMULAR INDISPONIBILIDAD";
+  strike.querySelector("small").textContent="RESPALDO PROCEDIMENTAL";
+  markActive(api);
+  setStatus("Escenario inicial propuesto: un motor consulta la API de Keraunos. Haz clic para simular una falla.");
 }
+
 api?.addEventListener("click",()=>{
-  if(fallback.api)return;
+  if(simBusy||fallback.api)return;
   fallback.api=true;
-  failNode(api);
-  connectors["api-motors"].classList.add("on");
-  motors.forEach((motor,i)=>delayedActivation(motor,.18+i*.21));
-  setStatus("Simulación: falla de consulta. Prueba los tres procesos de respaldo.");
+  markFailed(api);
+  setStatus("API no disponible. La estrategia de respaldo abre los 3 motores que consultan la web Keraunos.");
+  extendContinuity("motors","api-motors",()=>{
+    motors.forEach(node=>markActive(node,"SIMULAR FALLA"));
+    setStatus("Motores 01, 02 y 03 de consulta web disponibles. Simula sus fallas individualmente.");
+  });
 });
 motors.forEach((motor,i)=>motor.addEventListener("click",()=>{
-  if(!fallback.api ||fallback.motors[i])return;
-  fallback.motors[i]=true;failNode(motor);
+  if(simBusy||!fallback.api||fallback.motors[i])return;
+  fallback.motors[i]=true;
+  markFailed(motor);
   const count=fallback.motors.filter(Boolean).length;
-  if(count===3){
-    connectors["motors-keraunos"].classList.add("on");
-    delayedActivation(keraunos,.35);
-    setStatus("Tres motores fuera de servicio. Se plantea consulta manual mediante Keraunos.");
-  }else setStatus(count+" de 3 motores deshabilitados en la simulación.");
+  if(count<3){
+    setStatus(count+" de 3 motores web fuera de servicio. Continúan los motores restantes.");
+    if(!reduced)gsap.fromTo(motor,{scale:.95},{scale:1,duration:.35,ease:"back.out(1.4)"});
+    return;
+  }
+  setStatus("Los tres motores web quedaron inoperativos. Se abre la consulta manual de Keraunos.");
+  extendContinuity("keraunos","motors-keraunos",()=>{
+    markActive(keraunos,"SIMULAR INDISPONIBILIDAD");
+    setStatus("Consulta manual Keraunos disponible. Puedes simular su indisponibilidad.");
+  });
 }));
 keraunos?.addEventListener("click",()=>{
-  if(!fallback.motors.every(Boolean)||fallback.keraunos)return;
-  fallback.keraunos=true;failNode(keraunos);
-  connectors["keraunos-strike"].classList.add("on");
-  delayedActivation(strike,.35);
-  setStatus("Se plantea el procedimiento manual establecido con StrikeGuard.");
+  if(simBusy||!fallback.motors.every(Boolean)||fallback.keraunos)return;
+  fallback.keraunos=true;
+  markFailed(keraunos);
+  setStatus("Keraunos manual no está disponible. Continúa el procedimiento manual con StrikeGuard.");
+  extendContinuity("strike","keraunos-strike",()=>{
+    markActive(strike,"ÚLTIMO RESPALDO");
+    setStatus("Última capa: comunicación manual con StrikeGuard, según el procedimiento vigente. Fin de la simulación.");
+  });
 });
 document.querySelector("#reset-sim")?.addEventListener("click",resetFallback);
 resetFallback();
