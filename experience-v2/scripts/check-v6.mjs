@@ -10,6 +10,7 @@ const main=fs.readFileSync(path.join(root,"src","main.js"),"utf8");
 const css=fs.readFileSync(path.join(root,"src","styles.css"),"utf8");
 const weather=fs.readFileSync(path.join(root,"src","living-world.js"),"utf8");
 const chapterMotion=fs.readFileSync(path.join(root,"src","chapter-motion.js"),"utf8");
+const qrSvg=fs.readFileSync(path.join(root,"public","assets","qr-sara.svg"),"utf8");
 
 assert.equal(clamp01(-10),0);
 assert.equal(clamp01(2),1);
@@ -126,5 +127,18 @@ for(let sceneIndex=0;sceneIndex<7;sceneIndex++){
 assert(chapterMotion.includes("createChapterMotion"),"Reduced-motion safe scene choreography exported");
 assert(chapterMotion.includes("reducedMotion"),"Accessibility: respect reduced motion");
 assert(css.includes("V6.1 — SEMANTIC CINEMATIC MOTION GRAPHICS"),"Presentation visuals are styled");
+
+
+// Slide 03 QR is stored in the public web build; scanability requires an
+// undistorted high-contrast vector and a matching real S.A.R.A. destination.
+assert(html.includes('id="show-sara-qr"'),"Slide 03 must visibly contain the QR");
+assert(html.includes('id="sara-qr-dialog"'),"Presenter can enlarge the QR for the auditorium");
+assert.equal((html.match(/assets\/qr-sara\.svg/g)||[]).length,2,"QR in slide and modal");
+assert(html.includes('Código QR: abre el mapa web de S.A.R.A.'),"QR has accessible description");
+assert(html.includes('href="https://antito-yanac.github.io/sara/"'),"Real system URL is linked");
+assert(qrSvg.includes('viewBox="0 0 37 37"') && qrSvg.includes('fill="#ffffff"'),"Vector QR has white quiet-zone");
+assert(qrSvg.includes('<path fill="#000000" d="M4 4h7'),"Vector QR has high-contrast encoded modules");
+assert(css.includes("V6.2 — Scannable QR installed"),"Responsive slide 03 QR styles included");
+assert(main.includes('const saraQrDialog = document.querySelector("#sara-qr-dialog")'),"QR enlargement logic connected");
 
 console.log("S.A.R.A. hybrid executive V6: seven autonomous chapters, operational context, prevention culture, fallback — OK");
