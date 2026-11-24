@@ -199,3 +199,97 @@ button.sim-node:disabled{cursor:not-allowed}
  html{scroll-behavior:auto}
  *,:before,:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+
+/* S.A.R.A. symbol: three ascending diagonal strokes, denoting
+   detectar · comprender · responder. Deliberately minimal. */
+.brand-symbol{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+.sara-mark{width:40px;height:38px;display:block;fill:none;stroke-width:4.4;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.sara-mark .mark-one{stroke:var(--orange)}
+.sara-mark .mark-two{stroke:var(--cyan)}
+.sara-mark .mark-three{stroke:var(--orange)}
+.brand-symbol .sara-mark{filter:drop-shadow(0 0 6px rgba(69,217,253,.20))}
+.sara-closing{display:flex;align-items:center;gap:13px;margin-top:20px;opacity:.9}
+.sara-closing .sara-mark{width:35px;height:35px}
+.sara-closing span{font:700 11px/1.5 var(--font-title, var(--title, Arial));letter-spacing:.07em;color:#b7d9e7}
+
+/* Slide 01: readable operational flow when projected. */
+#capitulo-01 .micro-flow{
+  display:flex;flex-wrap:wrap;justify-content:center;align-items:center;
+  gap:9px 11px;padding:19px 11px;background:rgba(2,13,23,.69);
+  border:1px solid rgba(113,201,234,.24);
+  font:800 clamp(14px,1.15vw,18px)/1.3 var(--font-title);
+  letter-spacing:.005em;text-align:center;
+}
+#capitulo-01 .micro-flow span:nth-child(odd){white-space:nowrap}
+#capitulo-01 .micro-flow span:nth-child(even){color:var(--orange);font-size:clamp(22px,2vw,29px)}
+
+/* Formal V4 slide 06 now shares the same progressive timeline as V5. */
+.last-scene .continuity-design-note,.last-scene .continuity-summary{
+ color:#d4e5ef;font-size:clamp(15px,1.2vw,18px);
+ font-weight:600;line-height:1.28;
+}
+.last-scene .continuity-design-note{margin:0 0 11px}
+.last-scene .continuity-summary{margin:6px 0 15px}
+.last-scene .continuity-viewport{width:100%;overflow-x:auto;overflow-y:hidden;min-height:270px;scrollbar-width:thin}
+.last-scene .continuity-track{
+ display:flex;align-items:center;justify-content:center;
+ gap:10px;width:max-content;min-width:100%;
+ min-height:268px;padding:10px 8px;margin:auto;
+}
+.last-scene .continuity-stage{flex:0 0 auto;display:flex;align-items:center;justify-content:center;min-width:0;will-change:transform,opacity}
+.last-scene .continuity-stage[hidden],.last-scene .continuity-link[hidden]{display:none!important}
+.last-scene .stage-api{width:190px}
+.last-scene .stage-motors{width:195px;display:flex;flex-direction:column;gap:8px}
+.last-scene .stage-keraunos{width:180px}
+.last-scene .stage-strike{width:192px}
+.last-scene .sim-node{
+ flex:1;width:100%;min-width:0;min-height:145px;
+ display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+ gap:12px;padding:16px 14px;border:1px solid #526c82;
+ background:linear-gradient(135deg,rgba(6,26,42,.96),rgba(4,12,24,.93));
+ color:#dcebf6;opacity:.43;box-shadow:none;text-align:left;
+ transition:border-color .3s,background .3s;
+}
+.last-scene .sim-node.active{opacity:1;border-color:var(--cyan);color:#fff;background:linear-gradient(135deg,rgba(9,52,74,.93),rgba(4,21,39,.92));box-shadow:0 0 24px rgba(62,212,252,.18)}
+.last-scene .sim-node.failed{opacity:1;border-color:var(--red);background:linear-gradient(135deg,rgba(66,16,32,.9),rgba(28,10,22,.9));box-shadow:0 0 18px rgba(249,64,88,.14)}
+.last-scene .sim-node.failed strong{text-decoration:line-through;text-decoration-thickness:1px;text-decoration-color:var(--red)}
+.last-scene .sim-node strong{font:800 clamp(12px,1.05vw,16px)/1.3 var(--font-title)}
+.last-scene .sim-node small{font:700 12px var(--font-body);letter-spacing:.06em;color:#a9ddec}
+.last-scene .sim-node.failed small{color:#ffb3bd}
+.last-scene .node-id{font:700 10px var(--font-title);color:var(--orange);letter-spacing:.05em}
+.last-scene .node-subtitle{font-size:17px;line-height:1.15;font-weight:600;color:#d8e3ec}
+.last-scene button.sim-node:disabled{cursor:default}
+.last-scene .motors{display:flex;flex-direction:column;gap:7px;width:100%}
+.last-scene .motors .sim-node{width:100%;min-height:68px;flex:0 0 auto;padding:9px 12px;gap:6px}
+.last-scene .motors .sim-node strong{font-size:13px}
+.last-scene .motors .sim-node small{font-size:11px}
+.last-scene .engine-stage-heading,.last-scene .engine-stage-caption{
+ font:700 10px/1.4 var(--font-title);letter-spacing:.05em;text-align:center;color:var(--cyan)
+}
+.last-scene .engine-stage-caption{font:600 14px var(--font-body);color:#c4d8e4}
+.last-scene .continuity-link{
+ flex:0 0 50px;min-width:50px;height:38px;display:flex;
+ align-items:center;justify-content:center;gap:0;will-change:transform,opacity
+}
+.last-scene .continuity-link .link-line{
+ display:block;flex:1;height:2px;background:linear-gradient(90deg,var(--orange),var(--cyan));
+ transform-origin:left center;box-shadow:0 0 12px rgba(80,219,255,.6)
+}
+.last-scene .continuity-link .link-arrow{color:var(--cyan);font:bold 26px var(--font-body);line-height:1}
+.last-scene .terminal-node.active{opacity:1}
+.last-scene .sim-status{font-size:clamp(17px,1.5vw,20px);line-height:1.25;margin:5px 0 14px}
+@media(max-width:1120px){
+ .last-scene .continuity-track{justify-content:flex-start}
+ .last-scene .resilience-panel{padding:16px}
+}
+@media(max-width:780px){
+ #capitulo-01 .micro-flow{font-size:15px;gap:6px 8px;padding:15px 8px}
+ .last-scene .continuity-viewport{min-height:250px}
+ .last-scene .continuity-track{min-height:245px}
+ .last-scene .stage-api{width:174px}
+ .last-scene .stage-motors{width:177px}
+ .last-scene .stage-keraunos{width:164px}
+ .last-scene .stage-strike{width:175px}
+ .last-scene .continuity-link{flex-basis:34px;min-width:34px}
+}
