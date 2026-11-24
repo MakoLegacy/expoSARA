@@ -509,3 +509,123 @@ main:after{display:none}
 @media(prefers-reduced-motion:reduce){
  .prevention-step,.inapp-notice,.operational-chain{animation:none}
 }
+
+
+/* V6.1 — SEMANTIC CINEMATIC MOTION GRAPHICS
+   Quiet, independent timelines accompany the spoken explanation.
+   These visuals are conceptual, never live warning telemetry. */
+.presentation-controls .motion-replay{
+  border-color:rgba(255,155,91,.42);color:var(--orange);
+  font-size:25px;line-height:1;
+}
+.presentation-controls .motion-replay:hover{
+  background:rgba(82,34,19,.68);border-color:var(--orange)
+}
+
+/* 01 • Detection → monitoring → official radio. */
+.operational-chain{position:relative;overflow:hidden}
+.operational-chain span{position:relative;padding:2px 4px;border-radius:2px;transition:color .25s}
+.signal-journey{
+ display:flex;align-items:center;gap:3px;width:100%;
+ padding:0 16px;margin-top:12px;height:15px;pointer-events:none;
+}
+.signal-beacon{
+ display:block;flex:0 0 10px;width:10px;height:10px;border-radius:50%;
+ border:1px solid var(--cyan);background:rgba(44,165,202,.55);
+ box-shadow:0 0 10px rgba(78,212,255,.28);opacity:.55;
+}
+.signal-beacon:last-child{border-color:var(--orange);background:rgba(249,126,64,.48)}
+.signal-route{display:block;position:relative;height:2px;flex:1;background:rgba(80,217,250,.34)}
+.signal-packet{
+ position:absolute;left:0;top:-3px;display:block;width:10px;height:8px;
+ border-radius:50%;background:var(--cyan);opacity:0;
+ box-shadow:0 0 13px rgba(67,213,255,.92)
+}
+.signal-route:nth-of-type(2) .signal-packet{background:var(--orange);box-shadow:0 0 14px rgba(255,146,88,.86)}
+
+/* 02 • A transmitted message and an operational question about the zone. */
+.friction-result .problem-signal{
+ display:flex;align-items:center;gap:8px;height:33px;
+ margin-top:18px;max-width:340px;pointer-events:none
+}
+.radio-origin{
+ display:block;flex:0 0 22px;width:22px;height:22px;border:2px solid var(--cyan);
+ border-radius:50%;position:relative;opacity:.6
+}
+.radio-origin:before,.radio-origin:after{
+ content:"";position:absolute;inset:3px;border:1px solid rgba(91,221,253,.7);border-radius:50%
+}
+.radio-origin:after{inset:8px;background:var(--cyan)}
+.radio-path{position:relative;display:block;height:2px;flex:1;background:linear-gradient(90deg,var(--cyan),rgba(109,202,228,.26))}
+.radio-path i{
+ position:absolute;top:-4px;left:0;display:block;width:9px;height:10px;
+ background:var(--cyan);box-shadow:0 0 14px rgba(76,221,252,.84);
+ border-radius:50%;opacity:0
+}
+.radio-target{
+ display:grid;place-items:center;width:32px;height:32px;border:1px solid var(--orange);
+ border-radius:50%;font:700 18px var(--title);color:var(--orange);opacity:.6
+}
+.radio-answer{
+ font:700 11px var(--title);padding:8px;color:#e0f1fa;
+ border:1px solid rgba(90,211,245,.42);background:rgba(8,38,56,.55)
+}
+
+/* 03 • A visual reader inspects each of the four zones. */
+.zone-visual .zone-item{will-change:filter,box-shadow}
+.zone-visual .zone-ring{will-change:filter,opacity}
+.zone-scan{
+ display:flex;align-items:center;gap:12px;margin-top:13px;
+ font:700 10px/1.35 var(--title);letter-spacing:.08em;
+ color:#cae5f2;pointer-events:none
+}
+.zone-scan-line{position:relative;display:block;flex:1;height:2px;background:rgba(88,205,239,.4)}
+.zone-scan-packet{
+ display:block;position:absolute;left:0;top:-4px;width:10px;height:10px;
+ background:var(--orange);border-radius:50%;opacity:0;
+ box-shadow:0 0 12px rgba(255,154,89,.82)
+}
+
+/* 04 • Animated data packets travel down the actual consultation flow. */
+.architecture-visual .flow-rail{position:relative}
+.architecture-visual .flow-rail > span{transform-origin:top center;will-change:transform}
+.architecture-visual .flow-packet{
+ position:absolute;left:calc(50% - 5px);top:0;display:block;width:10px;height:10px;
+ border-radius:50%;background:var(--orange);box-shadow:0 0 12px rgba(255,159,90,.7);
+ opacity:0;pointer-events:none;will-change:transform,opacity
+}
+.architecture-visual .accent-rail .flow-packet{background:var(--cyan);box-shadow:0 0 13px rgba(102,229,251,.8)}
+.architecture-visual .engine{will-change:background-color,box-shadow}
+
+/* 05 • The preventive sequence moves in step with what is spoken. */
+.prevention-step,.prevention-icon,.inapp-notice .notice-dot{
+ will-change:filter,box-shadow;
+}
+.prevention-connector span{transform-origin:top center;will-change:transform}
+.inapp-notice .notice-dot{border-radius:50%}
+
+/* 06 • A thin storyteller rail moves through the groups affected by value. */
+.value-visual .value-rail{position:absolute;top:0;left:-20px;bottom:0;width:2px;background:rgba(94,207,241,.22);pointer-events:none}
+.value-visual .value-rail i{position:absolute;top:0;left:-4px;display:block;width:10px;height:27px;background:var(--cyan);box-shadow:0 0 17px rgba(100,213,255,.64);border-radius:2px;will-change:transform}
+.value-visual .value-row{will-change:filter,box-shadow}
+
+/* 07 • Sequential roadmap lines and the three-stroke S.A.R.A. signature. */
+.future-connector{transform-origin:top center;will-change:transform}
+.sara-closing .sara-mark path{will-change:stroke-dashoffset}
+
+@media(max-width:850px){
+ .presentation-controls .motion-replay{font-size:22px}
+ .signal-journey{margin-top:5px;height:10px}
+ .signal-beacon{width:7px;height:7px;flex-basis:7px}
+ .friction-result .problem-signal{margin-top:8px;height:25px}
+ .radio-origin{width:17px;height:17px;flex-basis:17px}
+ .radio-target{width:26px;height:26px;font-size:14px}
+ .radio-answer{font-size:9px;padding:5px}
+ .zone-scan{margin-top:8px;font-size:9px}
+ .value-visual .value-rail{left:-8px}
+}
+@media(prefers-reduced-motion:reduce){
+ .signal-packet,.zone-scan-packet,.radio-path i,.flow-packet{display:none}
+ .value-rail i{box-shadow:none}
+ .prevention-step,.future-connector{will-change:auto}
+}
