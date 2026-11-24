@@ -629,3 +629,9 @@ main:after{display:none}
  .value-rail i{box-shadow:none}
  .prevention-step,.future-connector{will-change:auto}
 }
+
+/* Keep the three-stage detection/radio logic together on large screens. */
+@media(min-width:1251px){
+ .operational-chain{flex-wrap:nowrap;gap:5px;padding:14px 8px}
+ .operational-chain span{padding-inline:2px}
+}
