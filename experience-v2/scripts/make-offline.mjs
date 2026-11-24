@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDir = path.join(root, "dist-offline");
 const photoFile = path.join(root, "public", "assets", "antamina-cinematic.webp");
+const qrFile = path.join(root, "public", "assets", "qr-sara.svg");
 const htmlFile = path.join(outputDir, "index.html");
 const outputFile = path.join(outputDir, "SARA_V6_PREVIEW_OFFLINE.html");
 
@@ -16,6 +17,7 @@ async function requiredFile(file, label) {
 }
 
 const imageData = await requiredFile(photoFile, "Falta la imagen cinematográfica");
+const qrData = await requiredFile(qrFile, "Falta el QR de S.A.R.A.");
 let html = (await requiredFile(htmlFile, "Falta el HTML compilado")).toString("utf8");
 const assetsDir = path.join(outputDir, "assets");
 const assets = await fs.readdir(assetsDir);
@@ -40,6 +42,16 @@ html = html.replace(scriptPattern, () => "<script type=\"module\">" + js + "</sc
 html = html.replace(stylePattern, () => "<style>" + css + "</style>");
 html = html.replace(photoPattern, (_all, before, after) =>
   before + "data:image/webp;base64," + imageData.toString("base64") + after);
+// Preserve both QR displays without network access. The public online version
+// keeps the same genuine QR resource served by GitHub Pages.
+const qrPattern = /(<img\b[^>]*\bsrc=["'])([^"']*qr-sara\.svg)(["'][^>]*>)/gi;
+const qrCount = (html.match(/qr-sara\.svg/g) || []).length;
+if (qrCount !== 2) {
+  throw new Error("Se esperaban dos referencias al QR en la presentación.");
+}
+html = html.replace(qrPattern, (_all, before, _url, after) =>
+  before + "data:image/svg+xml;base64," + qrData.toString("base64") + after);
+if (html.includes("qr-sara.svg")) throw new Error("El QR no se incrustó correctamente en el HTML portable.");
 html = html.replace(/<link\b[^>]*(?:fonts\.googleapis\.com|fonts\.gstatic\.com)[^>]*\/?>/gi, "");
 html = html.replace(/<link\b[^>]*rel=["']modulepreload["'][^>]*\/?>/gi, "");
 await fs.writeFile(outputFile, html, "utf8");
