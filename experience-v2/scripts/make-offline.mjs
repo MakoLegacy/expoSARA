@@ -6,7 +6,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDir = path.join(root, "dist-offline");
 const photoFile = path.join(root, "public", "assets", "antamina-cinematic.webp");
 const htmlFile = path.join(outputDir, "index.html");
-const outputFile = path.join(outputDir, "SARA_V5_PREVIEW_OFFLINE.html");
+const outputFile = path.join(outputDir, "SARA_V6_PREVIEW_OFFLINE.html");
 
 async function requiredFile(file, label) {
   try { return await fs.readFile(file); }
@@ -43,6 +43,6 @@ html = html.replace(photoPattern, (_all, before, after) =>
 html = html.replace(/<link\b[^>]*(?:fonts\.googleapis\.com|fonts\.gstatic\.com)[^>]*\/?>/gi, "");
 html = html.replace(/<link\b[^>]*rel=["']modulepreload["'][^>]*\/?>/gi, "");
 await fs.writeFile(outputFile, html, "utf8");
-console.log("S.A.R.A. V4 portable: " + outputFile);
+console.log("S.A.R.A. V6 portable: " + outputFile);
 console.log("CSS, JS e imagen incrustados. Abre el HTML con doble clic en Chrome/Edge.");
 console.log("Los enlaces a Keraunos y S.A.R.A. requieren internet.");
