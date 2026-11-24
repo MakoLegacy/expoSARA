@@ -1,12 +1,13 @@
-name: Publicar S.A.R.A. V4 + respaldo offline
+name: S.A.R.A. - Formal y Preview independientes
 
 on:
   push:
     branches:
       - presentation-approved
     paths:
-      - experience-v2/**
-      - .github/workflows/deploy-sara-pages.yml
+      - "experience-v2/**"
+      - ".github/workflows/deploy-sara-pages.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,46 +15,70 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages-sara-v4"
+  group: pages-sara-formal-preview
   cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Descargar repositorio
+      - name: Descargar version formal (solo presentation-approved)
         uses: actions/checkout@v4
+        with:
+          ref: presentation-approved
+          path: approved
+      - name: Descargar version de pruebas (development-v5)
+        uses: actions/checkout@v4
+        with:
+          ref: development-v5
+          path: preview-src
       - name: Preparar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-      - name: Comprobar imagen requerida
+          node-version: "22"
+      - name: Verificar imagen cinematografica de ambas versiones
         run: |
-          if [ ! -s experience-v2/public/assets/antamina-cinematic.webp ]; then
-            echo "::error::Falta experience-v2/public/assets/antamina-cinematic.webp. Sube la imagen optimizada del paquete V3 a la rama de rediseño."
-            exit 1
-          fi
-      - name: Instalar dependencias
-        working-directory: experience-v2
+          test -s approved/experience-v2/public/assets/antamina-cinematic.webp
+          test -s preview-src/experience-v2/public/assets/antamina-cinematic.webp
+      - name: Instalar dependencias formales
+        working-directory: approved/experience-v2
         run: npm install
-      - name: Compilar web para GitHub Pages
-        working-directory: experience-v2
+      - name: Compilar V4 formal en /expoSARA/
+        working-directory: approved/experience-v2
         run: npm run build:pages
-      - name: Compilar respaldo portable
-        working-directory: experience-v2
+      - name: Generar copia offline formal
+        working-directory: approved/experience-v2
         run: npm run build:offline
-      - name: Subir respaldo offline descargable
+      - name: Comprobar archivo principal formal
+        run: test -s approved/experience-v2/dist/index.html
+      - name: Instalar dependencias de preview
+        working-directory: preview-src/experience-v2
+        run: npm install
+      - name: Verificar pruebas de la V5
+        working-directory: preview-src/experience-v2
+        run: npm run test:v5
+      - name: Compilar V5 solo en /expoSARA/preview/
+        working-directory: preview-src/experience-v2
+        run: npm run build -- --base /expoSARA/preview/ --outDir dist-preview
+      - name: Unir preview al artefacto formal sin modificar su raiz
+        run: |
+          test -s preview-src/experience-v2/dist-preview/index.html
+          mkdir -p approved/experience-v2/dist/preview
+          cp -R preview-src/experience-v2/dist-preview/. approved/experience-v2/dist/preview/
+          test -s approved/experience-v2/dist/index.html
+          test -s approved/experience-v2/dist/preview/index.html
+      - name: Guardar respaldo offline formal
         uses: actions/upload-artifact@v4
         with:
-          name: SARA-V4-OFFLINE
-          path: experience-v2/dist-offline/SARA_V4_OFFLINE.html
+          name: SARA-FORMAL-OFFLINE
+          path: approved/experience-v2/dist-offline/SARA_V4_OFFLINE.html
           if-no-files-found: error
-      - name: Preparar GitHub Pages
+      - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
-      - name: Subir web a GitHub Pages
+      - name: Subir formal y preview en un solo sitio Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: experience-v2/dist
+          path: approved/experience-v2/dist
 
   deploy:
     runs-on: ubuntu-latest
@@ -62,6 +87,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Publicar
+      - name: Publicar formal + preview
         id: deployment
         uses: actions/deploy-pages@v4
