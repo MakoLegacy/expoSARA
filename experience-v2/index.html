@@ -59,6 +59,7 @@
   <div class="presentation-controls" role="group" aria-label="Navegación de la exposición">
     <button type="button" id="prev-chapter" aria-label="Capítulo anterior" disabled>←</button>
     <output id="chapter-count" aria-live="polite">01 / 07</output>
+    <button type="button" id="replay-motion" class="motion-replay" aria-label="Repetir la animación explicativa del capítulo" title="Repetir animación explicativa (tecla R)">↻</button>
     <button type="button" id="next-chapter" aria-label="Capítulo siguiente">→</button>
   </div>
 
@@ -85,6 +86,7 @@
             <span><strong>KERAUNOS</strong><small>Monitoreo predictivo</small></span><span class="identity-plus" aria-hidden="true">+</span>
           </button>
           <div class="operational-chain beat" data-beat=".65"><span>DETECCIÓN</span><b>→</b><span>MONITOREO 24/7</span><b>→</b><span>AVISO RADIAL</span></div>
+          <div class="signal-journey beat" data-beat=".72" aria-hidden="true"><i class="signal-beacon"></i><span class="signal-route"><i class="signal-packet"></i></span><i class="signal-beacon"></i><span class="signal-route"><i class="signal-packet"></i></span><i class="signal-beacon"></i></div>
         </div>
       </div>
     </section>
@@ -104,7 +106,7 @@
           <div class="friction beat" data-beat=".20"><span class="friction-index">01</span><strong>AVISOS RADIALES OFICIALES</strong><span class="friction-symbol" aria-hidden="true">↗</span></div>
           <div class="friction beat" data-beat=".34"><span class="friction-index">02</span><strong>CONSULTAS ADICIONALES</strong><span class="friction-symbol" aria-hidden="true">→</span></div>
           <div class="friction beat" data-beat=".48"><span class="friction-index">03</span><strong>COMPRENSIÓN POR ZONA</strong><span class="friction-symbol" aria-hidden="true">+</span></div>
-          <div class="friction-result beat" data-beat=".63"><span class="result-line"></span><strong>NO REEMPLAZAR.<br><em>COMPLEMENTAR.</em></strong></div>
+          <div class="friction-result beat" data-beat=".63"><span class="result-line"></span><strong>NO REEMPLAZAR.<br><em>COMPLEMENTAR.</em></strong><div class="problem-signal" aria-hidden="true"><i class="radio-origin"></i><span class="radio-path"><i></i></span><span class="radio-target">?</span><span class="radio-answer">ZONA</span></div></div>
           <p class="visual-footnote beat" data-beat=".74">Hoy no existe una práctica formal de consulta meteorológica previa para todo el personal de campo.</p>
         </div>
       </div>
@@ -130,7 +132,8 @@
             <div class="zone-item beat" data-beat=".45"><span class="zone-ring"><span>03</span></span><strong>TAJO</strong></div>
             <div class="zone-item beat" data-beat=".54"><span class="zone-ring"><span>04</span></span><strong>TUCUSH</strong></div>
           </div>
-          <div class="zone-caption beat" data-beat=".66">REPRESENTACIÓN ESQUEMÁTICA · SIN ESTADOS DE ALERTA EN VIVO</div>
+          <div class="zone-scan beat" data-beat=".63" aria-hidden="true"><span class="zone-scan-line"><i class="zone-scan-packet"></i></span><span>LECTURA POR ZONA</span></div>
+          <div class="zone-caption beat" data-beat=".70">REPRESENTACIÓN ESQUEMÁTICA · SIN ESTADOS DE ALERTA EN VIVO</div>
         </div>
       </div>
     </section>
@@ -147,15 +150,15 @@
         </div>
         <div class="narrative-visual architecture-visual" aria-label="Flujo conceptual desde la web de Keraunos hacia tres motores y S.A.R.A.">
           <div class="flow-source beat" data-beat=".14"><span class="node-tag">FUENTE ACTUAL</span><strong>WEB KERAUNOS</strong></div>
-          <div class="flow-rail beat" data-beat=".27"><span></span></div>
+          <div class="flow-rail beat" data-beat=".27"><span></span><i class="flow-packet" aria-hidden="true"></i></div>
           <div class="engine-grid">
             <div class="engine beat" data-beat=".30"><span class="engine-number">01</span><strong>MOTOR</strong><small>EQUIPO 01</small></div>
             <div class="engine beat" data-beat=".40"><span class="engine-number">02</span><strong>MOTOR</strong><small>EQUIPO 02</small></div>
             <div class="engine beat" data-beat=".50"><span class="engine-number">03</span><strong>MOTOR</strong><small>EQUIPO 03</small></div>
           </div>
-          <div class="flow-rail accent-rail beat" data-beat=".58"><span></span></div>
+          <div class="flow-rail accent-rail beat" data-beat=".58"><span></span><i class="flow-packet" aria-hidden="true"></i></div>
           <div class="flow-destination beat" data-beat=".64"><strong>S.A.R.A.</strong><span class="flow-arrow" aria-hidden="true">→</span><strong>CAMPO</strong></div>
-          <p class="flow-caption beat" data-beat=".75">Los tres motores comparten fuente. La API es una posibilidad futura, no una integración actual.</p>
+          <p class="flow-caption beat" data-beat=".75">FLUJO ILUSTRATIVO · Los tres motores comparten fuente. La API es una propuesta futura.</p>
         </div>
       </div>
     </section>
@@ -200,11 +203,11 @@
       <div class="scene-inner story-layout">
         <div class="story-copy">
           <p class="eyebrow beat" data-beat="0">06 / VALOR PARA ANTAMINA</p>
-          <h2 id="title-06" class="beat" data-beat="0">MENOS FRICCIÓN.<br><em>MÁS VISIBILIDAD OPERATIVA.</em></h2>
+          <h2 id="title-06" class="beat" data-beat="0">MÁS CLARIDAD.<br><em>MÁS VISIBILIDAD OPERATIVA.</em></h2>
           <p class="lead beat" data-beat=".11">Simplificar también es innovar.</p>
           <p class="context-note beat" data-beat=".66">Beneficios esperados que deben medirse durante una validación operativa.</p>
         </div>
-        <div class="narrative-visual value-visual">
+        <div class="narrative-visual value-visual"><div class="value-rail" aria-hidden="true"><i></i></div>
           <div class="value-row beat" data-beat=".22"><span class="value-number">01</span><div><strong>CENTRO DE CONTROL</strong><p>Complementar los avisos radiales y facilitar consultas.</p></div><span class="value-arrow" aria-hidden="true">↗</span></div>
           <div class="value-row beat" data-beat=".38"><span class="value-number">02</span><div><strong>PERSONAL DE CAMPO</strong><p>Consulta intuitiva y participación preventiva.</p></div><span class="value-arrow" aria-hidden="true">↗</span></div>
           <div class="value-row beat" data-beat=".54"><span class="value-number">03</span><div><strong>OPERACIÓN Y LIDERAZGO</strong><p>Visibilidad y oportunidad de estandarización.</p></div><span class="value-arrow" aria-hidden="true">↗</span></div>
