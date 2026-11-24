@@ -1,0 +1,16 @@
+# Entry point on default branch so a validated development build can
+# dispatch the real Pages publishing workflow on presentation-approved.
+# The presentation source in main is deliberately left untouched.
+name: S.A.R.A. - Activador de publicacion
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  default-branch-instructions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Informacion
+        run: echo "El despliegue real usa presentation-approved. Ejecuta el workflow con esa rama."
