@@ -1,4 +1,4 @@
-name: V5 Desarrollo - Validacion sin publicar
+name: V6 Desarrollo - Validacion sin publicar
 
 on:
   push:
@@ -31,18 +31,18 @@ jobs:
       - name: Instalar dependencias
         run: npm install
       - name: Verificar rutas, enlaces y progresion climatica
-        run: npm run test:v5
+        run: npm run test:v6
       - name: Verificar compilacion
         run: npm run build
-      - name: Crear preview offline V5
+      - name: Crear preview offline V6
         run: npm run build:offline
       - name: Verificar integridad del HTML offline
         run: npm run test:offline
       - name: Guardar preview sin publicar
         uses: actions/upload-artifact@v4
         with:
-          name: SARA-V5-PREVIEW
-          path: experience-v2/dist-offline/SARA_V5_PREVIEW_OFFLINE.html
+          name: SARA-V6-PREVIEW
+          path: experience-v2/dist-offline/SARA_V6_PREVIEW_OFFLINE.html
           if-no-files-found: error
 
 
