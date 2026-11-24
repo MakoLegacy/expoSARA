@@ -1,11 +1,14 @@
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { createLivingWorld } from "./living-world.js";
+import { createLivingWorld, clamp01, smoothstep } from "./living-world.js";
 import "./styles.css";
-gsap.registerPlugin(ScrollTrigger);
 
-// V4 story camera. The same photographic representation persists behind every
-// chapter: these are simulated 2.5D camera moves, not a surveyed 3D terrain.
+/**
+ * V5 executive scrollytelling:
+ * - Exactly six sections from the approved executive script.
+ * - A persistent 2.5D mine camera that continuously interpolates.
+ * - Reversible scroll-linked semantic graphic reveals (no discrete slide cuts).
+ * - All external systems and original fallback simulator remain interactive.
+ */
 const camera = document.querySelector("#world-camera");
 const highlights = document.querySelector(".world-highlights");
 const shade = document.querySelector(".world-shade");
@@ -15,182 +18,222 @@ const progress = document.querySelector("#progress-bar");
 const scenes = [...document.querySelectorAll("[data-scene]")];
 const navLinks = [...document.querySelectorAll("[data-nav]")];
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const livingWorld = createLivingWorld({ reducedMotion:reduced });
+const livingWorld = createLivingWorld({ reducedMotion: reduced });
 
 const looks = [
-  { x:  0.0, y:  0.0, zoom: 1.12, glow: .07 },
-  { x: -1.6, y: -1.3, zoom: 1.23, glow: .09 },
-  { x: -3.8, y:  1.2, zoom: 1.35, glow: .11 },
-  { x: -1.4, y:  0.0, zoom: 1.42, glow: .28 },
-  { x:  1.8, y: -1.7, zoom: 1.46, glow: .40 },
-  { x:  2.8, y:  1.1, zoom: 1.37, glow: .47 },
-  { x:  0.1, y:  0.0, zoom: 1.22, glow: .28 }
+  { x: 0,   y: 0,   zoom: 1.12, glow: .00 },
+  { x: -2.2,y: -1.0,zoom: 1.22, glow: .05 },
+  { x: -3.8,y: 1.2, zoom: 1.35, glow: .10 },
+  { x: .8,  y: -.9, zoom: 1.42, glow: .18 },
+  { x: 2.2, y: 1.6, zoom: 1.36, glow: .12 },
+  { x: .3,  y: 0,   zoom: 1.23, glow: .04 }
 ];
-let scrollTarget = 0, smoothPosition = 0, activeIndex = -1, pointerX = 0, pointerY = 0;
 
-const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-const mix = (a, b, t) => a + (b - a) * t;
-const lerpLook = (a, b, t) => ({
-  x: mix(a.x, b.x, t), y: mix(a.y, b.y, t),
-  zoom: mix(a.zoom, b.zoom, t), glow: mix(a.glow, b.glow, t)
-});
+const story = scenes.map(scene => ({
+  scene,
+  inner: scene.querySelector(".scene-inner"),
+  beats: [...scene.querySelectorAll("[data-beat]")].map(el => ({
+    el, start: Number(el.dataset.beat) || 0
+  }))
+}));
+let storyTarget = 0, smoothPosition = 0, activeIndex = -1, pointerX = 0, pointerY = 0;
+let elapsedScrollY = window.scrollY;
+const mix = (a,b,t) => a + (b-a)*t;
+const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
 
 function getStoryPosition() {
   const center = window.scrollY + window.innerHeight * .52;
-  const stops = scenes.map(scene => scene.offsetTop + scene.offsetHeight * .52);
+  const stops = scenes.map(scene => scene.offsetTop + scene.offsetHeight * .51);
   if (center <= stops[0]) return 0;
-  for (let i = 0; i < stops.length - 1; i++) {
-    if (center <= stops[i + 1]) return i + clamp((center - stops[i]) / (stops[i + 1] - stops[i]), 0, 1);
+  for (let i=0;i<stops.length-1;i++) {
+    if (center <= stops[i+1])
+      return i + clamp((center - stops[i]) / (stops[i+1] - stops[i]),0,1);
   }
-  return stops.length - 1;
+  return stops.length-1;
+}
+
+function sectionProgress(scene) {
+  const scrollable = Math.max(1,scene.offsetHeight-window.innerHeight);
+  return clamp01((elapsedScrollY - scene.offsetTop)/scrollable);
 }
 
 function markActive(index) {
-  if (index === activeIndex) return;
-  activeIndex = index;
-  navLinks.forEach((link, i) => {
-    if (i === index) link.setAttribute("aria-current", "step");
+  if (index===activeIndex) return;
+  activeIndex=index;
+  navLinks.forEach((link,i) => {
+    if(i===index)link.setAttribute("aria-current","step");
     else link.removeAttribute("aria-current");
   });
-  document.body.dataset.chapter = String(index).padStart(2, "0");
+  document.body.dataset.chapter=String(index+1).padStart(2,"0");
 }
 
 function syncScroll() {
-  scrollTarget = getStoryPosition();
-  const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-  progress.style.width = (clamp(window.scrollY / maxScroll, 0, 1) * 100).toFixed(2) + "%";
-  markActive(Math.min(looks.length - 1, Math.floor(scrollTarget + .52)));
+  elapsedScrollY = window.scrollY;
+  storyTarget = getStoryPosition();
+  const maxScroll = Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
+  progress.style.width = (clamp01(elapsedScrollY/maxScroll)*100).toFixed(2)+"%";
+  markActive(Math.min(looks.length-1,Math.floor(storyTarget+.5)));
 }
 
-function renderCamera(frameTime = 0) {
-  smoothPosition = reduced ? scrollTarget : mix(smoothPosition, scrollTarget, .092);
-  const low = Math.min(looks.length - 1, Math.floor(smoothPosition));
-  const high = Math.min(looks.length - 1, low + 1);
-  const t = smoothPosition - low;
-  const look = lerpLook(looks[low], looks[high], t);
-  const microX = reduced ? 0 : pointerX * .45;
-  const microY = reduced ? 0 : pointerY * .32;
-  camera.style.transform = 'translate3d(' + (look.x + microX).toFixed(3) + '%, ' +
-    (look.y + microY).toFixed(3) + '%, 0) scale(' + look.zoom.toFixed(4) + ')';
-  highlights.style.opacity = look.glow.toFixed(3);
-  shade.style.opacity = (1 - Math.min(.18,look.glow*.27)).toFixed(3);
-  livingWorld.render(frameTime / 1000, smoothPosition);
+function updateBeats() {
+  // Elements are revealed progressively in the same viewport. Scrubbing back
+  // reverses each transition. Nothing is triggered by a timer.
+  for (const group of story) {
+    const section = group.scene;
+    // Skip the expensive writes for chapters well outside the viewport.
+    if(section.offsetTop > elapsedScrollY + window.innerHeight*1.5 ||
+       section.offsetTop + section.offsetHeight < elapsedScrollY-window.innerHeight*.5)continue;
+
+    const phase = sectionProgress(section);
+    const exit = 1-smoothstep(.94,1,phase);
+    group.inner.style.opacity = reduced ? "1" : exit.toFixed(3);
+    for (const beat of group.beats) {
+      if(reduced){
+        beat.el.style.opacity="1";
+        beat.el.style.transform="none";
+        beat.el.style.filter="none";
+        continue;
+      }
+      const arrival = beat.start===0 ? 1 : smoothstep(beat.start,beat.start+.115,phase);
+      beat.el.style.opacity = arrival.toFixed(3);
+      beat.el.style.transform = "translate3d(0,"+((1-arrival)*25).toFixed(1)+"px,0)";
+      beat.el.style.filter = arrival<.999 ? "blur("+((1-arrival)*2.6).toFixed(2)+"px)" : "none";
+    }
+  }
+}
+
+function renderCamera(frameTime=0) {
+  smoothPosition = reduced ? storyTarget : mix(smoothPosition,storyTarget,.082);
+  const lower=Math.min(looks.length-1,Math.floor(smoothPosition));
+  const upper=Math.min(looks.length-1,lower+1);
+  const a=looks[lower], b=looks[upper],t=smoothPosition-lower;
+  const x=mix(a.x,b.x,t)+(reduced?0:pointerX*.38);
+  const y=mix(a.y,b.y,t)+(reduced?0:pointerY*.28);
+  const zoom=mix(a.zoom,b.zoom,t);
+  const glow=mix(a.glow,b.glow,t);
+  camera.style.transform="translate3d("+x.toFixed(3)+"%,"+y.toFixed(3)+"%,0) scale("+zoom.toFixed(4)+")";
+  highlights.style.opacity=glow.toFixed(3);
+  shade.style.opacity=(1-Math.min(.12,glow*.26)).toFixed(3);
+  livingWorld.render(frameTime/1000,smoothPosition);
+  updateBeats();
   requestAnimationFrame(renderCamera);
 }
 
-if(image) {
-  const loadOK = () => { warning.hidden = true; document.body.classList.add("asset-loaded"); };
-  const loadError = () => { warning.hidden = false; document.body.classList.add("asset-missing"); };
-  image.addEventListener("load", loadOK);
-  image.addEventListener("error", loadError);
-  if (image.complete) (image.naturalWidth ? loadOK : loadError)();
+if(image){
+  const okay=()=>{warning.hidden=true;document.body.classList.add("asset-loaded")};
+  const missing=()=>{warning.hidden=false;document.body.classList.add("asset-missing")};
+  image.addEventListener("load",okay);
+  image.addEventListener("error",missing);
+  if(image.complete)(image.naturalWidth?okay:missing)();
 }
-
-window.addEventListener("scroll", syncScroll, { passive:true });
-window.addEventListener("resize", syncScroll, { passive:true });
-window.addEventListener("pointermove", event => {
-  if (reduced) return;
-  pointerX = (event.clientX / window.innerWidth - .5) * 2;
-  pointerY = (event.clientY / window.innerHeight - .5) * 2;
-}, { passive:true });
-window.addEventListener("load", syncScroll);
+window.addEventListener("scroll",syncScroll,{passive:true});
+window.addEventListener("resize",syncScroll,{passive:true});
+window.addEventListener("hashchange",syncScroll);
+window.addEventListener("pointermove",e=>{
+  if(reduced)return;
+  pointerX=(e.clientX/window.innerWidth-.5)*2;
+  pointerY=(e.clientY/window.innerHeight-.5)*2;
+},{passive:true});
+window.addEventListener("load",syncScroll);
 document.fonts?.ready?.then(syncScroll);
-syncScroll(); smoothPosition = scrollTarget; requestAnimationFrame(renderCamera);
+syncScroll();
+smoothPosition=storyTarget;
+requestAnimationFrame(renderCamera);
 
-if (!reduced) {
-  scenes.forEach(scene => {
-    const targets = scene.querySelectorAll(".copy > *, .glass-stack, .problem-list, .feature-lineup, .improvement-columns, .notification-points, .resilience-panel");
-    gsap.fromTo(targets, { y:22, opacity:0 }, {
-      y:0, opacity:1, duration:.9, stagger:.06, ease:"power2.out",
-      scrollTrigger: { trigger:scene, start:"top 85%", once:true }
-    });
-  });
-}
-
-// Direct access links from the original presentation are preserved in index.html.
-// StrikeGuard and Keraunos description dialogs also preserve the original meaning.
-const infoDialog = document.querySelector("#info-dialog");
-const dialogHeading = document.querySelector("#dialog-heading");
-const dialogText = document.querySelector("#dialog-text");
-const details = {
-  strikeguard: {
+// System info dialogs. StrikeGuard is contextualized, not represented as a
+// live source feeding S.A.R.A.'s Keraunos consultation engines.
+const infoDialog=document.querySelector("#info-dialog");
+const heading=document.querySelector("#dialog-heading");
+const detail=document.querySelector("#dialog-text");
+const info={
+  strikeguard:{
     title:"STRIKEGUARD",
-    message:"Sistema reactivo: emite alertas cuando registra una descarga eléctrica nube–tierra."
+    message:"Sistema reactivo de detección de descargas nube–tierra. Forma parte de los sistemas de monitoreo utilizados por el Centro de Control."
   },
-  keraunos: {
+  keraunos:{
     title:"KERAUNOS",
-    message:"Sistema predictivo: evalúa el umbral del campo electromagnético mediante el sensor físico y emite alertas ante una posible descarga eléctrica."
+    message:"Sistema de monitoreo predictivo de condiciones eléctricas. Su interfaz web es la fuente que consultan los tres motores de S.A.R.A."
   }
 };
-document.querySelectorAll("[data-info]").forEach(button => button.addEventListener("click", () => {
-  const item = details[button.dataset.info];
-  if (!item || !infoDialog) return;
-  dialogHeading.textContent = item.title;
-  dialogText.textContent = item.message;
-  if (typeof infoDialog.showModal === "function") infoDialog.showModal();
+document.querySelectorAll("[data-info]").forEach(button=>button.addEventListener("click",()=>{
+  const content=info[button.dataset.info];
+  if(!content)return;
+  heading.textContent=content.title;
+  detail.textContent=content.message;
+  infoDialog?.showModal();
 }));
-document.querySelector("#close-info")?.addEventListener("click", () => infoDialog.close());
-infoDialog?.addEventListener("click", e => { if (e.target === infoDialog) infoDialog.close(); });
+document.querySelector("#close-info")?.addEventListener("click",()=>infoDialog?.close());
+infoDialog?.addEventListener("click",e=>{if(e.target===infoDialog)infoDialog.close()});
 
-// Faithful interactive fallback chain from original slide 06:
-// Fail API -> activate all three engines -> fail all engines ->
-// activate Keraunos manual -> fail it -> activate StrikeGuard manual.
-const api = document.querySelector("#fail-api");
-const motors = [...document.querySelectorAll("[data-motor]")];
-const keraunos = document.querySelector("#fail-keraunos");
-const strike = document.querySelector("#strike-final");
-const status = document.querySelector("#sim-status");
-const connectors = Object.fromEntries([...document.querySelectorAll("[data-link]")].map(el => [el.dataset.link,el]));
-let fallback = {};
-let simGeneration = 0;
-function delayedActivation(node, delay) {
-  const generation = simGeneration;
-  if (reduced) activateNode(node);
-  else gsap.delayedCall(delay, () => { if (generation === simGeneration) activateNode(node); });
+// Optional technical continuity exploration — not a claim that S.A.R.A. is
+// completely redundant. Three motors consult the same Keraunos source.
+const continuityDialog=document.querySelector("#continuity-dialog");
+document.querySelector("#show-continuity")?.addEventListener("click",()=>{
+  continuityDialog?.showModal();
+  resetFallback();
+});
+document.querySelector("#close-continuity")?.addEventListener("click",()=>continuityDialog?.close());
+continuityDialog?.addEventListener("click",e=>{
+  if(e.target===continuityDialog)continuityDialog.close();
+});
+const api=document.querySelector("#fail-api");
+const motors=[...document.querySelectorAll("[data-motor]")];
+const keraunos=document.querySelector("#fail-keraunos");
+const strike=document.querySelector("#strike-final");
+const status=document.querySelector("#sim-status");
+const connectors=Object.fromEntries([...document.querySelectorAll("[data-link]")].map(el=>[el.dataset.link,el]));
+let fallback={},generation=0;
+function setStatus(message){if(status)status.textContent=message}
+function failNode(node){
+  node.classList.remove("active");node.classList.add("failed");
+  node.querySelector("small").textContent="FUERA DE SERVICIO";
+  if(node.tagName==="BUTTON")node.disabled=true;
 }
-function setStatus(message) { if (status) status.textContent = message; }
-function failNode(node) { node.classList.remove("active"); node.classList.add("failed"); node.querySelector("small").textContent="FUERA DE SERVICIO"; if(node.tagName==="BUTTON")node.disabled=true; }
-function activateNode(node){node.classList.add("active"); if(node.tagName==="BUTTON")node.disabled=false;}
-function resetFallback() {
-  simGeneration++;
-  fallback = { api:false, motors:[false,false,false], keraunos:false };
-  [api,...motors,keraunos,strike].forEach(node => {
+function activateNode(node){
+  node.classList.add("active");
+  if(node.tagName==="BUTTON")node.disabled=false;
+}
+function delayedActivation(node,delay){
+  const cycle=generation;
+  if(reduced)activateNode(node);
+  else gsap.delayedCall(delay,()=>{if(cycle===generation)activateNode(node)});
+}
+function resetFallback(){
+  generation++;
+  fallback={api:false,motors:[false,false,false],keraunos:false};
+  [api,...motors,keraunos,strike].forEach(node=>{
     node.classList.remove("active","failed");
-    node.querySelector("small").textContent = node===api ? "CLIC PARA FALLAR" : node===strike ? "ÚLTIMO RESPALDO" : "RESPALDO";
+    node.querySelector("small").textContent=node===api?"CLIC PARA SIMULAR FALLA":node===strike?"ÚLTIMO RESPALDO":"RESPALDO";
     if(node.tagName==="BUTTON")node.disabled=true;
   });
-  Object.values(connectors).forEach(el => el.classList.remove("on","failed"));
+  Object.values(connectors).forEach(el=>el.classList.remove("on","failed"));
   activateNode(api);
-  setStatus("Haz clic en API para simular una falla y descubrir las capas de respaldo.");
+  setStatus("Haz clic en FUENTE / CONSULTA para iniciar la simulación conceptual.");
 }
-api?.addEventListener("click", () => {
-  if (fallback.api) return;
-  fallback.api = true;
+api?.addEventListener("click",()=>{
+  if(fallback.api)return;
+  fallback.api=true;
   failNode(api);
   connectors["api-motors"].classList.add("on");
-  motors.forEach((motor,i) => {
-    delayedActivation(motor, .18 + i*.21);
-  });
-  setStatus("API fuera de servicio. Motores 01, 02 y 03 disponibles: simula la falla de los tres.");
+  motors.forEach((motor,i)=>delayedActivation(motor,.18+i*.21));
+  setStatus("Simulación: falla de consulta. Prueba los tres procesos de respaldo.");
 });
-motors.forEach((motor,i) => motor.addEventListener("click", () => {
-  if(!fallback.api || fallback.motors[i])return;
-  fallback.motors[i]=true;
-  failNode(motor);
+motors.forEach((motor,i)=>motor.addEventListener("click",()=>{
+  if(!fallback.api ||fallback.motors[i])return;
+  fallback.motors[i]=true;failNode(motor);
   const count=fallback.motors.filter(Boolean).length;
   if(count===3){
     connectors["motors-keraunos"].classList.add("on");
-    delayedActivation(keraunos, .35);
-    setStatus("Los tres motores fallaron. El respaldo pasa a Keraunos manual.");
-  }else setStatus(count+" de 3 motores fuera de servicio. Sigue probando los motores activos.");
+    delayedActivation(keraunos,.35);
+    setStatus("Tres motores fuera de servicio. Se plantea consulta manual mediante Keraunos.");
+  }else setStatus(count+" de 3 motores deshabilitados en la simulación.");
 }));
-keraunos?.addEventListener("click", () => {
-  if(!fallback.motors.every(Boolean) || fallback.keraunos)return;
-  fallback.keraunos = true;
-  failNode(keraunos);
+keraunos?.addEventListener("click",()=>{
+  if(!fallback.motors.every(Boolean)||fallback.keraunos)return;
+  fallback.keraunos=true;failNode(keraunos);
   connectors["keraunos-strike"].classList.add("on");
-  delayedActivation(strike, .35);
-  setStatus("Keraunos manual fuera de servicio. Último respaldo: StrikeGuard manual.");
+  delayedActivation(strike,.35);
+  setStatus("Se plantea el procedimiento manual establecido con StrikeGuard.");
 });
-document.querySelector("#reset-sim")?.addEventListener("click", resetFallback);
+document.querySelector("#reset-sim")?.addEventListener("click",resetFallback);
 resetFallback();
