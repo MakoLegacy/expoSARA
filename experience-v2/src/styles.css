@@ -346,3 +346,68 @@ main:after{display:none}
 @media(prefers-reduced-motion:reduce){
  .scene .beat{opacity:1;filter:none}
 }
+
+
+/* V5.2 — FLIP-based progressive continuity sequence.
+   The initial API node is centered. Each failure opens a wider layout,
+   moving the existing blocks sideways and drawing the next link. */
+.continuity-dialog{width:min(1340px,96vw);max-height:min(92dvh,930px);padding:27px clamp(16px,3vw,35px);overflow-y:auto}
+.continuity-head .eyebrow{font-size:11px;margin-bottom:15px}
+.continuity-head h2{margin-bottom:13px}
+.continuity-disclaimer{font-size:clamp(16px,1.3vw,20px);line-height:1.32;max-width:1150px}
+.continuity-footer{font-size:15px;color:#c9d9e4;margin:14px 0 0}
+.continuity-dialog .resilience-panel{padding:20px 20px 17px;background:rgba(2,13,24,.93)}
+.continuity-viewport{width:100%;min-height:310px;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
+.continuity-track{display:flex;align-items:center;justify-content:center;gap:10px;min-height:305px;width:max-content;min-width:100%;padding:12px 6px;margin:auto}
+.continuity-stage{flex:0 0 auto;display:flex;align-items:center;justify-content:center;min-width:0;will-change:transform,opacity}
+.continuity-stage[hidden],.continuity-link[hidden]{display:none!important}
+.stage-api{width:198px}
+.stage-motors{width:204px;display:flex;flex-direction:column;gap:8px}
+.stage-keraunos{width:188px}
+.stage-strike{width:194px}
+.continuity-dialog .sim-node{flex:1;min-width:0;width:100%;min-height:150px;opacity:.46;display:flex;align-items:flex-start;gap:13px;justify-content:center;padding:18px 14px;border:1px solid #526c82;border-radius:2px;background:linear-gradient(135deg,rgba(6,26,42,.96),rgba(4,12,24,.93));color:#e5eef7;text-align:left;box-shadow:none;transition:border-color .3s,background .3s}
+.continuity-dialog .sim-node.active{opacity:1;border-color:var(--cyan);color:#fff;background:linear-gradient(135deg,rgba(9,52,74,.93),rgba(4,21,39,.92));box-shadow:0 0 24px rgba(62,212,252,.18)}
+.continuity-dialog .sim-node.failed{opacity:1;border-color:var(--red);background:linear-gradient(135deg,rgba(66,16,32,.9),rgba(28,10,22,.9));box-shadow:0 0 18px rgba(249,64,88,.14)}
+.continuity-dialog .sim-node.failed strong{text-decoration:line-through;text-decoration-thickness:1px;text-decoration-color:var(--red)}
+.continuity-dialog .node-id{font:700 10px var(--title);color:var(--orange);letter-spacing:.06em}
+.continuity-dialog .sim-node strong{font:800 clamp(12px,1.08vw,16px)/1.35 var(--title)}
+.continuity-dialog .sim-node small{font:700 12px var(--body);letter-spacing:.07em;color:#a9ddec}
+.continuity-dialog .sim-node.failed small{color:#ffb3bd}
+.continuity-dialog .node-subtitle{font-size:17px;line-height:1.18;font-weight:600;color:#d8e3ec}
+.continuity-dialog .sim-node button{color:inherit}
+.continuity-dialog button.sim-node:not(:disabled){cursor:pointer}
+.continuity-dialog button.sim-node:disabled{cursor:default}
+.continuity-dialog .motors{display:flex;flex-direction:column;gap:7px;width:100%}
+.continuity-dialog .motors .sim-node{min-height:72px;width:100%;flex:0 0 auto;gap:6px;padding:10px 14px}
+.continuity-dialog .motors .sim-node strong{font-size:13px}
+.continuity-dialog .motors .sim-node small{font-size:11px}
+.engine-stage-heading,.engine-stage-caption{font:700 9px/1.4 var(--title);letter-spacing:.075em;text-align:center;color:var(--cyan)}
+.engine-stage-caption{font:600 13px var(--body);color:#c4d8e4}
+.continuity-link{flex:0 0 54px;display:flex;align-items:center;gap:0;justify-content:center;min-width:54px;height:38px;will-change:transform,opacity}
+.continuity-link .link-line{display:block;flex:1;height:2px;transform-origin:left center;background:linear-gradient(90deg,var(--orange),var(--cyan));box-shadow:0 0 12px rgba(80,219,255,.6)}
+.continuity-link .link-arrow{font:bold 26px var(--body);line-height:1;color:var(--cyan);transform:translateY(-1px)}
+.continuity-dialog .terminal-node.active{opacity:1}
+.continuity-dialog .sim-status{font-size:clamp(17px,1.4vw,20px);margin:13px 0 12px;min-height:27px;line-height:1.25}
+.continuity-legend{display:flex;flex-wrap:wrap;gap:18px;border-top:1px solid rgba(141,218,249,.18);padding-top:11px;color:#bfd4e2;font-size:14px}
+.continuity-legend span{display:flex;align-items:center;gap:7px}
+.continuity-legend i{display:inline-block;width:10px;height:10px;border-radius:50%}
+.legend-light{background:var(--cyan);box-shadow:0 0 9px var(--cyan)}
+.legend-red{background:var(--red)}
+.legend-dim{background:#53687b}
+@media(max-width:1110px){
+ .continuity-track{justify-content:flex-start}
+ .continuity-dialog .resilience-panel{padding:14px}
+ .continuity-viewport{min-height:290px}
+ .continuity-track{min-height:285px}
+}
+@media(max-width:660px){
+ .continuity-dialog{width:98vw;max-height:91dvh;padding:23px 12px}
+ .continuity-head h2{font-size:23px}
+ .continuity-disclaimer{font-size:15px}
+ .continuity-viewport{min-height:270px}
+ .continuity-track{min-height:265px}
+ .stage-api{width:176px}
+ .stage-motors{width:184px}
+ .stage-keraunos,.stage-strike{width:175px}
+ .continuity-link{flex-basis:36px;min-width:36px}
+}
