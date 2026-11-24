@@ -304,6 +304,22 @@ gsap.set(camera, {
 });
 showChapter(getChapterFromHash(), { initial: true, updateHash: false });
 
+// Presenter-facing QR in slide 03. The QR always encodes the actual S.A.R.A.
+// web application, not this presentation or a simulated telemetry endpoint.
+const saraQrDialog = document.querySelector("#sara-qr-dialog");
+const showSaraQr = document.querySelector("#show-sara-qr");
+showSaraQr?.addEventListener("click", () => {
+  chapterMotion.stop();
+  saraQrDialog?.showModal();
+});
+document.querySelector("#close-sara-qr")?.addEventListener("click", () => saraQrDialog?.close());
+saraQrDialog?.addEventListener("click", event => {
+  if (event.target === saraQrDialog) saraQrDialog.close();
+});
+saraQrDialog?.addEventListener("close", () => {
+  if (activeIndex >= 0 && !isModalOpen()) chapterMotion.play(scenes[activeIndex]);
+});
+
 // System info dialogs. StrikeGuard is contextualized, not represented as a
 // live source feeding S.A.R.A.'s Keraunos consultation engines.
 const infoDialog=document.querySelector("#info-dialog");
